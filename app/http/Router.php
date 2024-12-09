@@ -7,6 +7,7 @@ use \Closure;
 use \Exception;
 use \ReflectionFunction;
 use \App\http\Middleware\Queue as MiddlewareQueue;
+use Stringable;
 
 class Router
 {
@@ -21,6 +22,15 @@ class Router
      * @var request
      */
     private $request;
+
+    private $contentType = 'text/html';
+
+
+    public function setContentType($contentType)
+    {
+        $this->contentType = $contentType;
+    }
+
 
     /**
      * Método responsável por definir uma rota de get
@@ -111,6 +121,8 @@ class Router
             $params['variables'] = $matches[1];
         }
 
+        $route = rtrim($route, '/');
+
         //PADRÃO DE VALIDAÇÃO DA URL
         $patternRoute = '/^' . str_replace('/', '\/', $route) . '$/';
         //ADICIONA ROTA DENTRO DA CLASSE
@@ -128,7 +140,7 @@ class Router
 
         $xUri = strlen($this->prefix) ? explode($this->prefix, $uri) : [$uri];
 
-        return end($xUri);
+        return rtrim(end($xUri), '/');
     }
 
     /**
@@ -189,7 +201,24 @@ class Router
             return (new MiddlewareQueue($route['middlewares'], $route['controller'], $args))->next($this->request);
 
         } catch (Exception $e) {
-            return new Response($e->getCode(), $e->getMessage());
+            return new Response($e->getCode(), $this->getErrorMessage($e->getMessage()), $this->contentType);
+        }
+    }
+
+    /**
+     * Método responsável por retornar a mensagem de erro de acordo com o contentType
+     * @param String $message
+     * @return mixed
+     */
+    private function getErrorMessage($message)
+    {
+        switch ($this->contentType) {
+            case 'application/json':
+                return [
+                    'error' => $message
+                ];
+            default:
+                return $message;
         }
     }
 

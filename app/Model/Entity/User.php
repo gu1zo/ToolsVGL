@@ -34,6 +34,7 @@ class User
 
         return true;
     }
+
     public function atualizar()
     {
         return (new Database('usuarios'))->update('id =' . $this->id, [
@@ -42,10 +43,12 @@ class User
             'senha' => $this->senha
         ]);
     }
+
     public static function getUserById($id)
     {
         return self::getUsers('id =' . $id)->fetchObject(self::class);
     }
+
     public function excluir($id)
     {
         return (new Database('usuarios'))->delete('id =' . $this->id);
