@@ -7,7 +7,6 @@ use \Closure;
 use \Exception;
 use \ReflectionFunction;
 use \App\http\Middleware\Queue as MiddlewareQueue;
-use Stringable;
 
 class Router
 {

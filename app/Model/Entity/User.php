@@ -14,6 +14,12 @@ class User
 
     public $senha;
 
+    public $setor;
+
+    public $privilegio;
+
+    public $recovery_token;
+
     public static function getUserByEmail($email)
     {
         return (new Database('usuarios'))->select('email = "' . $email . '"')->fetchObject(self::class);
@@ -29,7 +35,9 @@ class User
         $this->id = (new Database('usuarios'))->insert([
             'nome' => $this->nome,
             'email' => $this->email,
-            'senha' => $this->senha
+            'senha' => $this->senha,
+            'setor' => $this->setor,
+            'privilegio' => $this->privilegio
         ]);
 
         return true;
@@ -40,7 +48,10 @@ class User
         return (new Database('usuarios'))->update('id =' . $this->id, [
             'nome' => $this->nome,
             'email' => $this->email,
-            'senha' => $this->senha
+            'senha' => $this->senha,
+            'setor' => $this->setor,
+            'privilegio' => $this->privilegio,
+            'recovery_token' => $this->recovery_token
         ]);
     }
 
@@ -49,7 +60,7 @@ class User
         return self::getUsers('id =' . $id)->fetchObject(self::class);
     }
 
-    public function excluir($id)
+    public function excluir()
     {
         return (new Database('usuarios'))->delete('id =' . $this->id);
 

@@ -1,0 +1,122 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="{{URL}}/resources/js/chart.js"></script>
+<div class="graficos">
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Total de Eventos</h5>
+    </div>
+    <div class="card-body">
+      <div class="chart">
+        <canvas id="graficoEventos"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center gap-3">
+    <!-- Primeiro gráfico (meia largura) -->
+    <div class="card mt-4 shadow border-1" style="width: 100%">
+      <div class="card-header">
+        <h5 class="card-title">Total Horas em Eventos</h5>
+      </div>
+      <div class="card-body">
+        <div class="chart">
+          <canvas id="graficoEventos2"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Segundo gráfico (meia largura) -->
+    <div class="card mt-4 shadow border-1" style="width: 100%">
+      <div class="card-header">
+        <h5 class="card-title">Total de clientes Impactados</h5>
+      </div>
+      <div class="card-body">
+        <div class="chart">
+          <canvas id="graficoEventos3"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="graficos">
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Tempo médio de Eventos da Rede</h5>
+    </div>
+    <div class="card-body">
+      <div class="chart">
+        <canvas id="graficoEventos4"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Disponibilidade da Rede de Acesso</h5>
+    </div>
+    <div class="card-body">
+      <div class="chart">
+        <canvas id="graficoEventos5"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="graficos">
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Força Maior Mês a Mês</h5>
+    </div>
+    <div class="card-body">
+      <div class="chart">
+        <canvas id="graficoEventos6"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Adesão ao Cronograma</h5>
+    </div>
+    <div class="card-body">
+      <div class="chart">
+        <canvas id="graficoEventos7"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="graficos">
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Top 10 Caixas</h5>
+    </div>
+    <div class="card-body">
+      <table id="topCaixas" class="table table-bordered shadow">
+        <thead>
+          <tr>
+            <th scope="col" class="text-center"></th>
+            <th scope="col" class="text-center">Ponto de Acesso</th>
+            <th scope="col" class="text-center">Vezes Afetado</th>
+            <th scope="col" class="text-center">Tempo Total Fora</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title text-center">Top 10 Motivos</h5>
+    </div>
+    <div class="card-body">
+      <table id="topMotivos" class="table table-bordered shadow">
+        <thead>
+          <tr>
+            <th scope="col" class="text-center"></th>
+            <th scope="col" class="text-center">Motivo</th>
+            <th scope="col" class="text-center">Total</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>

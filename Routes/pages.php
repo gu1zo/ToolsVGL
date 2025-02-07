@@ -3,34 +3,15 @@
 use \App\Controller\Pages;
 use \App\http\response;
 
-
 //ROTA HOME
 $obRouter->get('/', [
-    function () {
-        return new response(200, Pages\Home::getHome());
-    }
-]);
-
-//ROTA SOBRE
-$obRouter->get('/sobre', [
-    function () {
-        return new response(200, Pages\About::getAbout());
-    }
-]);
-
-$obRouter->get('/depoimentos', [
+    'middlewares' => [
+        'required-login'
+    ],
     function ($request) {
-        return new response(200, Pages\Testimony::getTestimonies($request));
+        return new response(200, Pages\Home::getHome($request));
     }
 ]);
-
-//ROTA POST
-$obRouter->post('/depoimentos', [
-    function ($request) {
-        return new response(200, Pages\Testimony::insertTestimony($request));
-    }
-]);
-
 
 
 //ROTA DINAMICA

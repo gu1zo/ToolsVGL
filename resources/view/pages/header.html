@@ -1,9 +1,25 @@
-<div class="jumbotron bg-danger p-3 my-3">
-  <h1>RetisVGL - MVC</h1>
-  <p>Model - View - Controller</p>
-  <a href="{{URL}}"><button class="btn btn-light">HOME</button></a>
-  <a href="{{URL}}/sobre"><button class="btn btn-light">SOBRE</button></a>
-  <a href="{{URL}}/depoimentos"
-    ><button class="btn btn-light">DEPOIMENTOS</button></a
-  >
-</div>
+<header class="header d-flex justify-content-between align-items-center p-3">
+  <div></div>
+  <div class="dropdown">
+    <a
+      href="#"
+      class="d-flex align-items-center text-decoration-none"
+      data-bs-toggle="dropdown"
+    >
+      <img src="{{URL}}/resources/img/ggnet.png" alt="User" />
+      <span class="ms-2 fw-semibold">{{user}}</span>
+    </a>
+    <ul class="dropdown-menu shadow">
+      <li>
+        <a class="dropdown-item" href="{{URL}}/usuario/edit?id={{id}}"
+          ><i class="bi bi-person me-2"></i>Configurações</a
+        >
+      </li>
+      <li>
+        <a class="dropdown-item text-danger" href="{{URL}}/logout"
+          ><i class="bi bi-box-arrow-right me-2"></i>Sair</a
+        >
+      </li>
+    </ul>
+  </div>
+</header>

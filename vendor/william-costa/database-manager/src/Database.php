@@ -138,18 +138,19 @@ class Database
    * @param  string $order
    * @param  string $limit
    * @param  string $fields
+   * @param  string $group
    * @return PDOStatement
    */
-  public function select($where = null, $order = null, $limit = null, $fields = '*')
+  public function select($where = null, $order = null, $limit = null, $fields = '*', $group = null)
   {
     // DADOS DA QUERY
     $where = !empty($where) ? 'WHERE ' . $where : '';
     $order = !empty($order) ? 'ORDER BY ' . $order : '';
     $limit = !empty($limit) ? 'LIMIT ' . $limit : '';
+    $group = !empty($group) ? 'GROUP BY ' . $group : '';
 
     // MONTA A QUERY
-    $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $where . ' ' . $order . ' ' . $limit;
-
+    $query = 'SELECT ' . $fields . ' FROM ' . $this->table . ' ' . $where . ' ' . $group . ' ' . $order . ' ' . $limit;
     // EXECUTA A QUERY
     return $this->execute($query);
   }

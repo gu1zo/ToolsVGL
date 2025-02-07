@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <style>
+      hr {
+        background-color: white;
+      }
+      body {
+        background-color: #f2d4d4;
+      }
+    </style>
+    <!-- Meta tags Obrigatórias -->
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+
+    <title>Login</title>
+  </head>
+  <body class="text-light">
+    <div class="container">
+      <div class="d-flex justify-content-center">
+        <div
+          class="card card-lg mt-3 text-dark text-center shadow"
+          style="width: 500px; background-color: #fff; border: 1px solid #ddd"
+        >
+          <div
+            class="card-header"
+            style="
+              background-color: #f5e5e5;
+              color: #4f4f4f;
+              border-bottom: 1px solid #ddd;
+            "
+          >
+            <h1 class="h4 mb-0">Recuperar Senha</h1>
+          </div>
+
+          <div class="card-body">
+            {{status}}
+            <form method="post">
+              <input type="hidden" name="id" value="{{id}}" />
+              <div class="form-group mb-3 w-75 mx-auto text-center">
+                <label for="email" class="form-label"
+                  >Digite a nova senha:
+                </label>
+                <input
+                  name="senha"
+                  type="password"
+                  id="senha"
+                  class="form-control shadow"
+                  placeholder="**************"
+                  required
+                  autofocus
+                />
+              </div>
+              <div class="form-group mb-3 w-75 mx-auto text-center">
+                <label for="email" class="form-label">Confirme a senha: </label>
+                <input
+                  name="senha-confirma"
+                  type="password"
+                  id="senha"
+                  class="form-control shadow"
+                  placeholder="**************"
+                  required
+                  autofocus
+                />
+              </div>
+              <button
+                type="submit"
+                class="shadow btn btn-lg text-dark w-100"
+                style="background-color: #f5e5e5; border: none"
+              >
+                Salvar
+              </button>
+              <a href="{{URL}}/login" class="text-muted">Entrar</a>
+            </form>
+          </div>
+          <div
+            class="card-footer text-muted"
+            style="
+              background-color: #f8f9fa;
+              color: #6c757d;
+              border-top: 1px solid #ddd;
+            "
+          >
+            <small>© 2024 - Desenvolvido por Vogel</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- JavaScript (Opcional) -->
+    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
+    <script
+      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
+      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

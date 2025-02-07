@@ -12,6 +12,10 @@ class ComposerStaticInit9743642d6983ecee831de14ef53a1543
             'WilliamCosta\\DotEnv\\' => 20,
             'WilliamCosta\\DatabaseManager\\' => 29,
         ),
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
         'A' => 
         array (
             'App\\' => 4,
@@ -26,6 +30,10 @@ class ComposerStaticInit9743642d6983ecee831de14ef53a1543
         'WilliamCosta\\DatabaseManager\\' => 
         array (
             0 => __DIR__ . '/..' . '/william-costa/database-manager/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
         'App\\' => 
         array (

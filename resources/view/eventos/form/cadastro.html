@@ -1,0 +1,97 @@
+<div
+  class="card mt-3 text-dark text-center shadow card-no-hover me-3"
+  style="width: 100%; max-width: 800px"
+>
+  <div class="card-header">
+    <h1 class="h4 mb-0">{{title}}</h1>
+  </div>
+
+  <div class="card-body">
+    {{status}}
+    <form method="post">
+      <!-- Tipo -->
+      <input type="hidden" value="{{tipo}}" name="tipo" />
+      <!-- Protocolo ISP -->
+      <div class="form-group mb-3 w-75 mx-auto text-center">
+        <label for="protocolo" class="form-label">Protocolo ISP</label>
+        <input
+          name="protocolo"
+          type="text"
+          id="protocolo"
+          class="form-control shadow"
+          placeholder="Digite o protocolo ISP"
+          value="{{protocolo}}"
+          required
+        />
+      </div>
+
+      <!-- Horários -->
+      {{horario}}
+      <div class="form-group mb-3 w-75 mx-auto text-center">
+        <label class="form-label">Pontos de Acesso</label>
+        <select
+          class="form-select shadow"
+          name="pontosAcesso[]"
+          id="{{pontos-acesso}}"
+        ></select>
+      </div>
+
+      <!-- Pontos de Acesso (Opcional) -->
+      <div class="form-group mb-3 w-75 mx-auto text-center">
+        <label for="pontos-acesso-opcional" class="form-label"
+          >Pontos de Acesso (Opcional)
+          <a
+            class=""
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="Ao preencher esse campo, o campo 'Pontos de Acesso' será desconsiderado"
+            ><i class="bi bi-info-circle"></i></a
+        ></label>
+        <textarea
+          name="pontos-acesso-opcional"
+          id="pontos-acesso"
+          class="form-control shadow"
+          placeholder="Descreva os pontos de acesso"
+        ></textarea>
+      </div>
+
+      <!-- Regional -->
+      {{regionais}}
+
+      <!-- Observação -->
+      <div class="form-group mb-3 w-75 mx-auto text-center">
+        <label for="observacao" class="form-label">Observação</label>
+        <textarea
+          name="observacao"
+          id="observacao"
+          class="form-control shadow"
+          placeholder="Adicione observações sobre o evento"
+        >
+{{observacao}}</textarea
+        >
+      </div>
+
+      <!-- Botões -->
+      <div class="d-flex justify-content-center gap-3 mb-2">
+        <a
+          href="{{URL}}/evento/table?evento-status=todos"
+          class="shadow btn btn-pink shadow"
+          >Voltar</a
+        >
+        <button type="submit" class="shadow btn btn-pink shadow">
+          {{button-name}}
+        </button>
+        <button
+          type="button"
+          class="shadow btn btn-outline-secondary"
+          data-bs-toggle="modal"
+          data-bs-placement="top"
+          data-bs-target="#modal-logs"
+        >
+          <i class="bi bi-clock-history"></i> Alterações
+        </button>
+        {{button}}
+      </div>
+    </form>
+  </div>
+</div>

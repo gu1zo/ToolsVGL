@@ -1,0 +1,43 @@
+<div class="row row-cols-1 row-cols-md-5 g-4">
+  <!-- Card Em Análise -->
+  {{cards}}
+</div>
+<!-- Card de Tabela de Eventos -->
+<div class="card mt-4 shadow border-1">
+  <div class="card-header">
+    <h5 class="card-title">Eventos</h5>
+  </div>
+  <div class="card-body">
+    {{status}}
+    <table id="tableEvento" class="table table-bordered shadow">
+      <thead>
+        <tr>
+          <th scope="col"></th>
+          <th scope="col" class="text-center">Protocolo</th>
+          <th scope="col" class="text-center">Tipo</th>
+          <th scope="col" class="text-center">Horário Inicial</th>
+          <th scope="col" class="text-center">Ponto de Acesso</th>
+          <th scope="col" class="text-center">Regional</th>
+          <th scope="col" class="text-center">Observacao</th>
+          <th scope="col" class="text-center">E-mail</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{itens}}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script>
+  // Seleciona todas as linhas da tabela no tbody
+  const rows = document.querySelectorAll("tbody tr");
+
+  rows.forEach((row) => {
+    row.addEventListener("click", () => {
+      const url = row.getAttribute("data-url");
+      if (url) {
+        window.location.href = url; // Redireciona para a URL especificada
+      }
+    });
+  });
+</script>
