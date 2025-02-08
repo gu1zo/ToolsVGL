@@ -30,10 +30,10 @@ class SyncBanco
 
             return null; // Retorna null se a data não for válida
         }
-        define('HOST', 'ws4.altcloud.net.br');
-        define('USER', 'ggnet_manutencao');
-        define('PASS', 'pD1!bmuR8iotgR?l');
-        define('BASE', 'ggnet_manutencao');
+        define('HOST', '');
+        define('USER', '');
+        define('PASS', '');
+        define('BASE', '');
 
 
         // Conectar ao banco de dados
