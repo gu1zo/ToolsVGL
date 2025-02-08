@@ -1,0 +1,51 @@
+<div class="d-flex justify-content-center">
+  <div
+    class="card mt-3 text-dark text-center shadow card-no-hover"
+    style="width: 100%; max-width: 600px"
+  >
+    <div class="card-header">
+      <h1 class="h4 mb-0">{{title}}</h1>
+    </div>
+
+    <div class="card-body">
+      {{status}}
+      <form method="post">
+        <!-- Nome -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Nome:</label>
+          <input
+            name="nome"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o nome"
+            value="{{nome}}"
+            required
+          />
+        </div>
+
+        <!-- E-mail -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">E-mail:</label>
+          <input
+            name="email"
+            type="email"
+            class="form-control shadow text-center"
+            placeholder="Digite o E-mail"
+            value="{{email}}"
+            required
+          />
+        </div>
+
+        <!-- Setor e Privilégio -->
+        {{setor}} {{privilegio}}
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-center gap-3 mb-2">
+          <a href="{{URL}}/" class="shadow btn btn-pink">Voltar</a>
+          <button type="submit" class="shadow btn btn-pink">Salvar</button>
+          {{buttons}}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div class="form-group mb-3 w-75 mx-auto text-center">
+  <label for="privilegio" class="form-label">Privilegio</label>
+  <br />
+  <div class="form-check form-check-inline">
+    <input
+      class="form-check-input shadow"
+      type="radio"
+      name="privilegio"
+      id="privilegio"
+      value="admin"
+      {{admin}}
+    />
+    <label class="form-check-label" for="privilegio">Admin</label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input
+      class="form-check-input shadow"
+      type="radio"
+      name="privilegio"
+      id="privilegio2"
+      value="normal"
+      {{normal}}
+    />
+    <label class="form-check-label" for="privilegio2">Normal</label>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<div class="d-flex justify-content-center">
+  <div
+    class="card mt-3 text-dark text-center shadow card-no-hover"
+    style="width: 100%; max-width: 500px"
+  >
+    <div class="card-header">
+      <h1 class="h4 mb-0">Concluir evento</h1>
+    </div>
+
+    <div class="card-body d-flex justify-content-center">
+      <form method="post">
+        <div class="form-group">
+          <h6 class="mb-3 fs-5">Motivo</h6>
+        </div>
+        <div class="form-group ms-3 mt-3">
+          <select
+            style="width: 100%; min-width: 250px"
+            class="form-select text-center pe-1"
+            name="motivo"
+            id="motivos"
+            required
+          >
+            <option disabled selected value="">Selecione o Motivo</option>
+          </select>
+        </div>
+        <div class="form-group ms-3 mt-3 d-flex flex-column align-items-center">
+          <!-- Aumentei o tamanho do texto e ajustei o espaçamento -->
+          <h6 class="mb-3 fs-5">Força Maior</h6>
+          <div class="form-check form-switch" style="transform: scale(1.5)">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="forca-maior"
+              id="flexSwitchCheckDefault"
+            />
+          </div>
+        </div>
+        <div class="form-group ms-3 mt-3">
+          <h6 class="mb-3 fs-5">Comentários</h6>
+          <textarea
+            name="comentario"
+            id="comentario"
+            class="form-control shadow"
+            placeholder="Adicione observações sobre o evento"
+            required
+          ></textarea>
+        </div>
+        <div class="form-group ps-3">
+          <button type="submit" class="shadow btn btn-pink mt-3">
+            Concluir
+          </button>
+          <a
+            style="text-decoration: none; color: #4f4f4f"
+            href="/evento/edit?id={{id}}"
+          >
+            <button type="button" class="shadow btn btn-pink mt-3">
+              Voltar
+            </button>
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
