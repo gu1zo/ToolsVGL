@@ -782,7 +782,14 @@ class Evento extends Page
 
     public static function getEmail($request)
     {
-        $content = View::render('eventos/email');
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+        $content = View::render(
+            'eventos/email',
+            [
+                'id' => $id
+            ]
+        );
 
         return parent::getPage('Enviar E-mails > RetisVGL', $content);
     }

@@ -60,6 +60,7 @@ class Email
                 ]);
                 break;
             case 'emergencial':
+                $vars['horario-previsto'] = isset($vars['horario-previsto']) ? $vars['horario-previsto'] : $vars['horario-inicial'];
                 $horarioInicial = strtotime($vars['horario-inicial']);
                 $horarioPrevisto = strtotime($vars['horario-previsto']);
                 return View::render('emails/emergencial', [
