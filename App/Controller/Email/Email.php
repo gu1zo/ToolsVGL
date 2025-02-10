@@ -37,10 +37,6 @@ class Email
             $mail->addAddress($cliente['e_mail']);
             $mail->send();
         } catch (Exception $e) {
-            echo '<pre>';
-            print_r($e);
-            echo '</pre>';
-            exit;
         }
 
     }
