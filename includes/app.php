@@ -27,19 +27,11 @@ View::init([
 
 //Mapeamento de middlewares
 MiddlewareQueue::setMap([
-<<<<<<< HEAD
     'maintenance' => \App\http\Middleware\Maintenance::class,
     'required-logout' => \App\http\Middleware\RequireLogout::class,
     'required-login' => App\http\Middleware\RequireLogin::class,
     'api' => App\http\Middleware\Api::class,
     'password-reset-confirm' => App\http\Middleware\PasswordResetConfirm::class,
-=======
-    'maintenance' => \App\Http\Middleware\Maintenance::class,
-    'required-logout' => \App\Http\Middleware\RequireLogout::class,
-    'required-login' => App\Http\Middleware\RequireLogin::class,
-    'api' => App\Http\Middleware\Api::class,
-    'password-reset-confirm' => App\Http\Middleware\PasswordResetConfirm::class,
->>>>>>> c7ade26b24b3664d43fc7086967cff6dbbed8451
     'required-login-permission' => App\http\Middleware\RequireLoginPermission::class,
     'required-tipo' => App\http\Middleware\RequireTipo::class,
     'verify-protocol' => App\http\Middleware\VerifyProtocol::class,
