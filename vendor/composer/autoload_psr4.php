@@ -9,5 +9,5 @@ return array(
     'WilliamCosta\\DotEnv\\' => array($vendorDir . '/william-costa/dot-env/src'),
     'WilliamCosta\\DatabaseManager\\' => array($vendorDir . '/william-costa/database-manager/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
-    'App\\' => array($baseDir . '/app'),
+    'App\\' => array($baseDir . '/App'),
 );
