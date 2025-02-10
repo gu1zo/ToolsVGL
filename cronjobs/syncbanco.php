@@ -40,7 +40,7 @@ function syncbanco()
         $obPontoAcesso->cadastrar();
     }
 
-    echo 'Banco sincronizado com sucesso';
+    echo "Banco sincronizado com sucesso\n";
 }
 
 //echo APIElite::getPontosAcesso();
