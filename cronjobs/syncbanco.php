@@ -26,7 +26,7 @@ function syncbanco()
             continue;
         }
         // Verifica se já existe no banco
-        $obPontoAcesso = EntityPontoAcesso::getPontoByCodeAndName($codigo, $nome);
+        $obPontoAcesso = EntityPontoAcesso::getPontoByCode($codigo);
         if ($obPontoAcesso instanceof EntityPontoAcesso) {
             continue;
         }
