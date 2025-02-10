@@ -4,7 +4,6 @@ require __DIR__ . '/../vendor/autoload.php';
 use \App\Utils\View;
 use \WilliamCosta\DotEnv\Environment;
 use \WilliamCosta\DatabaseManager\Database;
-use \WilliamCosta\DatabaseManager\Database as oldDataBase;
 use \App\http\Middleware\Queue as MiddlewareQueue;
 
 

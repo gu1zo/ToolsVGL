@@ -75,7 +75,7 @@ class Router
 
     public function __construct($url)
     {
-        $this->request = new request($this);
+        $this->request = new Request($this);
         $this->url = $url;
         $this->setPrefix();
     }
