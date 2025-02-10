@@ -7,6 +7,8 @@ require __DIR__ . '/../includes/app.php';
 use \App\Model\Entity\PontoAcesso as EntityPontoAcesso;
 use \App\Model\Rest\APIElite;
 use \App\Utils\StringVerify;
+use DateTime;
+use DateTimeZone;
 
 
 require_once __DIR__ . '/../App/Model/Rest/APIElite.php';
@@ -39,8 +41,9 @@ function syncbanco()
 
         $obPontoAcesso->cadastrar();
     }
+    $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo')); // Definir o fuso horário de Brasília
+    echo "Banco sincronizado com sucesso - " . $data->format('d/m/Y H:i') . "\n"; // Formatar para o padrão brasileiro
 
-    echo "Banco sincronizado com sucesso\n";
 }
 
 //echo APIElite::getPontosAcesso();
