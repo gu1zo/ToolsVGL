@@ -28,6 +28,6 @@ class Graficos extends Page
         ]);
 
         //Retorna a view da pagina
-        return parent::getPage('Dashboard > RetisVGL', $content);
+        return parent::getPage('Graficos > RetisVGL', $content);
     }
 }
