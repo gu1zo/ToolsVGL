@@ -4,7 +4,6 @@ namespace App\Controller\Graficos;
 
 use \App\Utils\View;
 use \App\Controller\Pages\Page;
-use Dompdf\Dompdf;
 
 class Graficos extends Page
 {
