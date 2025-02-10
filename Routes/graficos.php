@@ -1,14 +1,14 @@
 <?php
 
 use \App\Controller\Graficos\Graficos;
-use \App\http\response;
+use \App\http\Response;
 
 $obRouter->get('/graficos/geral-ano', [
     'middlewares' => [
         'required-login'
     ],
     function () {
-        return new response(200, Graficos::getGraficos());
+        return new Response(200, Graficos::getGraficos());
     }
 ]);
 $obRouter->get('/graficos/dex', [
@@ -16,7 +16,7 @@ $obRouter->get('/graficos/dex', [
         'required-login'
     ],
     function () {
-        return new response(200, Graficos::getDEX());
+        return new Response(200, Graficos::getDEX());
     }
 ]);
 ?>

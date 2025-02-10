@@ -1,7 +1,7 @@
 <?php
 
 use \App\Controller\Pages;
-use \App\http\response;
+use \App\http\Response;
 
 //ROTA HOME
 $obRouter->get('/', [
@@ -9,7 +9,7 @@ $obRouter->get('/', [
         'required-login'
     ],
     function ($request) {
-        return new response(200, Pages\Home::getHome($request));
+        return new Response(200, Pages\Home::getHome($request));
     }
 ]);
 
