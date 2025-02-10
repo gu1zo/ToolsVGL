@@ -248,7 +248,6 @@ class Evento extends Page
     {
         $queryParams = $request->getQueryParams();
         $id = $queryParams['id'];
-
         $content = View::render('/eventos/elements/button-logs');
         $content .= View::render('/eventos/elements/button', [
             'url' => '/evento/email?id=' . $id,
