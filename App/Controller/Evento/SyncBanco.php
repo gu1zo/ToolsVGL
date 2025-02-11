@@ -43,12 +43,17 @@ class SyncBanco
         if (!$conn) {
             die("Falha na conexão: " . mysqli_connect_error());
         }
-        $sql = "SELECT * from manutencao";
+        $sql = "SELECT * from manutencao WHERE dataInicio BETWEEN '2025-02-01' AND '2025-02-29'";
         $res = $conn->query($sql);
         $qtd = $res->num_rows;
 
         if ($qtd > 0) {
             while ($obOld = $res->fetch_object()) {
+                $obEvento = EntityEvento::getEventoByProtocol($obOld->protocolo);
+
+                if ($obEvento instanceof EntityEvento) {
+                    continue;
+                }
                 $obEvento = new EntityEvento;
 
                 if ($obOld->tipo == 'Manutencao' || $obOld->tipo == 'Evento' || $obOld->tipo == 'Solicitação emergencial') {
