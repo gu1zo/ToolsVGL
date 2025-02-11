@@ -142,6 +142,7 @@ $obRouter->post('/evento/email', [
     }
 ]);
 
+/*
 $obRouter->get('/evento/sync', [
     'middlewares' => [
         'required-login'
@@ -149,4 +150,4 @@ $obRouter->get('/evento/sync', [
     function () {
         return new response(200, Evento\SyncBanco::syncbanco());
     }
-]);
+]);*/

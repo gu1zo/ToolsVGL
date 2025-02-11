@@ -75,7 +75,9 @@ class SyncBanco
                 } else if ($obOld->status = 'Em analise(Regional)') {
                     $obEvento->status = 'em analise';
                 } else if ($obOld->status = 'Em analise(Interno)') {
-                    $obEvento->status = 'em analise';
+                    $obEvento->status = 'pendente';
+                } else {
+                    $obEvento->status = $obOld->status;
                 }
 
 

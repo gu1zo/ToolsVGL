@@ -137,10 +137,15 @@ class Login extends Page
         $token = $queryParams['token'];
         $tokenHash = hash('sha256', $token);
 
+
         $results = EntityUser::getUsers();
 
         while ($obUser = $results->fetchObject(EntityUser::class)) {
+            if (!isset($obUser->recovery_token)) {
+                continue;
+            }
             if (hash_equals($obUser->recovery_token, $tokenHash)) {
+
                 return View::render('usuario/recuperar-senha', [
                     'status' => self::getStatus($request),
                     'id' => $obUser->id
