@@ -9,6 +9,7 @@ use App\Model\Entity\User as EntityUser;
 use App\Utils\StringManipulation;
 use App\Session\Login\Login;
 use App\Controller\Evento\Evento;
+use App\Controller\Api\EvolutionAPI;
 use WilliamCosta\DatabaseManager\Pagination;
 use DateTime;
 
@@ -207,6 +208,7 @@ class Ajax
 
         $obComentario->cadastrar();
         self::setAlteracao($id, "Adicionado Comentário");
+        EvolutionAPI::sendMessage(Evento::getIndividualMessage($id, 'atualizar'));
         return true;
     }
     public static function getComentario($request)

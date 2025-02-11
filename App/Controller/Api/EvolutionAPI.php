@@ -42,8 +42,6 @@ class EvolutionAPI
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
 
-        // Ativar depuração
-        curl_setopt($ch, CURLOPT_VERBOSE, true);
         curl_setopt($ch, CURLOPT_STDERR, fopen('php://stderr', 'w')); // Direciona erros para o log
 
         $response = curl_exec($ch);
@@ -58,13 +56,9 @@ class EvolutionAPI
 
         // Verifique o status do HTTP e retorne a resposta
         if ($httpCode == 200 || $httpCode == 201) {
-            return json_decode($response, true);
+            return true;
         } else {
-            return [
-                "error" => "Erro ao enviar mensagem",
-                "status" => $httpCode,
-                "response" => $response
-            ];
+            return false;
         }
     }
 }

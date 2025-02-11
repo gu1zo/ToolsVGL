@@ -4,19 +4,23 @@ namespace App\Controller\Evento;
 
 use \App\Controller\Pages\Page;
 use \App\Controller\Email\Email;
+use \App\Controller\Api\EvolutionAPI;
 use \App\Utils\View;
 use \App\Utils\Alert;
+use \App\Utils\DateManipulation;
 use \App\Model\Entity\PontoAcesso as EntityPontoAcesso;
 use \App\Model\Entity\PontoAcessoAfetado as EntityPontoAcessoAfetado;
 use \App\Model\Entity\Evento as EntityEvento;
 use \App\Model\Entity\Manutencao as EntityManutencao;
 use \App\Model\Entity\EventoConclusao as EntityEventoConclusao;
 use \App\Model\Entity\Alteracoes as EntityAlteracoes;
+use \App\Model\Entity\Joins as EntityJoins;
 use \App\Session\Login\Login;
 use \App\Model\Rest\APIElite;
 
 use \App\Utils\StringManipulation;
 use DateTime;
+use IntlDateFormatter;
 
 class Evento extends Page
 {
@@ -130,6 +134,11 @@ class Evento extends Page
         }
 
         self::setAlteracao($obEvento->id, "Evento Criado");
+
+        if ($obEvento->tipo != 'manutencao') {
+            EvolutionAPI::sendMessage(self::getIndividualMessage($obEvento->id, 'novo'));
+        }
+
 
         $request->getRouter()->redirect('/evento/edit?id=' . $obEvento->id . '&status=created');
         exit;
@@ -335,6 +344,8 @@ class Evento extends Page
         self::setAlteracao($obEvento->id, "Evento Editado");
 
         $obEvento->atualizar();
+
+        EvolutionAPI::sendMessage(self::getIndividualMessage($obEvento->id, 'atualizar'));
 
         $request->getRouter()->redirect('/evento/edit?id=' . $id . '&status=edited');
         exit;
@@ -669,6 +680,7 @@ class Evento extends Page
         $obManutencao = EntityManutencao::getManutencaoById($id);
 
         if ($obEvento->status != 'reagendado') {
+            EvolutionAPI::sendMessage(self::getIndividualMessage($obEvento->id, 'reagendar'));
             $obEvento->dataInicio = null;
             $obManutencao->dataPrevista = null;
             $obEvento->status = 'reagendado';
@@ -689,9 +701,11 @@ class Evento extends Page
             $obEvento->atualizar();
             $data = new DateTime($obEvento->dataInicio);
             $alteracao = "Evento reagendado para " . $data->format('Y/m/d H:i');
+            EvolutionAPI::sendMessage(self::getIndividualMessage($obEvento->id, 'reagendar'));
 
             self::setAlteracao($obEvento->id, $alteracao);
         }
+
         $request->getRouter()->redirect('/evento/edit?id=' . $id . '&status=edited');
         exit;
     }
@@ -784,6 +798,7 @@ class Evento extends Page
         $obConclusao->comentario = $comentario;
 
         $obConclusao->cadastrar();
+        EvolutionAPI::sendMessage(self::getIndividualMessage($obEvento->id, 'concluir'));
         $request->getRouter()->redirect('/evento/edit?id=' . $id . '&status=completed');
         exit;
     }
@@ -899,6 +914,47 @@ class Evento extends Page
         }
 
         return $content;
+    }
+
+    public static function getIndividualMessage($id, $tipo)
+    {
+        $obEvento = EntityJoins::getEventoById($id);
+
+        date_default_timezone_set('America/Sao_Paulo');
+        $dataAtual = new DateTime();
+
+        $duracao = DateManipulation::gethourDiff($obEvento->dataInicio, $dataAtual);
+        $lastupdate = $duracao;
+        $usuario = $obEvento->usuario_nome;
+        $info = $obEvento->observacao;
+
+        $obComentario = EntityJoins::getLastInfoById($obEvento->id);
+        if ($obComentario instanceof EntityJoins) {
+            $lastupdate = DateManipulation::gethourDiff($obComentario->data, $dataAtual);
+            $usuario = $obComentario->usuario_nome;
+            $info = $obComentario->comentario;
+        }
+        $string = '';
+        switch ($tipo) {
+            case 'concluir':
+                $string .= "*CONCLUÍDO* ✅\n";
+                break;
+            case 'atualizar':
+                $string .= "*ATUALIZAÇÃO* ✍️\n";
+                break;
+            case 'novo':
+                $string .= "*NOVO EVENTO* ⚠️\n";
+                break;
+            case 'reagendar':
+                $string .= "*REAGENDADO* 🕑\n";
+                break;
+        }
+
+        $string .= "_EVENTO_ *" . $obEvento->protocolo . " " . Evento::getPontosAcessoTable($obEvento->id) . "*\n";
+        $string .= "_duration:_ " . $duracao . "\n";
+        $string .= "_last update:_ " . $lastupdate . " por " . $usuario . "\n";
+        $string .= "_last info:_ " . $info;
+        return $string;
     }
 
 }

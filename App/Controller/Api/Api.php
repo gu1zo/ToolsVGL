@@ -7,6 +7,7 @@ use WilliamCosta\DatabaseManager\Pagination;
 use App\Controller\Evento\Evento;
 use App\Model\Entity\Evento as EntityEvento;
 use App\Model\Entity\Joins as EntityJoins;
+use App\Utils\DateManipulation;
 use DateTime;
 use IntlDateFormatter;
 
@@ -48,14 +49,7 @@ class Api
     public static function getMessage()
     {
         date_default_timezone_set('America/Sao_Paulo');
-        function gethourDiff($hora1, $horaFinal)
-        {
-            $horaInicial = new DateTime($hora1);
 
-            $diferenca = $horaInicial->diff($horaFinal);
-
-            return $diferenca->h . " horas " . $diferenca->i . " min";
-        }
         // Obtém a data e hora atual
         $formatter = new IntlDateFormatter(
             'pt_BR',
@@ -78,14 +72,15 @@ class Api
         $resultados = EntityJoins::getEventoByStatus('em execucao');
         if ($resultados->rowCount() > 0) {
             while ($row = $resultados->fetchObject(EntityJoins::class)) {
-                $duracao = gethourDiff($row->dataInicio, $dataAtual);
+                $dataInicio = new DateTime($row->dataInicio);
+                $duracao = DateManipulation::getHourDiff($dataInicio, $dataAtual);
                 $lastupdate = $duracao;
                 $usuario = $row->usuario_nome;
                 $info = $row->observacao;
 
                 $obComentario = EntityJoins::getLastInfoById($row->id);
                 if ($obComentario instanceof EntityJoins) {
-                    $lastupdate = gethourDiff($obComentario->data, $dataAtual);
+                    $lastupdate = DateManipulation::gethourDiff($obComentario->data, $dataAtual);
                     $usuario = $obComentario->usuario_nome;
                     $info = $obComentario->comentario;
                 }
@@ -114,13 +109,6 @@ class Api
         }
 
         $message = "*GESTÃO DE FALHAS GGNET*\n" . $falhas . "\n*MANUTENÇÕES PROGRAMADAS GGNET*\n" . $manutencao;
-
-        $response = [
-            'status' => 'success',
-            'message' => $message
-        ];
-        return json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-
-
+        return $message;
     }
 }

@@ -64,5 +64,8 @@ class Joins
         return (new Database('eventos e JOIN usuarios u ON e.id_usuario_criador = u.id'))->select('e.status = "' . $status . '"', null, null, ' e.*, u.nome AS usuario_nome');
     }
 
-
+    public static function getEventoById($id)
+    {
+        return (new Database('eventos e JOIN usuarios u ON e.id_usuario_criador = u.id'))->select('e.id = "' . $id . '"', null, null, ' e.*, u.nome AS usuario_nome')->fetchObject(self::class);
+    }
 }
