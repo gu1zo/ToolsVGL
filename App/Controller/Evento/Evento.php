@@ -93,7 +93,7 @@ class Evento extends Page
         $regional = $postVars['regional'] ?? '';
         $observacao = $postVars['observacao'] ?? '';
         $id_usuario_criador = Login::getId();
-        $pontosAcesso = self::getPontosAcessoArray($postVars);
+        $pontosAcesso = self::getPontosAcessoArray($request, $postVars);
         $clientes = self::getClientesByPonto($pontosAcesso);
         if ($tipo == 'evento') {
             $email = true;
@@ -306,7 +306,7 @@ class Evento extends Page
         $regional = $postVars['regional'] ?? $obEvento->regional;
         $observacao = $postVars['observacao'] ?? $obEvento->observacao;
 
-        $pontosAcesso = self::getPontosAcessoArray($postVars);
+        $pontosAcesso = self::getPontosAcessoArray($request, $postVars);
         self::updatePontosAcessoAfetados($id, $pontosAcesso);
 
 
@@ -444,7 +444,7 @@ class Evento extends Page
                 return Alert::getSuccess('O evento foi editado com sucesso.');
                 break;
             case 'no-pontos':
-                return Alert::getError('Nenhum ponto de acesso foi selecionado. Tente novamente!');
+                return Alert::getError('Nenhum ponto de acesso válido foi selecionado. Tente novamente!');
                 break;
             case 'approved':
                 return Alert::getSuccess('A manutenção foi aprovada com sucesso!');
@@ -555,8 +555,12 @@ class Evento extends Page
      * Método responsável por retornar o array de pontos de acesso com base no campo opcional
      * @param array $postVars
      */
-    private static function getPontosAcessoArray($postVars)
+    private static function getPontosAcessoArray($request, $postVars)
     {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'] ?? '';
+        $tipo = $postVars['tipo'];
+
         $pontosAcesso = $postVars['pontos-acesso-opcional'] ?? '';
         if ($pontosAcesso != '') {
             $pontosAcesso = array_map('trim', explode(',', $postVars['pontos-acesso-opcional']));
@@ -567,6 +571,10 @@ class Evento extends Page
                 if ($obPonto instanceof EntityPontoAcesso) {
                     $pontosAcessoFiltrados[] = $obPonto->codigo;
                 }
+            }
+            if (empty($pontosAcessoFiltrados)) {
+                $request->getRouter()->redirect($request->getUri() . '?tipo=' . $tipo . '&status=no-pontos&id=' . $id);
+                exit;
             }
             $pontosAcesso = $pontosAcessoFiltrados;
         } else {
