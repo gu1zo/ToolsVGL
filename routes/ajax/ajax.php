@@ -99,4 +99,9 @@ $obRouter->get('/ajax/graficos/dex', [
         return new response(200, Graficos::getDEX());
     }
 ]);
+$obRouter->get('/ajax/graficos/heatmap', [
+    function () {
+        return new response(200, Graficos::getHeatMap());
+    }
+]);
 ?>

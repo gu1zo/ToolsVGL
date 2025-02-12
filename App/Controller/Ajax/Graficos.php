@@ -439,5 +439,44 @@ class Graficos
         return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 
+    public static function getHeatMap()
+    {
+        $dataAtual = new DateTime();
+        $dataInicio = (clone $dataAtual)->modify('-11 months')->modify('first day of this month');
+
+        $dataInicioStr = $dataInicio->format('Y-m-01 00:00:00');
+        $dataAtualStr = $dataAtual->format('Y-m-d 23:59:59');
+
+        $results = EntityJoins::getCoordenadasByDate($dataInicioStr, $dataAtualStr);
+        $coordenadas = [];
+
+        // Limites geográficos do Brasil
+        $latitudeMin = -33.75;
+        $latitudeMax = 5.25;
+        $longitudeMin = -73.99;
+        $longitudeMax = -34.79;
+
+        while ($row = $results->fetchObject(EntityJoins::class)) {
+            // Verificar se as coordenadas são válidas e estão dentro do Brasil
+            if (is_numeric($row->latitude) && is_numeric($row->longitude) && $row->latitude != 0 && $row->longitude != 0) {
+                $latitude = floatval($row->latitude);
+                $longitude = floatval($row->longitude);
+
+                // Verificar se as coordenadas estão dentro dos limites geográficos do Brasil
+                if ($latitude >= $latitudeMin && $latitude <= $latitudeMax && $longitude >= $longitudeMin && $longitude <= $longitudeMax) {
+                    $coordenadas[] = [
+                        "lat" => $latitude,
+                        "lng" => $longitude,
+                        "intensidade" => 1
+                    ];
+                }
+            }
+        }
+
+        header('Content-Type: application/json');
+        return json_encode($coordenadas);
+    }
+
+
 
 }

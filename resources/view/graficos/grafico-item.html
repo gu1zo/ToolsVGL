@@ -1,6 +1,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
 <script src="{{URL}}/resources/js/chart.js"></script>
+<script src="{{URL}}/resources/js/heatmap.js"></script>
 <div class="graficos">
   <div class="card mt-4 shadow border-1">
     <div class="card-header">
@@ -83,6 +87,15 @@
     </div>
   </div>
 </div>
+<div class="card shadow border-1">
+  <div class="card-header text-center">
+    <h5 class="card-title">Mapa de Calor</h5>
+  </div>
+  <div class="card-body">
+    <div id="map"></div>
+  </div>
+</div>
+
 <div class="graficos">
   <div class="card mt-4 shadow border-1">
     <div class="card-header">

@@ -205,7 +205,6 @@ footer {
   white-space: nowrap; /* Impede quebra de linha */
 }
 
-
 #tableEvento {
     table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
     width: 100%;
@@ -305,4 +304,8 @@ footer {
 
 .d-flex-comentario {
   margin-top: auto; /* Mantém os botões sempre alinhados na parte inferior */
+}
+#map {
+  min-width: 100%;
+  min-height: 400px;  /* Defina a altura que você precisar */
 }

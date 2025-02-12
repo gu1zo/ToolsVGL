@@ -28,6 +28,8 @@ class Joins
     public $evento_id;
     public $data;
     public $comentario;
+    public $latitude;
+    public $longitude;
 
     public static function getEventosByDateAndMonth($dataInicio, $dataAtual)
     {
@@ -67,5 +69,10 @@ class Joins
     public static function getEventoById($id)
     {
         return (new Database('eventos e JOIN usuarios u ON e.id_usuario_criador = u.id'))->select('e.id = "' . $id . '"', null, null, ' e.*, u.nome AS usuario_nome')->fetchObject(self::class);
+    }
+
+    public static function getCoordenadasByDate($dataInicio, $dataAtual)
+    {
+        return (new Database('pontos_acesso pa JOIN pontos_acesso_afetados paa ON paa.ponto_acesso_codigo = pa.codigo JOIN eventos e ON paa.evento_id = e.id'))->select('e.dataInicio BETWEEN "' . $dataInicio . '" AND "' . $dataAtual . '"', null, null, ' pa.latitude, pa.longitude, e.id AS evento_id, e.dataInicio');
     }
 }
