@@ -19,7 +19,7 @@ class VerifyPonto
         $tipo = $postVars['tipo'];
         $pontosAcessoOpicinal = $postVars['pontos-acesso-opcional'] ?? '';
 
-        if ($pontosAcesso == '' && $pontosAcessoOpicinal == '') {
+        if ($pontosAcesso == '' && $pontosAcessoOpicinal == '' && $tipo != 'backbone') {
             $request->getRouter()->redirect($request->getUri() . '?tipo=' . $tipo . '&status=no-pontos&id=' . $id);
             exit;
         }

@@ -12,6 +12,7 @@ use \App\Model\Entity\PontoAcesso as EntityPontoAcesso;
 use \App\Model\Entity\PontoAcessoAfetado as EntityPontoAcessoAfetado;
 use \App\Model\Entity\Evento as EntityEvento;
 use \App\Model\Entity\Manutencao as EntityManutencao;
+use \App\Model\Entity\Backbone as EntityBackbone;
 use \App\Model\Entity\EventoConclusao as EntityEventoConclusao;
 use \App\Model\Entity\Alteracoes as EntityAlteracoes;
 use \App\Model\Entity\Joins as EntityJoins;
@@ -44,6 +45,7 @@ class Evento extends Page
     public static function getNovoEvento($request)
     {
         $previsto = '';
+        $backbone = '';
 
         $queryParams = $request->getQueryParams();
         $tipo = $queryParams['tipo'];
@@ -51,6 +53,11 @@ class Evento extends Page
         if ($tipo == 'manutencao') {
             $previsto = View::render('eventos/elements/horario/horario-previsto', [
                 'horario-previsto' => '',
+            ]);
+        }
+        if ($tipo == 'backbone') {
+            $backbone = View::render('eventos/elements/backbone', [
+                'backbone' => ''
             ]);
         }
 
@@ -70,6 +77,7 @@ class Evento extends Page
             'protocolo' => '',
             'pontos-acesso' => 'pontosAcesso',
             'observacao' => '',
+            'backbone' => $backbone,
             'button' => '',
             'button-name' => 'Cadastrar'
         ]);
@@ -98,7 +106,10 @@ class Evento extends Page
         $observacao = $postVars['observacao'] ?? '';
         $id_usuario_criador = Login::getId();
         $pontosAcesso = self::getPontosAcessoArray($request, $postVars);
-        $clientes = self::getClientesByPonto($pontosAcesso);
+        $clientes = [];
+        if ($pontosAcesso != '') {
+            $clientes = self::getClientesByPonto($pontosAcesso);
+        }
         if ($tipo == 'evento') {
             $email = true;
             foreach ($clientes as $k) {
@@ -109,9 +120,14 @@ class Evento extends Page
         $clientes = json_encode(array_values($clientes), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
         $obEvento = new EntityEvento;
         $obManutencao = new EntityManutencao;
+        $obBackbone = new EntityBackbone;
         if ($tipo == 'manutencao') {
             $obEvento->status = 'em analise';
             $obManutencao->dataPrevista = $postVars['horario-previsto'] ?? '';
+        }
+        if ($tipo == 'backbone') {
+            $obEvento->status = 'em analise';
+            $obBackbone->backbone = $postVars['backbone'] ?? '';
         }
         $obEvento->email = $email;
         $obEvento->tipo = $tipo;
@@ -123,16 +139,24 @@ class Evento extends Page
         $obEvento->id_usuario_criador = $id_usuario_criador;
 
         $obEvento->cadastrar();
-        $obManutencao->evento_id = $obEvento->id;
-        $obManutencao->cadastrar();
 
-        foreach ($pontosAcesso as $item) {
-            $obPontoAcessoAfetado = new EntityPontoAcessoAfetado;
-            $obPontoAcessoAfetado->evento_id = $obEvento->id;
-            $obPontoAcessoAfetado->ponto_acesso_codigo = $item;
-            $obPontoAcessoAfetado->cadastrar();
+        if ($tipo == 'manutencao') {
+            $obManutencao->evento_id = $obEvento->id;
+            $obManutencao->cadastrar();
+        }
+        if ($tipo == 'backbone') {
+            $obBackbone->evento_id = $obEvento->id;
+            $obBackbone->cadastrar();
         }
 
+        if ($pontosAcesso != '') {
+            foreach ($pontosAcesso as $item) {
+                $obPontoAcessoAfetado = new EntityPontoAcessoAfetado;
+                $obPontoAcessoAfetado->evento_id = $obEvento->id;
+                $obPontoAcessoAfetado->ponto_acesso_codigo = $item;
+                $obPontoAcessoAfetado->cadastrar();
+            }
+        }
         self::setAlteracao($obEvento->id, "Evento Criado");
 
         if ($obEvento->tipo != 'manutencao') {
@@ -171,12 +195,19 @@ class Evento extends Page
         }
 
         $previsto = '';
+        $backbone = '';
         $final = '';
         $tipo = 'disabled';
         if ($obEventos->tipo == 'manutencao') {
             $obManutencao = EntityManutencao::getManutencaoById($id);
             $previsto = View::render('eventos/elements/horario/horario-previsto', [
                 'horario-previsto' => $obManutencao->dataPrevista
+            ]);
+        }
+        if ($obEventos->tipo == 'backbone') {
+            $obBackbone = EntityBackbone::getBackboneById($id);
+            $backbone = View::render('eventos/elements/backbone', [
+                'backbone' => $obBackbone->backbone
             ]);
         }
         $reagendar = View::render('eventos/elements/horario/reagendar-icon', [
@@ -212,6 +243,7 @@ class Evento extends Page
                 'horario' => $horario,
                 'protocolo' => $obEventos->protocolo,
                 'horario-inicial' => $obEventos->dataInicio,
+                'backbone' => $backbone,
                 'pontos-acesso' => 'pontosAcessoEdit',
                 'observacao' => $obEventos->observacao,
                 'button' => self::getEditButtons($request),
@@ -317,6 +349,12 @@ class Evento extends Page
 
         $pontosAcesso = self::getPontosAcessoArray($request, $postVars);
         self::updatePontosAcessoAfetados($id, $pontosAcesso);
+
+        if ($tipo == 'backbone') {
+            $obBackbone = EntityBackbone::getBackboneById($id);
+            $obBackbone->backbone = $postVars['backbone'] ?? $obBackbone->backbone;
+            $obBackbone->atualizar();
+        }
 
 
         if ($obEvento->status != 'reagendado') {
@@ -427,9 +465,13 @@ class Evento extends Page
         $pontosAcesso = [];
 
         $results = (new EntityPontoAcesso)->getCodeAndNameById($id);
-
         while ($row = $results->fetchObject(EntityPontoAcesso::class)) {
             $pontosAcesso[] = $row->nome;
+        }
+        $obEvento = EntityEvento::getEventoById($id);
+        if ($obEvento->tipo == 'backbone') {
+            $obBackbone = EntityBackbone::getBackboneById($id);
+            $pontosAcesso[] = $obBackbone->backbone;
         }
         $pontosAcesso = implode(', ', $pontosAcesso);
         return $pontosAcesso;
@@ -548,7 +590,7 @@ class Evento extends Page
                         if (!array_key_exists($k['codcli'], $clientes)) {
                             if (filter_var($k['e_mail'], FILTER_VALIDATE_EMAIL)) {
                                 $clientes[$k['codcli']] = [
-                                    'codcli' => $k['codcli'],
+                                    'codigo' => $k['codcli'],
                                     'nome' => $k['nome_cli'],
                                     'e_mail' => $k['e_mail'],
                                     'ponto' => $item
@@ -604,21 +646,23 @@ class Evento extends Page
      */
     private static function updatePontosAcessoAfetados($id, $pontosAcesso)
     {
-        $res = EntityPontoAcessoAfetado::getPontoAcessoAfetadoById($id);
-        while ($row = $res->fetchObject(EntityPontoAcessoAfetado::class)) {
-            if (!in_array($row->ponto_acesso_codigo, $pontosAcesso)) {
-                $obPonto = new EntityPontoAcessoAfetado;
-                $obPonto->excluir($id, $row->ponto_acesso_codigo);
+        if ($pontosAcesso != '') {
+            $res = EntityPontoAcessoAfetado::getPontoAcessoAfetadoById($id);
+            while ($row = $res->fetchObject(EntityPontoAcessoAfetado::class)) {
+                if (!in_array($row->ponto_acesso_codigo, $pontosAcesso)) {
+                    $obPonto = new EntityPontoAcessoAfetado;
+                    $obPonto->excluir($id, $row->ponto_acesso_codigo);
+                }
             }
-        }
-        foreach ($pontosAcesso as $item) {
+            foreach ($pontosAcesso as $item) {
 
-            $obPonto = EntityPontoAcessoAfetado::getPontoAcessoAfetadoByIdAndCode($id, $item);
-            if (!$obPonto instanceof EntityPontoAcessoAfetado) {
-                $obPonto = new EntityPontoAcessoAfetado;
-                $obPonto->evento_id = $id;
-                $obPonto->ponto_acesso_codigo = $item;
-                $obPonto->cadastrar();
+                $obPonto = EntityPontoAcessoAfetado::getPontoAcessoAfetadoByIdAndCode($id, $item);
+                if (!$obPonto instanceof EntityPontoAcessoAfetado) {
+                    $obPonto = new EntityPontoAcessoAfetado;
+                    $obPonto->evento_id = $id;
+                    $obPonto->ponto_acesso_codigo = $item;
+                    $obPonto->cadastrar();
+                }
             }
         }
         return true;
@@ -761,7 +805,11 @@ class Evento extends Page
      */
     public static function getConcluir($request)
     {
-        $content = View::render('eventos/concluir');
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+        $content = View::render('eventos/concluir', [
+            'id' => $id
+        ]);
 
         return parent::getPage('Novo Evento > RetisVGL', $content);
     }
@@ -856,15 +904,17 @@ class Evento extends Page
         $results = EntityEvento::getEventoByStatus('em execucao');
         while ($obEvento = $results->fetchObject(EntityEvento::class)) {
 
-            $clientes = json_decode($obEvento->clientes, true);
+            if (!empty($obEvento->clientes)) {
+                $clientes = json_decode($obEvento->clientes, true);
+            }
 
             foreach ($clientes as $k) {
-
+                $obPontoAcesso = EntityPontoAcesso::getPontoByCode($k['ponto']);
                 $itens .= View::render('eventos/table/item-clientes', [
                     'protocolo' => $obEvento->protocolo,
-                    'codcli' => $k['codigo'],
+                    'codigo' => $k['codigo'],
                     'nome' => $k['nome'],
-                    'ponto' => $k['ponto']
+                    'ponto' => $obPontoAcesso->nome
                 ]);
             }
 
