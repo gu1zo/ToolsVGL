@@ -5,6 +5,7 @@ namespace App\Cronjobs;
 require __DIR__ . '/../includes/app.php';
 
 use \App\Model\Entity\PontoAcesso as EntityPontoAcesso;
+use \App\Model\Entity\Cidades as EntityCidades;
 use \App\Model\Rest\APIElite;
 use \App\Utils\StringVerify;
 use DateTime;
@@ -16,6 +17,23 @@ function syncbanco()
 {
     $nomesInvalidos = ["APAGAR", "Infopasa", ""];
     $termosProibidos = ['VEÍCULO', 'VEICULO'];
+
+    $objResults = APIElite::getCidades();
+    foreach ($objResults as $item) {
+        $cidade = $item['nome_cid'];
+
+        $obCidade = EntityCidades::getCidadesByName($cidade);
+
+        if ($obCidade instanceof EntityCidades) {
+            continue;
+        }
+
+        $obCidade = new EntityCidades;
+        $obCidade->nome = $cidade;
+        $obCidade->massiva = 0;
+        $obCidade->cadastrar();
+    }
+
 
     $objResults = APIElite::getPontosAcesso('');
     foreach ($objResults as $item) {
@@ -41,6 +59,10 @@ function syncbanco()
 
         $obPontoAcesso->cadastrar();
     }
+
+
+
+
     $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo')); // Definir o fuso horário de Brasília
     echo "Banco sincronizado com sucesso - " . $data->format('d/m/Y H:i') . "\n"; // Formatar para o padrão brasileiro
 

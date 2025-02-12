@@ -19,3 +19,11 @@ $obRouter->get('/api/v1/getMessage', [
         return new Response(200, Api\Api::getMessage(), 'application/json');
     }
 ]);
+$obRouter->get('/api/v1/getMassiva', [
+    'middlewares' => [
+        'api'
+    ],
+    function ($request) {
+        return new Response(200, Api\Api::massiva($request), 'application/json');
+    }
+]);

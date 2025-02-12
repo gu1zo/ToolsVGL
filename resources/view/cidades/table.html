@@ -1,0 +1,27 @@
+<div class="container">
+  <div class="card mt-4 shadow-sm border-1">
+    <div class="card-header">
+      <h5 class="card-title">Cidades Afetadas por Massiva</h5>
+    </div>
+    <div class="card-body">
+      {{status}}
+      <form method="post">
+        <table id="table" class="table table-bordered text-center shadow">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Cidade</th>
+              <th scope="col">Massiva</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{itens}}
+          </tbody>
+        </table>
+        <div class="text-center">
+          <button type="submit" class="btn btn-pink mt-3">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

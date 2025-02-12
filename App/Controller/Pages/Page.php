@@ -154,6 +154,12 @@ class Page
                             'link' => URL . '/graficos/dex'
                         ]
                     ]
+                ],
+                [
+                    'name' => 'Cidades Massiva',
+                    'icon' => 'bi bi-building-gear',
+                    'link' => URL . '/cidades',
+                    'content' => []
                 ]
             ],
             'DADOS' => [

@@ -7,8 +7,10 @@ use WilliamCosta\DatabaseManager\Pagination;
 use App\Controller\Evento\Evento;
 use App\Model\Entity\Evento as EntityEvento;
 use App\Model\Entity\Joins as EntityJoins;
+use App\Model\Entity\Cidades as EntityCidades;
 use App\Utils\DateManipulation;
 use DateTime;
+use Exception;
 use IntlDateFormatter;
 
 class Api
@@ -110,5 +112,35 @@ class Api
 
         $message = "*GESTÃO DE FALHAS GGNET*\n" . $falhas . "\n*MANUTENÇÕES PROGRAMADAS GGNET*\n" . $manutencao;
         return $message;
+    }
+
+    public static function massiva($request)
+    {
+        $queryParams = $request->getQueryParams();
+
+        $cidade = $queryParams['cidade'] ?? '';
+        try {
+            if ($cidade != '') {
+                $obCidade = EntityCidades::getCidadesByName($cidade);
+
+                if (!$obCidade instanceof EntityCidades) {
+                    throw new Exception("A cidade informada não existe");
+                }
+                $massiva = $obCidade->massiva == 1 ? true : false;
+
+                $data = [
+                    'massiva' => $massiva
+                ];
+
+            } else {
+                throw new Exception("Nenhuma cidade informada");
+            }
+        } catch (Exception $e) {
+            $data = [
+                'erro' => true,
+                'message' => $e->getMessage()
+            ];
+        }
+        return json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 }

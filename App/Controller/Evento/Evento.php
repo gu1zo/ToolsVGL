@@ -859,13 +859,12 @@ class Evento extends Page
             $clientes = json_decode($obEvento->clientes, true);
 
             foreach ($clientes as $k) {
-                $obPonto = EntityPontoAcesso::getPontoByCode($k['ponto']);
 
                 $itens .= View::render('eventos/table/item-clientes', [
                     'protocolo' => $obEvento->protocolo,
-                    'codcli' => $k['codcli'],
+                    'codcli' => $k['codigo'],
                     'nome' => $k['nome'],
-                    'ponto' => $obPonto->nome
+                    'ponto' => $k['ponto']
                 ]);
             }
 

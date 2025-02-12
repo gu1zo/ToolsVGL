@@ -70,6 +70,25 @@ class APIElite
         return $instance->makeRequest($data);
     }
 
+    public static function getCidades()
+    {
+        $instance = new self();
+        // Dados do payload
+        $data = [
+            "request" => [
+                "sendRequest" => "integrator.server",
+                "method" => "execute",
+                "submethod" => "cidades.list",
+                "params" => [
+                    "_user" => $instance->user,
+                    "_passwd" => $instance->pass
+                ]
+            ]
+        ];
+
+        return $instance->makeRequest($data);
+    }
+
     private function makeRequest(array $data)
     {
         // Inicializa o cURL

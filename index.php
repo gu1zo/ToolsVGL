@@ -12,6 +12,7 @@ include __DIR__ . '/routes/eventos.php';
 include __DIR__ . '/routes/usuario.php';
 include __DIR__ . '/routes/ajax.php';
 include __DIR__ . '/routes/graficos.php';
+include __DIR__ . '/routes/massiva.php';
 
 //IMPRIME O RESPONSE DA PÁGINA
 $obRouter->run()->sendResponse();

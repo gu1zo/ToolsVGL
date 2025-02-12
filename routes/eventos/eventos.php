@@ -3,6 +3,8 @@
 use \App\http\Response;
 use \App\Controller\Evento;
 
+
+
 $obRouter->get('/evento/novoTipo', [
     'middlewares' => [
         'required-login'
@@ -143,7 +145,7 @@ $obRouter->post('/evento/email', [
 ]);
 
 /*
-$obRouter->get('/evento/sync', [
+$obRouter->get('/evento/syncbanco', [
     'middlewares' => [
         'required-login'
     ],
