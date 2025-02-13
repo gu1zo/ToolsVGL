@@ -25,6 +25,20 @@ class PontoAcesso
         return true;
     }
 
+    public function atualizar()
+    {
+        (new Database('pontos_acesso'))->update('id =' . $this->id, [
+            'codigo' => $this->codigo,
+            'nome' => $this->nome,
+            'latitude' => $this->latitude,
+            'longitude' => $this->longitude,
+        ]);
+
+        return true;
+    }
+
+
+
 
     public static function getPontosAcesso($where = null, $order = null, $limit = null, $fields = '*')
     {
