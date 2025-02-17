@@ -912,7 +912,7 @@ class Evento extends Page
                 $obPontoAcesso = EntityPontoAcesso::getPontoByCode($k['ponto']);
                 $itens .= View::render('eventos/table/item-clientes', [
                     'protocolo' => $obEvento->protocolo,
-                    'codigo' => $k['codigo'],
+                    'codcli' => $k['codigo'],
                     'nome' => $k['nome'],
                     'ponto' => $obPontoAcesso->nome
                 ]);
