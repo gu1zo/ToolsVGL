@@ -71,10 +71,10 @@ class Api
         $falhas = '';
 
 
-        $resultados = EntityJoins::getEventoByStatus('em execucao');
+        $resultados = EntityJoins::getEventoByStatus('em execucao" OR e.status = "pendente');
         if ($resultados->rowCount() > 0) {
             while ($row = $resultados->fetchObject(EntityJoins::class)) {
-                $dataInicio = new DateTime($row->dataInicio);
+                $dataInicio = DateTime::createFromFormat('d/m/Y H:i', $row->dataInicio);
                 $duracao = DateManipulation::getHourDiff($dataInicio, $dataAtual);
                 $lastupdate = $duracao;
                 $usuario = $row->usuario_nome;
@@ -82,18 +82,19 @@ class Api
 
                 $obComentario = EntityJoins::getLastInfoById($row->id);
                 if ($obComentario instanceof EntityJoins) {
+                    $obComentario->data = DateTime::createFromFormat('d/m/Y H:i', $obComentario->data);
                     $lastupdate = DateManipulation::gethourDiff($obComentario->data, $dataAtual);
                     $usuario = $obComentario->usuario_nome;
                     $info = $obComentario->comentario;
                 }
                 $string = '';
-                if ($row->tipo == 'manutencao') {
+                if ($row->tipo == 'manutencao' || ($row->tipo == 'backbone' && $row->status == 'pendente')) {
                     $string .= "_EVENTO_ *" . $row->protocolo . " " . Evento::getPontosAcessoTable($row->id) . "*\n";
                     $string .= "_duration:_ " . $duracao . "\n";
                     $string .= "_last update:_ " . $lastupdate . " por " . $usuario . "\n";
                     $string .= "_last info:_ " . $info . "\n\n";
                     $manutencao .= $string;
-                } else if ($row->tipo == 'evento') {
+                } else if ($row->tipo == 'evento' || ($row->tipo == 'backbone' && $row->status == 'em execucao')) {
                     $string .= "_EVENTO_ *" . $row->protocolo . " " . Evento::getPontosAcessoTable($row->id) . "*\n";
                     $string .= "_duration:_ " . $duracao . "\n";
                     $string .= "_last update:_ " . $lastupdate . " por " . $usuario . "\n";
