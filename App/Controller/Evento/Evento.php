@@ -793,6 +793,8 @@ class Evento extends Page
 
         self::setAlteracao($obEvento->id, "Evento em Execução");
 
+        EvolutionAPI::sendMessage(self::getIndividualMessage($id, 'executar'));
+
         $request->getRouter()->redirect('/evento/edit?id=' . $id . '&status=executed');
         exit;
     }
@@ -996,6 +998,9 @@ class Evento extends Page
                 break;
             case 'reagendar':
                 $string .= "*REAGENDADO* 🕑\n";
+                break;
+                $string .= "*EM EXECUÇÃO* ⚠️\n";
+            case 'executar':
                 break;
         }
 
