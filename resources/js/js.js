@@ -183,6 +183,11 @@ $(document).ready(function () {
       $("#entrarFila").toggleClass("d-none", usuarioNaFila);
       $("#sairFila").toggleClass("d-none", !usuarioNaFila);
       $("#passarVez").toggleClass("d-none", !usuarioPrimeiroFila);
+      if (usuarioPrimeiroFila) {
+        $("#title").html("É A SUA VEZ > ToolsVGL");
+    } else {
+        $("#title").html("Fila SZ.chat > ToolsVGL");
+    }
   }
 
   $("#entrarFila").click(function() {
@@ -203,8 +208,8 @@ $(document).ready(function () {
       });
   });
 
-  verificarFila();
   setInterval(function() {
+    verificarFila();
     tabelaFila.ajax.reload(null, false);  // Recarrega os dados sem resetar a página
 }, 5000);
 });
