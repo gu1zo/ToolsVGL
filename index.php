@@ -7,13 +7,12 @@ $obRouter = new Router(URL);
 
 
 include __DIR__ . '/routes/pages.php';
-include __DIR__ . '/routes/api.php';
-include __DIR__ . '/routes/eventos.php';
 include __DIR__ . '/routes/usuario.php';
+include __DIR__ . '/routes/agendados.php';
 include __DIR__ . '/routes/ajax.php';
-include __DIR__ . '/routes/graficos.php';
-include __DIR__ . '/routes/massiva.php';
-include __DIR__ . '/routes/relatorios.php';
+include __DIR__ . '/routes/perdidas.php';
+include __DIR__ . '/routes/fila.php';
+
 
 //IMPRIME O RESPONSE DA PÁGINA
 $obRouter->run()->sendResponse();

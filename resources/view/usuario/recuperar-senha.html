@@ -6,7 +6,7 @@
         background-color: white;
       }
       body {
-        background-color: #f2d4d4;
+        background-color: #d0e7f9; /* Azul claro suave */
       }
     </style>
     <!-- Meta tags Obrigatórias -->
@@ -31,14 +31,18 @@
       <div class="d-flex justify-content-center">
         <div
           class="card card-lg mt-3 text-dark text-center shadow"
-          style="width: 500px; background-color: #fff; border: 1px solid #ddd"
+          style="
+            width: 500px;
+            background-color: #ffffff;
+            border: 1px solid #87ceeb;
+          "
         >
           <div
             class="card-header"
             style="
-              background-color: #f5e5e5;
+              background-color: #b0d4ee;
               color: #4f4f4f;
-              border-bottom: 1px solid #ddd;
+              border-bottom: 1px solid #87ceeb;
             "
           >
             <h1 class="h4 mb-0">Recuperar Senha</h1>
@@ -49,9 +53,9 @@
             <form method="post">
               <input type="hidden" name="id" value="{{id}}" />
               <div class="form-group mb-3 w-75 mx-auto text-center">
-                <label for="email" class="form-label"
-                  >Digite a nova senha:
-                </label>
+                <label for="senha" class="form-label"
+                  >Digite a nova senha:</label
+                >
                 <input
                   name="senha"
                   type="password"
@@ -63,21 +67,22 @@
                 />
               </div>
               <div class="form-group mb-3 w-75 mx-auto text-center">
-                <label for="email" class="form-label">Confirme a senha: </label>
+                <label for="senha-confirma" class="form-label"
+                  >Confirme a senha:</label
+                >
                 <input
                   name="senha-confirma"
                   type="password"
-                  id="senha"
+                  id="senha-confirma"
                   class="form-control shadow"
                   placeholder="**************"
                   required
-                  autofocus
                 />
               </div>
               <button
                 type="submit"
                 class="shadow btn btn-lg text-dark w-100"
-                style="background-color: #f5e5e5; border: none"
+                style="background-color: #87ceeb; border: none"
               >
                 Salvar
               </button>
@@ -87,19 +92,18 @@
           <div
             class="card-footer text-muted"
             style="
-              background-color: #f8f9fa;
+              background-color: #d0e7f9;
               color: #6c757d;
-              border-top: 1px solid #ddd;
+              border-top: 1px solid #87ceeb;
             "
           >
-            <small>© 2024 - Desenvolvido por Vogel</small>
+            <small>© 2025 - Desenvolvido por Vogel</small>
           </div>
         </div>
       </div>
     </div>
 
     <!-- JavaScript (Opcional) -->
-    <!-- jQuery primeiro, depois Popper.js, depois Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
       integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"

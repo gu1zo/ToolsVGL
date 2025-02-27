@@ -1,6 +1,6 @@
 <?php return array(
     'root' => array(
-        'name' => 'retisvgl/mvc',
+        'name' => 'ToolsVGL/mvc',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
         'reference' => 'ca71aa9877fd79f6bd8f89dda7f5945c48cd6184',
@@ -19,7 +19,7 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'retisvgl/mvc' => array(
+        'ToolsVGL/mvc' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
             'reference' => 'ca71aa9877fd79f6bd8f89dda7f5945c48cd6184',

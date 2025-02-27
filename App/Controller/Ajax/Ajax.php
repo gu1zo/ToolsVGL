@@ -1,246 +1,186 @@
 <?php
 namespace App\Controller\Ajax;
 
-use App\Model\Entity\PontoAcesso as EntityPontoAcesso;
-use App\Model\Entity\Comentarios as EntityComentarios;
-use App\Model\Entity\Evento as EntityEvento;
-use App\Model\Entity\Alteracoes as EntityAlteracoes;
-use App\Model\Entity\User as EntityUser;
-use App\Utils\StringManipulation;
-use App\Session\Login\Login;
-use App\Controller\Evento\Evento;
 use App\Controller\Api\EvolutionAPI;
-use WilliamCosta\DatabaseManager\Pagination;
+use App\Controller\Agendados\Agendados;
+use \App\Model\Entity\Agendados as EntityAgendados;
+use \App\Model\Entity\Fila as EntityFila;
+use \App\Model\Entity\User as EntityUser;
 use DateTime;
-
 
 class Ajax
 {
-    /**
-     * Método responsável por retornar os dados para o select2 de pontos de Acesso
-     * @param Request $request
-     * @return json
-     */
-    public static function getPontosAcesso($request)
+    public static function getAgendados($request)
     {
-        $results = [];
-
-        // Obter os parâmetros da query
         $queryParams = $request->getQueryParams();
 
-        $paginaAtual = $queryParams['page'] ?? 1;
-        $search = $queryParams['search'] ?? '';
+        $tipo = $queryParams['tipo'];
+        $agendados = [];
 
-        // Montar o filtro de busca
-        $where = null;
-        if (!empty($search)) {
-            $where = 'nome LIKE "%' . addslashes($search) . '%"';
-        }
+        $results = EntityAgendados::getAgendadosByTipoAndStatus($tipo, 'agendado');
 
-        // Obter o total de registros com o filtro
-        $quantidadetotal = EntityPontoAcesso::getPontosAcesso($where, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
-
-        // Configuração da paginação
-        $obPagination = new Pagination($quantidadetotal, $paginaAtual, 100);
-
-        // Buscar os registros filtrados
-        $res = EntityPontoAcesso::getPontosAcesso($where, 'nome ASC', $obPagination->getLimit());
-
-        // Construir a lista de resultados
-        while ($obPontoAcesso = $res->fetchObject(EntityPontoAcesso::class)) {
-            $results[] = [
-                'id' => $obPontoAcesso->codigo,
-                'text' => $obPontoAcesso->nome
+        while ($obAgendados = $results->fetchObject(EntityAgendados::class)) {
+            $obUser = EntityUser::getUserById($obAgendados->id_usuario);
+            $agendados[] = [
+                'id' => $obAgendados->id,
+                'protocolo' => $obAgendados->protocolo,
+                'data' => $obAgendados->data,
+                'observacao' => $obAgendados->observacao,
+                'usuario' => $obUser->nome
             ];
         }
-
-        // Verificar se há mais páginas
-        $hasMore = $paginaAtual * 15 < $quantidadetotal;
-        // Estrutura JSON com resultados e paginação
-        $response = [
-            'results' => $results,
-            'pagination' => [
-                'more' => $hasMore
-            ]
-        ];
-
-
-        // Retornar JSON
-        return json_encode($response);
+        return json_encode($agendados, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
 
-    public static function getEvents($request)
+    public static function setAgendados($request)
     {
-        // Inicializar resultados
-        $results = [];
 
-        // Obter os parâmetros da query
-        $queryParams = $request->getQueryParams();
-        $status = $queryParams['status'];
 
-        // Parâmetros para paginação e pesquisa
-        $paginaAtual = $queryParams['start'] ?? 0;  // 'start' é o índice da primeira linha da página
-        $length = $queryParams['length'] ?? 10;    // 'length' é a quantidade de itens por página
-        $search = $queryParams['search'] ?? '';  // 'search.value' é o termo de busca
-
-        // Montar o filtro de busca
-        $where = null;
-        if ($status != 'todos') {
-            $where = 'status ="' . $status . '"';
-        }
-        if (!empty($search)) {
-            $where = 'protocolo LIKE "%' . addslashes($search) . '%"';
-        }
-
-        // Obter o total de registros com o filtro
-        $quantidadetotal = EntityEvento::getEvento($where, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
-
-        // Configuração da paginação
-        $obPagination = new Pagination($quantidadetotal, $paginaAtual, $length); // Paginação ajustada
-
-        // Buscar os registros filtrados e com a paginação aplicada
-        $res = EntityEvento::getEvento($where, 'protocolo ASC', $obPagination->getLimit());
-        // Construir a lista de resultados
-        while ($obEvento = $res->fetchObject(EntityEvento::class)) {
-            $results[] = [
-                'status' => str_replace(' ', '-', $obEvento->status),
-                'protocolo' => $obEvento->protocolo,
-                'tipo' => (new StringManipulation)->formatarTipo($obEvento->tipo),
-                'horario-inicial' => $obEvento->dataInicio,
-                'pontos-acesso' => Evento::getPontosAcessoTable($obEvento->id),
-                'regional' => $obEvento->regional,
-                'observacao' => $obEvento->observacao,
-                'email' => $obEvento->email ? '✔' : '❌',
-                'id' => $obEvento->id
-            ];
-        }
-
-        // Determinar se há mais registros
-        $hasMore = ($paginaAtual + 1) * $length < $quantidadetotal;
-
-        // Construir a resposta para DataTables
-        $response = [
-            'draw' => $queryParams['draw'] ?? 1, // O valor de "draw" enviado no request
-            'recordsTotal' => $quantidadetotal,  // Total de registros sem filtro
-            'recordsFiltered' => $quantidadetotal, // Total de registros após filtro (pode ser ajustado se houver filtro)
-            'data' => $results,  // Dados da tabela
-            'pagination' => [
-                'more' => $hasMore
-            ]
-        ];
-
-        // Retornar a resposta em formato JSON
-        return json_encode($response);
-    }
-
-    /**
-     * Método responsável por retornar os pontos de acesso selecionados de evento x
-     * @param Request $request
-     * @return bool|string
-     */
-    public static function getPontosAcessoEdit($request)
-    {
-        $response = [];
-        $queryParams = $request->getQueryParams();
-        $id = $queryParams['id'];
-
-        $obPontoAcesso = new EntityPontoAcesso;
-        $results = $obPontoAcesso->getCodeAndNameById($id);
-
-        while ($row = $results->fetchObject(EntityPontoAcesso::class)) {
-            $response[] = [
-                'id' => $row->codigo,
-                'text' => $row->nome
-            ];
-        }
-        // Retornar JSON
-        return json_encode($response);
-    }
-
-    public static function getComentarios($request)
-    {
-        $queryParams = $request->getQueryParams();
-
-        $id = $queryParams['id'];
-        $comentarios = [];
-        $num = 1;
-
-        $results = EntityComentarios::getComentariosByEventoId($id);
-
-        while ($obComentarios = $results->fetchObject(EntityComentarios::class)) {
-            $obUser = EntityUser::getUserById($obComentarios->id_usuario_criador);
-            $comentarios[] = [
-                'id' => $obComentarios->id,
-                'num' => $num,
-                'data' => $obComentarios->data,
-                'autor' => $obUser->nome
-            ];
-            $num++;
-        }
-        return json_encode($comentarios, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
-    }
-    public static function setAlteracao($id, $alteracao)
-    {
-        $data = new DateTime('America/Sao_Paulo');
-        $obAlteracao = new EntityAlteracoes;
-        $obAlteracao->evento_id = $id;
-        $obAlteracao->alteracao = $alteracao;
-        $obAlteracao->data = $data->format('Y-m-d H:i');
-        $obAlteracao->id_usuario_criador = Login::getId();
-        $obAlteracao->cadastrar();
-    }
-    public static function setComentarios($request)
-    {
-        $queryParams = $request->getQueryParams();
         $postVars = $request->getPostVars();
+        $tipo = $postVars['tipo'];
 
-        $id = $queryParams['id'];
-        $comentario = $postVars['comentario'] ?? '';
-        $id_usuario_criador = Login::getId();
-        $data = (new DateTime('America/Sao_Paulo'))->format('Y-m-d H:i');
 
-        $obComentario = new EntityComentarios;
+        $obAgendado = new EntityAgendados;
+        $obAgendado->protocolo = $postVars['protocolo'];
+        $obAgendado->data = $postVars['data'];
+        $obAgendado->observacao = $postVars['observacao'];
+        $obAgendado->tipo = $tipo;
+        $obAgendado->status = 'agendado';
+        $obAgendado->id_usuario = $postVars['id_usuario'];
 
-        $obComentario->evento_id = $id;
-        $obComentario->comentario = $comentario;
-        $obComentario->data = $data;
-        $obComentario->id_usuario_criador = $id_usuario_criador;
+        $obAgendado->cadastrar();
 
-        $obComentario->cadastrar();
-        self::setAlteracao($id, "Adicionado Comentário");
-        EvolutionAPI::sendMessage(Evento::getIndividualMessage($id, 'atualizar'));
+        switch ($tipo) {
+            case 'digital':
+                $number = NUMBER_DIGITAL;
+                break;
+            case 'suporte':
+                $number = NUMBER_SUPORTE;
+                break;
+        }
+        $mensagem = Agendados::getMessage($tipo);
+
+        EvolutionAPI::sendMessage($mensagem, $number);
         return true;
     }
-    public static function getComentario($request)
+
+    public static function concluirAgendamento($request)
     {
-        $queryParams = $request->getQueryParams();
+        $postVars = $request->getPostVars();
+        $id = $postVars['id'];
 
-        $id = $queryParams['id'];
+        $obAgendados = EntityAgendados::getAgendadosById($id);
 
-        $obComentario = EntityComentarios::getComentarioById($id);
-        $response = ['comentario' => nl2br($obComentario->comentario)];
-        return json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        if (!$obAgendados instanceof EntityAgendados) {
+            return false;
+        }
+        $obAgendados->status = 'concluido';
+        $obAgendados->atualizar();
+        return true;
+    }
+
+    public static function getFila()
+    {
+        $fila = [];
+
+        $results = EntityFila::getFila();
+
+        while ($obFila = $results->fetchObject(EntityFila::class)) {
+            $obUser = EntityUser::getUserById($obFila->id_usuario);
+            $fila[] = [
+                'id' => $obUser->id,
+                'usuario' => $obUser->nome,
+                'posicao' => $obFila->posicao,
+                'entrada' => $obFila->data_entrada,
+            ];
+        }
+        return json_encode($fila, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function getFilaUser($request)
+    {
+        $queryParamas = $request->getQueryParams();
+        $id_usuario = $queryParamas['id_usuario'];
+
+        $isFirst = false;
+        $naFila = false;
+
+        $obFila = EntityFila::getFilaById($id_usuario);
+        if ($obFila instanceof EntityFila) {
+            $naFila = true;
+            if ($obFila->posicao == 1) {
+                $isFirst = true;
+            }
+        }
+
+        $response = [
+            'naFila' => $naFila,
+            'isFirst' => $isFirst
+        ];
+        header('Content-Type: application/json');
+        echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        exit;
 
     }
 
-    public static function getAlteracoes($request)
+    public static function entrarFila($request)
     {
-        $queryParams = $request->getQueryParams();
+        $postVars = $request->getPostVars();
+        $id_usuario = $postVars['id_usuario'];
 
-        $id = $queryParams['id'];
-        $alteracoes = [];
-
-        $results = EntityAlteracoes::getAlteracoesByEventoId($id);
-
-        while ($obAlteracoes = $results->fetchObject(EntityAlteracoes::class)) {
-            $obUser = EntityUser::getUserById($obAlteracoes->id_usuario_criador);
-            $alteracoes[] = [
-                'id' => $obAlteracoes->id,
-                'alteracao' => $obAlteracoes->alteracao,
-                'data' => $obAlteracoes->data,
-                'autor' => $obUser->nome
-            ];
+        $results = EntityFila::getFila('id_usuario !="' . $id_usuario . '"');
+        while ($obFila = $results->fetchObject(EntityFila::class)) {
+            $obFila->posicao = $obFila->posicao + 1;
+            $obFila->atualizar();
         }
-        return json_encode($alteracoes, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+        $data = new DateTime('America/Sao_Paulo');
+
+        $obFila = new EntityFila;
+        $obFila->id_usuario = $id_usuario;
+        $obFila->posicao = 1;
+        $obFila->data_entrada = $data->format('Y-m-d H:i:s');
+        $obFila->cadastrar();
+
+        return true;
+    }
+
+    public static function sairFila($request)
+    {
+        $postVars = $request->getPostVars();
+        $id_usuario = $postVars['id_usuario'];
+
+        $obFila = EntityFila::getFilaById($id_usuario);
+
+        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
+
+        while ($row = $results->fetchObject(EntityFila::class)) {
+            $row->posicao = $row->posicao - 1;
+            $row->atualizar();
+        }
+
+        $obFila->excluir();
+
+        return true;
+    }
+
+    public static function passarVez($request)
+    {
+        $postVars = $request->getPostVars();
+        $id_usuario = $postVars['id_usuario'];
+        $total = 1;
+        $obFila = EntityFila::getFilaById($id_usuario);
+
+        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
+
+        while ($row = $results->fetchObject(EntityFila::class)) {
+            $row->posicao = $row->posicao - 1;
+            $row->atualizar();
+            $total++;
+        }
+
+        $obFila->posicao = $total;
+        $obFila->atualizar();
+
+        return true;
     }
 }

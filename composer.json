@@ -1,5 +1,5 @@
 {
-    "name": "retisvgl/mvc",
+    "name": "ToolsVGL/mvc",
     "autoload": {
         "psr-4": {
             "App\\": "App/"

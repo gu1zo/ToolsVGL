@@ -107,74 +107,49 @@ class Page
     private static function getSideBarSections()
     {
         $sections = [
-            'GERAL' => [
+            'CSA' => [
                 [
-                    'name' => 'Dashboard',
-                    'icon' => 'bi bi-house',
-                    'link' => URL . '/',
-                    'content' => []
-                ]
-            ],
-            'INTERFACE' => [
-                [
-                    'name' => 'Eventos',
-                    'icon' => 'bi bi-gear',
+                    'name' => 'Agendados',
+                    'icon' => 'bi bi-calendar-fill',
                     'content' => [
                         [
-                            'item' => 'Novo Cadastro',
-                            'link' => URL . '/evento/novoTipo'
+                            'item' => 'Suporte',
+                            'link' => URL . '/agendados?tipo=suporte'
+                        ],
+                        [
+                            'item' => 'Digital',
+                            'link' => URL . '/agendados?tipo=digital'
                         ]
                     ]
 
                 ],
                 [
-                    'name' => 'Proativo',
-                    'icon' => 'bi bi-clipboard-check',
-                    'content' => [
-                        [
-                            'item' => 'Novo Cadastro',
-                            'link' => URL . '/proatividade/novo'
-                        ]
-                    ]
+                    'name' => 'Nova Ligação Perdida',
+                    'icon' => 'bi bi-telephone-inbound-fill',
+                    'link' => URL . '/perdidas/novo',
+                    'content' => []
+                ],
+                [
+                    'name' => 'Fila',
+                    'icon' => 'bi bi-person-lines-fill',
+                    'link' => URL . '/fila',
+                    'content' => []
+                ],
 
-                ]
             ],
             'GESTÃO' => [
                 [
-                    'name' => 'Gráficos',
-                    'icon' => 'bi bi-bar-chart',
-                    'link' => '#',
-                    'content' => [
-                        [
-                            'item' => 'Gráficos Geral Ano',
-                            'link' => URL . '/graficos/geral-ano'
-                        ],
-                        [
-                            'item' => 'DEX Ano',
-                            'link' => URL . '/graficos/dex'
-                        ]
-                    ]
-                ],
-                [
-                    'name' => 'Cidades Massiva',
-                    'icon' => 'bi bi-building-gear',
-                    'link' => URL . '/cidades',
-                    'content' => []
-                ]
-            ],
-            'DADOS' => [
-                [
-                    'name' => 'Eventos',
-                    'icon' => 'bi bi-table',
-                    'link' => URL . '/evento/table?evento-status=todos',
+                    'name' => 'Ligações Perdidas',
+                    'icon' => 'bi bi-clipboard-data-fill',
+                    'link' => URL . '/perdidas',
                     'content' => []
                 ],
                 [
-                    'name' => 'Proatividade',
-                    'icon' => 'bi bi-table',
-                    'link' => URL . '/proatividade',
+                    'name' => 'Fila Gestão',
+                    'icon' => 'bi bi-person-fill-gear',
+                    'link' => URL . '/fila/gestao',
                     'content' => []
-                ]
+                ],
             ],
             'USUÁRIOS' => [
                 [

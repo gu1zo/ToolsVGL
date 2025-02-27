@@ -4,11 +4,9 @@ namespace App\Controller\Usuario;
 
 use \App\Controller\Pages\Page;
 use \App\Session\Login\Login;
-use \App\Controller\Email\Email;
 use \App\Utils\View;
 use \WilliamCosta\DatabaseManager\Pagination;
 use \App\Utils\Alert;
-use \App\Utils\StringManipulation;
 use \App\Model\Entity\User as EntityUser;
 use \App\Session\Login\Login as SessionLogin;
 
@@ -62,7 +60,7 @@ class Usuario extends Page
             'status' => self::getStatus($request)
         ]);
         //Retorna a página
-        return parent::getPage('Usuários > RetisVGL', $content);
+        return parent::getPage('Usuários > ToolsVGL', $content);
     }
 
     /**
@@ -89,7 +87,6 @@ class Usuario extends Page
                 'id' => $obUser->id,
                 'nome' => $obUser->nome,
                 'email' => $obUser->email,
-                'setor' => $obUser->setor,
                 'privilegio' => $obUser->privilegio
             ]);
         }
@@ -107,13 +104,12 @@ class Usuario extends Page
             'title' => 'Novo Usuário',
             'nome' => '',
             'email' => '',
-            'setor' => self::getSetor(),
             'privilegio' => self::getPrivilegio(),
             'status' => self::getStatus($request),
             'buttons' => ''
         ]);
 
-        return parent::getPage('Novo Usuario > RetisVGL', $content);
+        return parent::getPage('Novo Usuario > ToolsVGL', $content);
     }
 
 
@@ -130,7 +126,6 @@ class Usuario extends Page
         $email = $postVars['email'] ?? '';
         $nome = $postVars['nome'] ?? '';
         $senha = bin2hex(random_bytes(32));
-        $setor = $postVars['setor'] ?? '';
         $privilegio = $postVars['privilegio'] ?? '';
 
         $obUser = EntityUser::getUserByEmail($email);
@@ -144,7 +139,6 @@ class Usuario extends Page
         $obUser = new EntityUser;
         $obUser->nome = $nome;
         $obUser->email = $email;
-        $obUser->setor = $setor;
         $obUser->privilegio = $privilegio;
         $obUser->senha = password_hash($senha, PASSWORD_DEFAULT);
 
@@ -167,11 +161,9 @@ class Usuario extends Page
         $queryParams = $request->getQueryParams();
         $id = $queryParams['id'];
 
-        $setor = '';
         $privilegio = '';
 
         if (Login::isAdmin()) {
-            $setor = self::getSetor($id);
             $privilegio = self::getPrivilegio($id);
         }
 
@@ -186,12 +178,11 @@ class Usuario extends Page
             'title' => 'Editar Usuário',
             'nome' => $obUser->nome,
             'email' => $obUser->email,
-            'setor' => $setor,
             'privilegio' => $privilegio,
             'status' => self::getStatus($request),
             'buttons' => self::getButtons($request)
         ]);
-        return parent::getPage('Editar Usuario > RetisVGL', $content);
+        return parent::getPage('Editar Usuario > ToolsVGL', $content);
     }
 
     private static function getButtons($request)
@@ -235,57 +226,6 @@ class Usuario extends Page
             'normal' => $normal
         ]);
     }
-    private static function getSetor($id = null)
-    {
-        // Carregar setores da variável de ambiente
-        $setores = explode(',', strtolower(getenv('SETORES')));
-        $selectedSetores = array_fill_keys($setores, ''); // Inicializa todos os setores sem seleção
-
-        $default = 'selected'; // Seleção padrão
-
-        if (isset($id)) {
-            $obUser = EntityUser::getUserById($id);
-            if ($obUser instanceof EntityUser) {
-                $setor = $obUser->setor;
-                $setor = strtolower($setor);
-                $default = '';
-                if (array_key_exists($setor, $selectedSetores)) {
-                    $selectedSetores[$setor] = 'selected';
-                }
-            }
-        }
-
-        // Preparar os dados para renderizar a visão
-        $data = ['default' => $default];
-        foreach ($selectedSetores as $setor => $selected) {
-            $data[$setor] = $selected;
-        }
-        $content = View::render('usuario/elements/select', [
-            'itens' => self::getSetorItens()
-        ]);
-
-        return View::render('usuario/elements/setor', [
-            'select' => StringManipulation::processTemplate($content, $data)
-        ]);
-    }
-
-
-    /**
-     * Método responsável por renderizar as opções do select do setor
-     * @return string
-     */
-    private static function getSetorItens()
-    {
-        $item = '';
-        $setores = explode(',', getenv('SETORES'));
-        foreach ($setores as $k) {
-            $item .= View::render('usuario/elements/item', [
-                'setor' => strtoupper($k)
-            ]);
-        }
-        return $item;
-    }
-
 
     /**
      * Método responsável por realizar a atualização do usuário
@@ -308,7 +248,6 @@ class Usuario extends Page
         $postVars = $request->getPostVars();
         $nome = $postVars['nome'] ?? $obUser->nome;
         $email = $postVars['email'] ?? $obUser->email;
-        $setor = $postVars['setor'] ?? $obUser->setor;
         $privilegio = $postVars['privilegio'] ?? $obUser->privilegio;
 
         $obUserEmail = EntityUser::getUserByEmail($email);
@@ -323,7 +262,6 @@ class Usuario extends Page
 
         $obUser->nome = $nome;
         $obUser->email = $email;
-        $obUser->setor = $setor;
         $obUser->privilegio = $privilegio;
 
 
@@ -362,7 +300,7 @@ class Usuario extends Page
         ]);
 
         //Retorna a página
-        return parent::getPage('Excluir usuário > RetisVGL', $content);
+        return parent::getPage('Excluir usuário > ToolsVGL', $content);
     }
 
 

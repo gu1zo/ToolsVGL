@@ -1,0 +1,62 @@
+<div class="container">
+  <div class="card mt-4 shadow-sm border-1">
+    <div class="card-header">
+      <h5 class="card-title">Agendados {{tipo}}</h5>
+    </div>
+    <div class="card-body">
+      <table id="agendados" class="table table-bordered text-center shadow">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col" class="text-center">Protocolo</th>
+            <th scope="col" class="text-center">Data</th>
+            <th scope="col" class="text-center">Observacao</th>
+            <th scope="col" class="text-center">Usuário</th>
+            <th scope="col" class="text-center">Ações</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <td
+              colspan="8"
+              class="text-center"
+              data-dt-column="0,1,2,3,4,5"
+              rowspan="1"
+            >
+              <span class="dt-column-title">
+                <button
+                  type="button"
+                  class="shadow btn btn-outline-success"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modal-novo"
+                >
+                  <i class="bi bi-clipboard-plus"></i> Novo Agendamento
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+<div
+  class="modal modal-lg fade"
+  id="modal-novo"
+  tabindex="-1"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Novo Agendamento</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">{{content}}</div>
+    </div>
+  </div>
+</div>

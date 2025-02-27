@@ -14,8 +14,6 @@ class User
 
     public $senha;
 
-    public $setor;
-
     public $privilegio;
 
     public $recovery_token;
@@ -36,7 +34,6 @@ class User
             'nome' => $this->nome,
             'email' => $this->email,
             'senha' => $this->senha,
-            'setor' => $this->setor,
             'privilegio' => $this->privilegio
         ]);
 
@@ -49,7 +46,6 @@ class User
             'nome' => $this->nome,
             'email' => $this->email,
             'senha' => $this->senha,
-            'setor' => $this->setor,
             'privilegio' => $this->privilegio,
             'recovery_token' => $this->recovery_token
         ]);
@@ -57,7 +53,7 @@ class User
 
     public static function getUserById($id)
     {
-        return self::getUsers('id =' . $id)->fetchObject(self::class);
+        return self::getUsers('id = "' . $id . '"')->fetchObject(self::class);
     }
 
     public function excluir()

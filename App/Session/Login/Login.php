@@ -28,7 +28,6 @@ class Login
             'id' => $obUser->id,
             'nome' => $obUser->nome,
             'email' => $obUser->email,
-            'setor' => $obUser->setor,
             'privilegio' => $obUser->privilegio
         ];
 
@@ -59,7 +58,6 @@ class Login
         self::init();
         return $_SESSION['usuario']['email'];
     }
-
     public static function logout()
     {
         self::init();

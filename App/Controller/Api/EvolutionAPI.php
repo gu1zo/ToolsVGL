@@ -7,20 +7,16 @@ class EvolutionAPI
     private $url;
     private $key;
     private $instanceName;
-    private $number;
-
     private function __construct()
     {
         $this->url = getenv('EVO_API_URL');
         $this->key = getenv('EVO_API_KEY');
         $this->instanceName = getenv('EVO_API_INSTANCE_NAME');
-        $this->number = getenv('EVO_API_NUMBER');
     }
 
-    public static function sendMessage($text)
+    public static function sendMessage($text, $number)
     {
         $instance = new self();
-        $number = $instance->number;
 
         $apiUrl = "{$instance->url}/message/sendText/{$instance->instanceName}";
 

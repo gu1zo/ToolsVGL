@@ -7,63 +7,64 @@
 }
 
 .card-hover:hover {
-  border: 1px solid #aaa;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  border: 1px solid #8ab6d6;
+  box-shadow: 0px 0px 10px rgba(138, 182, 214, 0.4);
   transform: scale(1.05);
 }
 
 /* Estilos para as bordas laterais */
 .border-left-gray {
-  border-left: 6px solid #b0b0b0;
+  border-left: 6px solid #b0c4de;
 }
 
 .border-left-lightblue {
-  border-left: 6px solid #a1c4e8;
+  border-left: 6px solid #a1d4f2;
 }
 
 .border-left-darkblue {
-  border-left: 6px solid #5a6f8f;
+  border-left: 6px solid #5a8fbf;
 }
 
 .border-left-yellow {
-  border-left: 6px solid #f1e0a4;
+  border-left: 6px solid #dbeaf5;
 }
 
 .border-left-red {
-  border-left: 6px solid #f5a6a6;
+  border-left: 6px solid #b0e0e6;
 }
+
 .border-left-green {
-  border-left: 6px solid #a6f5b5;
+  border-left: 6px solid #a6e2f5;
 }
 
 /* Estilo para a tabela */
 .table thead {
-  background-color: #f1f1f1;
+  background-color: #dbeaf5;
 }
 
 .table tbody tr:hover {
-  background-color: #f1f1f1;
+  background-color: #cbe0f5;
   cursor: pointer;
 }
 
 .table tbody tr:hover td {
-  background-color: #eaeaea;
+  background-color: #b3d4f5;
 }
 
 /* Estilo para o cabeçalho do card de tabela */
 .card-header {
-  background-color: #f5e5e5;
+  background-color: #cbe0f5;
 }
 
 body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #f8f9fa;
+  background-color: #eef4f9;
 }
 
 .sidebar {
-  background-color: #f5e5e5; /* Vermelho claro suave */
+  background-color: #dbeaf5; /* Azul claro suave */
   color: #4f4f4f; /* Cinza escuro para contraste */
   min-height: 100vh;
   width: 220px;
@@ -77,8 +78,8 @@ body {
 }
 
 .sidebar a:hover {
-  color: #a83232; /* Vermelho mais marcante para hover */
-  background-color: rgba(168, 50, 50, 0.1); /* Fundo suave no hover */
+  color: #2a6f97; /* Azul mais marcante para hover */
+  background-color: rgba(42, 111, 151, 0.1); /* Fundo suave no hover */
   border-radius: 5px;
 }
 
@@ -95,7 +96,7 @@ body {
 }
 
 .sidebar .dropdown-menu {
-  background-color: #e8c1c1; /* Vermelho pálido */
+  background-color: #b0d4f2; /* Azul pálido */
   border: none;
 }
 
@@ -104,7 +105,7 @@ body {
 }
 
 .sidebar .dropdown-item:hover {
-  background-color: rgba(168, 50, 50, 0.1);
+  background-color: rgba(42, 111, 151, 0.1);
 }
 
 .header {
@@ -133,14 +134,14 @@ footer {
   color: #6c757d;
 }
 
-/* Estilo para os botões rosa */
-.btn-pink {
-  background-color: #f5e5e5 !important; 
+/* Estilo para os botões azul claro */
+.btn-blue {
+  background-color: #dbeaf5 !important; 
   border: none;
 }
 
-.btn-pink:hover {
-  border: 1px solid #aaa;
+.btn-blue:hover {
+  border: 1px solid #8ab6d6;
   transform: scale(1.05);
 }
 
@@ -150,7 +151,7 @@ footer {
 }
 
 .card-header {
-  background-color: #f5e5e5;
+  background-color: #cbe0f5;
   padding: 10px;
 }
 
@@ -158,12 +159,14 @@ footer {
   border-radius: 8px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
+
 /* Desabilitar o efeito de hover para o card com a classe 'card-no-hover' */
-.card-no-hover{
+.card-no-hover {
   border: none !important;
   width: 100%; 
   max-width: 800px;
 }
+
 .no-hover {
   text-decoration: none;
 }
@@ -173,139 +176,20 @@ footer {
   text-decoration: none;
   color: inherit; /* Mantém a cor original */
 }
-#topCaixas {
-  table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
-  width: 100%;
-}
-#topMotivos th:nth-child(1),
-#topMotivos td:nth-child(1) {
-    overflow: hidden; /* Oculta o conteúdo que exceder */
-    text-overflow: ellipsis; /* Adiciona reticências (...) */
-    white-space: nowrap; /* Impede quebra de linha */
-}
-#topMotivos {
-  table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
-  width: 100%;
-}
-#topCaixas th:nth-child(1),
-#topCaixas td:nth-child(1) {
-    overflow: hidden; /* Oculta o conteúdo que exceder */
-    text-overflow: ellipsis; /* Adiciona reticências (...) */
-    white-space: nowrap; /* Impede quebra de linha */
-}
-#table {
-  table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
+
+#agendados, #table, #fila {
+  table-layout: fixed;
   width: 100%;
 }
 
-#table th:nth-child(1),
-#table td:nth-child(1) {
-  overflow: hidden; /* Oculta o conteúdo que exceder */
-  text-overflow: ellipsis; /* Adiciona reticências (...) */
-  white-space: nowrap; /* Impede quebra de linha */
+#agendados th:nth-child(1), #agendados td:nth-child(1),
+#table th:nth-child(1), #table td:nth-child(1),
+#fila th:nth-child(1), #fila td:nth-child(1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-#tableEvento {
-    table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
-    width: 100%;
-}
-
-#tableEvento th:nth-child(1),
-#tableEvento td:nth-child(1) {
-    overflow: hidden; /* Oculta o conteúdo que exceder */
-    text-overflow: ellipsis; /* Adiciona reticências (...) */
-    white-space: nowrap; /* Impede quebra de linha */
-}
-#tableEvento td:nth-child(5) {
-  overflow: hidden; /* Oculta o conteúdo que exceder */
-  text-overflow: ellipsis; /* Adiciona reticências (...) */
-  white-space: nowrap; /* Impede quebra de linha */
-}
-#tableEvento td:nth-child(7) {
-  overflow: hidden; /* Oculta o conteúdo que exceder */
-  text-overflow: ellipsis; /* Adiciona reticências (...) */
-  white-space: nowrap; /* Impede quebra de linha */
-}
-.em-analise {
-  background-color:#b0b0b0 !important;
-}
-
-.reagendado {
-  background-color:#a1c4e8 !important;
-}
-
-.pendente {
-  background-color:#5a6f8f !important;
-}
-
-.em-execucao {
-  background-color:#f1e0a4 !important;
-}
-
-.concluido {
-  background-color:#a6f5b5 !important;
-}
-.cliente-afetado {
-  background-color:red !important;
-}
 .default {
-  background-color:#f1d3d3 !important;
-}
-#comentarios {
-  table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
-  width: 100%;
-}
-
-#comentarios th:nth-child(1),
-#comentarios td:nth-child(1) {
-  width: 8px !important;
-  overflow: hidden; /* Oculta o conteúdo que exceder */
-  text-overflow: ellipsis; /* Adiciona reticências (...) */
-  white-space: nowrap; /* Impede quebra de linha */
-}
-#alteracoes {
-  table-layout: fixed; /* Faz com que todas as larguras sejam respeitadas */
-  width: 100%;
-}
-
-#alteracoes th:nth-child(1),
-#alteracoes td:nth-child(1) {
-  width: 8px !important;
-  overflow: hidden; /* Oculta o conteúdo que exceder */
-  text-overflow: ellipsis; /* Adiciona reticências (...) */
-  white-space: nowrap; /* Impede quebra de linha */
-}
-.text-justify {
-  text-align: justify;
-}
-.card-comentario {
-  width: 100%;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-}
-
-.card-body-comentario {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; /* Faz o card crescer conforme o conteúdo */
-}
-
-.table-comentario {
-  min-height: 200px;
-  text-align: center; 
-}
-
-.alert-comentario {
-  min-height: 350px; /* Garante que o alerta ocupe um espaço mínimo grande */
-  display: flex;
-  text-align: justify;;
-}
-
-.d-flex-comentario {
-  margin-top: auto; /* Mantém os botões sempre alinhados na parte inferior */
-}
-#map {
-  min-width: 100%;
-  min-height:700px;  /* Defina a altura que você precisar */
+  background-color: #dbeaf5 !important;
 }

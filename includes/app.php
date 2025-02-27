@@ -19,6 +19,8 @@ Database::config(
 
 
 define('URL', getenv('URL'));
+define('NUMBER_DIGITAL', getenv('EVO_API_NUMBER_DIGITAL'));
+define('NUMBER_SUPORTE', getenv('EVO_API_NUMBER_SUPORTE'));
 
 View::init([
     'URL' => URL,
@@ -29,14 +31,10 @@ MiddlewareQueue::setMap([
     'maintenance' => \App\http\Middleware\Maintenance::class,
     'required-logout' => \App\http\Middleware\RequireLogout::class,
     'required-login' => App\http\Middleware\RequireLogin::class,
-    'api' => App\http\Middleware\Api::class,
     'password-reset-confirm' => App\http\Middleware\PasswordResetConfirm::class,
     'required-login-permission' => App\http\Middleware\RequireLoginPermission::class,
-    'required-tipo' => App\http\Middleware\RequireTipo::class,
-    'verify-protocol' => App\http\Middleware\VerifyProtocol::class,
-    'verify-ponto' => App\http\Middleware\VerifyPonto::class,
-    'verify-id' => App\http\Middleware\VerifyId::class,
     'required-admin' => App\http\Middleware\RequireAdmin::class,
+    'required-admin-fila' => App\http\Middleware\RequireAdminFila::class
 ]);
 
 

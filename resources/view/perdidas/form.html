@@ -1,0 +1,82 @@
+<div class="d-flex justify-content-center">
+  <div
+    class="card mt-3 text-dark text-center shadow card-no-hover"
+    style="width: 100%; max-width: 600px"
+  >
+    <div class="card-header">
+      <h1 class="h4 mb-0">Nova Perdida</h1>
+    </div>
+
+    <div class="card-body">
+      {{status}}
+      <form method="post">
+        <!-- Nome -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Motivo:</label>
+          <input
+            name="motivo"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o motivo da perdida"
+            required
+          />
+        </div>
+
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">DNIS:</label>
+          <input
+            name="dnis"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o DNIS"
+            required
+          />
+        </div>
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Espera:</label>
+          <input
+            name="espera"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o tempo de espera"
+            required
+          />
+        </div>
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Posição:</label>
+          <input
+            name="posicao"
+            type="number"
+            class="form-control shadow text-center"
+            placeholder="Digite a posição"
+            required
+          />
+        </div>
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Originador:</label>
+          <input
+            name="originador"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o originador"
+            required
+          />
+        </div>
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Data:</label>
+          <input
+            name="data"
+            type="datetime-local"
+            class="form-control shadow text-center"
+            placeholder="Digite o originador"
+            required
+          />
+        </div>
+        <div class="d-flex justify-content-center gap-3 mb-2">
+          <a href="{{URL}}/" class="shadow btn btn-blue">Voltar</a>
+          <button type="submit" class="shadow btn btn-blue">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
