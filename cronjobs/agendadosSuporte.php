@@ -20,7 +20,8 @@ while ($obAgendado = $results->fetchObject(EntityAgendados::class)) {
     $mensagem .= "_Agendado para:_ *" . $data . "* \n\n";
 }
 $number = getenv('EVO_API_NUMBER_SUPORTE');
+/*
 if (EvolutionAPI::sendMessage($mensagem, $number)) {
     $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
     echo "Mensagem enviada - " . $data->format('d/m/Y H:i') . "\n";
-}
+}*/
