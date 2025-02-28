@@ -185,11 +185,36 @@ footer {
 #agendados th:nth-child(1), #agendados td:nth-child(1),
 #table th:nth-child(1), #table td:nth-child(1),
 #fila th:nth-child(1), #fila td:nth-child(1) {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .default {
   background-color: #dbeaf5 !important;
+}
+
+/* Garante que a tabela se ajuste ao tamanho da tela */
+#fila {
+  table-layout: auto;
+  width: 100%;
+}
+
+/* Adiciona um limite máximo para evitar que a tabela fique muito larga */
+#fila td, #fila th {
+  max-width: 200px;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+#fila th, #fila td {
+  max-width: 150px; /* Define um limite de largura para as células */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* Impede que o texto quebre para a linha de baixo */
+}
+
+#fila {
+  table-layout: fixed; /* Mantém as larguras das colunas uniformes */
+  width: 100%;
 }
