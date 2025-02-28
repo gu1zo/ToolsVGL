@@ -148,7 +148,7 @@ $(document).ready(function () {
       searching: false,
       paging: true,
       order: [[2, 'asc']],
-      pageLength: 5,
+      pageLength: 15,
       info: false,
       autoWidth: false,
       language: {
