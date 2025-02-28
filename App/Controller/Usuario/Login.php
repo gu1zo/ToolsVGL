@@ -159,13 +159,20 @@ class Login extends Page
     public static function setRecuperar($request)
     {
         $postVars = $request->getPostVars();
+        $queryParams = $request->getQueryParams();
+        $token = $queryParams['token'];
+        $tokenHash = hash('sha256', $token);
         $senha = $postVars['senha'] ?? '';
         $id = $postVars['id'];
 
         $obUser = EntityUser::getUserById($id);
-
         if (!$obUser instanceof EntityUser) {
-            $request->getRouter()->redirect('recuperar-senha?status=invalid-token');
+            $request->getRouter()->redirect('/recuperar-senha?status=invalid-token');
+            exit;
+        }
+
+        if (!hash_equals($obUser->recovery_token, $tokenHash)) {
+            $request->getRouter()->redirect('/recuperar-senha?status=invalid-token');
             exit;
         }
 

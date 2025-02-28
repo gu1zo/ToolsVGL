@@ -6,10 +6,13 @@ use App\Controller\Agendados\Agendados;
 use \App\Model\Entity\Agendados as EntityAgendados;
 use \App\Model\Entity\Fila as EntityFila;
 use \App\Model\Entity\User as EntityUser;
+use \App\Session\Login\Login;
 use DateTime;
 
 class Ajax
 {
+
+
     public static function getAgendados($request)
     {
         $queryParams = $request->getQueryParams();
@@ -46,7 +49,7 @@ class Ajax
         $obAgendado->observacao = $postVars['observacao'];
         $obAgendado->tipo = $tipo;
         $obAgendado->status = 'agendado';
-        $obAgendado->id_usuario = $postVars['id_usuario'];
+        $obAgendado->id_usuario = Login::getId();
 
         $obAgendado->cadastrar();
 
@@ -100,7 +103,7 @@ class Ajax
     public static function getFilaUser($request)
     {
         $queryParamas = $request->getQueryParams();
-        $id_usuario = $queryParamas['id_usuario'];
+        $id_usuario = Login::getId();
 
         $isFirst = false;
         $naFila = false;
@@ -125,8 +128,7 @@ class Ajax
 
     public static function entrarFila($request)
     {
-        $postVars = $request->getPostVars();
-        $id_usuario = $postVars['id_usuario'];
+        $id_usuario = Login::getId();
 
         $results = EntityFila::getFila('id_usuario !="' . $id_usuario . '"');
         while ($obFila = $results->fetchObject(EntityFila::class)) {
@@ -146,8 +148,7 @@ class Ajax
 
     public static function sairFila($request)
     {
-        $postVars = $request->getPostVars();
-        $id_usuario = $postVars['id_usuario'];
+        $id_usuario = Login::getId();
 
         $obFila = EntityFila::getFilaById($id_usuario);
 
@@ -165,8 +166,7 @@ class Ajax
 
     public static function passarVez($request)
     {
-        $postVars = $request->getPostVars();
-        $id_usuario = $postVars['id_usuario'];
+        $id_usuario = Login::getId();
         $total = 1;
         $obFila = EntityFila::getFilaById($id_usuario);
 

@@ -74,7 +74,6 @@ $(document).ready(function () {
     var data = $("#data").val().trim();
     var observacao = $("#observacao").val().trim();
     var tipo = $("#tipo").val().trim();
-    var id_usuario = $("#id_usuario").val().trim();
     
     if (protocolo === "") {
       $("#mensagem").html('<div class="alert alert-danger">Digite o protocolo!</div>');
@@ -93,8 +92,7 @@ $(document).ready(function () {
         protocolo: protocolo,
         data: data,
         observacao: observacao,
-        tipo: tipo,
-        id_usuario: id_usuario
+        tipo: tipo
        },
       dataType: "json",
       success: function (response) {
@@ -132,12 +130,11 @@ function alterarStatus(id) {
 
 
 $(document).ready(function () {
-  var id_usuario = $("#id_usuario").val();
   var usuarioNaFila = false;
   var usuarioPrimeiroFila = false;
 
   function verificarFila() {
-      $.get("/ajax/fila/usuario", { id_usuario: id_usuario }, function(response) {
+      $.get("/ajax/fila/usuario", function(response) {
           usuarioNaFila = response.naFila;
           usuarioPrimeiroFila = response.isFirst;
           atualizarBotoes();
@@ -191,19 +188,19 @@ $(document).ready(function () {
   }
 
   $("#entrarFila").click(function() {
-      $.post("/ajax/fila/entrar", { id_usuario: id_usuario }, function() {
+      $.post("/ajax/fila/entrar", function() {
           tabelaFila.ajax.reload();
       });
   });
 
   $("#sairFila").click(function() {
-      $.post("/ajax/fila/sair", { id_usuario: id_usuario }, function() {
+      $.post("/ajax/fila/sair", function() {
           tabelaFila.ajax.reload();
       });
   });
 
   $("#passarVez").click(function() {
-      $.post("/ajax/fila/passar", { id_usuario: id_usuario }, function() {
+      $.post("/ajax/fila/passar", function() {
           tabelaFila.ajax.reload();
       });
   });
