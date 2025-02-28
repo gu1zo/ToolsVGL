@@ -85,6 +85,7 @@ $(document).ready(function () {
       return;
     }
 
+    $("#modal-novo").modal("hide");
     $.ajax({
       url: "/ajax/agendados",
       type: "POST",
@@ -100,7 +101,6 @@ $(document).ready(function () {
           $("#protocolo").val(""); // Limpa o campo
           $("#data").val(""); // Limpa o campo
           $("#observacao").val(""); // Limpa o campo
-          $("#modal-novo").modal("hide");
           $("#agendados").DataTable().ajax.reload(null, false);
       },
       error: function () {
