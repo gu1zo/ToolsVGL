@@ -28,7 +28,7 @@ $(document).ready(function () {
   $("#agendados").DataTable({
       searching: false,
       paging: true,
-      pageLength: 5,
+      pageLength: 15,
       info: false,
       autoWidth: false,
       language: {
