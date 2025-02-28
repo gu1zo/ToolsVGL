@@ -22,4 +22,5 @@ while ($obAgendado = $results->fetchObject(EntityAgendados::class)) {
 $number = getenv('EVO_API_NUMBER_DIGITAL');
 if (EvolutionAPI::sendMessage($mensagem, $number)) {
     $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+    echo "Mensagem enviada - " . $data->format('d/m/Y H:i') . "\n";
 }
