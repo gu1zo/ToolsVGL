@@ -79,6 +79,19 @@ class Ajax
         }
         $obAgendados->status = 'concluido';
         $obAgendados->atualizar();
+        $tipo = $obAgendados->tipo;
+
+        switch ($tipo) {
+            case 'digital':
+                $number = NUMBER_DIGITAL;
+                break;
+            case 'suporte':
+                $number = NUMBER_SUPORTE;
+                break;
+        }
+        $mensagem = Agendados::getMessage($tipo);
+
+        EvolutionAPI::sendMessage($mensagem, $number);
         return true;
     }
 
