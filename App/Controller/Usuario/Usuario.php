@@ -137,8 +137,8 @@ class Usuario extends Page
 
 
         $obUser = new EntityUser;
-        $obUser->nome = $nome;
-        $obUser->email = $email;
+        $obUser->nome = trim($nome);
+        $obUser->email = trim($email);
         $obUser->privilegio = $privilegio;
         $obUser->senha = password_hash($senha, PASSWORD_DEFAULT);
 

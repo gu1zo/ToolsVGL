@@ -42,7 +42,7 @@ class Agendados extends Page
             $data = (new DateTime($obAgendado->data))->format('d/m/Y H:i');
             $mensagem .= "_Data:_ *" . $data . "* ";
             $mensagem .= "_Protocolo:_ *" . $obAgendado->protocolo . "* ";
-            $mensagem .= "_Usuário:_ *" . $obUser->nome . "* \n";
+            $mensagem .= "_Usuário:_ *" . trim($obUser->nome) . "* \n";
 
         }
 
