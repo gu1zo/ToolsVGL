@@ -56,7 +56,7 @@ class Agendados
     }
     public static function getAgendadosByTipoAndStatus($tipo, $status)
     {
-        return self::getAgendados('tipo ="' . $tipo . '" AND status = "' . $status . '"');
+        return self::getAgendados('tipo ="' . $tipo . '" AND status = "' . $status . '"', 'data ASC');
     }
 
     public function excluir()

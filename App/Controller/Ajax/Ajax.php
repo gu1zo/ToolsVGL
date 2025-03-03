@@ -63,7 +63,7 @@ class Ajax
         }
         $mensagem = Agendados::getMessage($tipo);
 
-        //EvolutionAPI::sendMessage($mensagem, $number);
+        EvolutionAPI::sendMessage($mensagem, $number);
         return true;
     }
 
@@ -91,7 +91,7 @@ class Ajax
         }
         $mensagem = Agendados::getMessage($tipo);
 
-        //EvolutionAPI::sendMessage($mensagem, $number);
+        EvolutionAPI::sendMessage($mensagem, $number);
         return true;
     }
 

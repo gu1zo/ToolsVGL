@@ -34,7 +34,7 @@ class Agendados extends Page
     public static function getMessage($tipo)
     {
         $data = (new DateTime('now', new DateTimeZone('America/Sao_Paulo')))->format("Y-m-d H:i");
-        $results = EntityAgendados::getAgendados('status = "agendado" AND tipo = "' . $tipo . '"');
+        $results = EntityAgendados::getAgendados('status = "agendado" AND tipo = "' . $tipo . '"', 'data ASC');
         $mensagem = "🕑 *AGENDADOS CSA-" . strtoupper($tipo) . "* 🕑\n\n";
         while ($obAgendado = $results->fetchObject(EntityAgendados::class)) {
             $obUser = EntityUser::getUserById($obAgendado->id_usuario);

@@ -30,6 +30,7 @@ $(document).ready(function () {
       paging: true,
       pageLength: 15,
       info: false,
+      order: [[3, 'asc']],
       autoWidth: false,
       language: {
           emptyTable: "Nenhum agendamento encontrado.",
