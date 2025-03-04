@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
-    <style>
-      hr {
-        background-color: white;
-      }
-      body {
-        background-color: #d0e7f9; /* Azul claro suave */
-      }
-    </style>
     <!-- Meta tags Obrigatórias -->
     <meta charset="utf-8" />
     <meta
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -23,28 +14,20 @@
       integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
       crossorigin="anonymous"
     />
-    <link rel="icon" type="image/png" href="{{URL}}/resources/img/icon.png" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <link rel="stylesheet" href="{{URL}}/resources/css/style.css" />
+    <script src="{{URL}}/resources/js/js.js"></script>
     <title>Login > ToolsVGL</title>
   </head>
-  <body class="text-light">
+  <body>
     <div class="container">
       <div class="d-flex justify-content-center">
         <div
           class="card card-lg mt-3 text-dark text-center shadow"
-          style="
-            width: 500px;
-            background-color: #ffffff;
-            border: 1px solid #87ceeb;
-          "
+          style="width: 500px"
         >
-          <div
-            class="card-header"
-            style="
-              background-color: #b0d4ee;
-              color: #4f4f4f;
-              border-bottom: 1px solid #87ceeb;
-            "
-          >
+          <div class="card-header">
             <h1 class="h4 mb-0">Login</h1>
           </div>
 
@@ -76,8 +59,7 @@
               </div>
               <button
                 type="submit"
-                class="shadow btn btn-lg text-dark w-100"
-                style="background-color: #87ceeb; border: none"
+                class="shadow btn btn-blue btn-lg text-dark w-100"
               >
                 Entrar
               </button>
@@ -86,35 +68,11 @@
               >
             </form>
           </div>
-          <div
-            class="card-footer text-muted"
-            style="
-              background-color: #d0e7f9;
-              color: #6c757d;
-              border-top: 1px solid #87ceeb;
-            "
-          >
+          <div class="card-footer text-muted">
             <small>© 2025 - Desenvolvido por Vogel</small>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- JavaScript (Opcional) -->
-    <script
-      src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-      integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
-      integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"
-      integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
-      crossorigin="anonymous"
-    ></script>
   </body>
 </html>

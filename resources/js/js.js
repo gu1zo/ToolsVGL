@@ -221,4 +221,41 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-  /**Download graficos */
+document.addEventListener("DOMContentLoaded", function () {
+    const toggleButton = document.getElementById("toggle-theme");
+    const icon = document.getElementById("theme-icon");
+    const body = document.body;
+    const htmlElement = document.documentElement; // Pega o <html>
+
+    // Verifica a preferência salva no localStorage
+    if (localStorage.getItem("theme") === "dark") {
+        body.classList.add("dark-mode");
+        htmlElement.setAttribute('data-bs-theme', 'dark');
+        icon.classList.add("bi-moon"); // Lua para modo escuro
+    } else {
+        htmlElement.setAttribute('data-bs-theme', 'light');
+        icon.classList.add("bi-sun"); // Sol para modo claro
+    }
+
+    toggleButton.addEventListener("click", function () {
+        body.classList.toggle("dark-mode");
+        
+        // Altera o atributo data-bs-theme no <html>
+        if (htmlElement.getAttribute('data-bs-theme') === 'dark') {
+            htmlElement.setAttribute('data-bs-theme', 'light');
+            icon.classList.remove("bi-sun");
+            icon.classList.add("bi-moon"); // Altera para o ícone de lua
+        } else {
+            htmlElement.setAttribute('data-bs-theme', 'dark');
+            icon.classList.remove("bi-moon");
+            icon.classList.add("bi-sun"); // Altera para o ícone de sol
+        }
+
+        // Salva a preferência no localStorage
+        if (body.classList.contains("dark-mode")) {
+            localStorage.setItem("theme", "dark");
+        } else {
+            localStorage.setItem("theme", "light");
+        }
+    });
+});

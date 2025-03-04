@@ -54,6 +54,7 @@
 /* Estilo para o cabeçalho do card de tabela */
 .card-header {
   background-color: #cbe0f5;
+  padding: 10px;
 }
 
 body {
@@ -67,7 +68,7 @@ body {
   background-color: #dbeaf5; /* Azul claro suave */
   color: #4f4f4f; /* Cinza escuro para contraste */
   min-height: 100vh;
-  width: 220px;
+  width: 250px;
   padding: 1rem;
 }
 
@@ -149,12 +150,6 @@ footer {
 .card-body {
   padding: 20px;
 }
-
-.card-header {
-  background-color: #cbe0f5;
-  padding: 10px;
-}
-
 .card {
   border-radius: 8px;
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
@@ -210,4 +205,99 @@ footer {
 #fila {
   table-layout: fixed; /* Mantém as larguras das colunas uniformes */
   width: 100%;
+}
+/* Modo noturno */
+.dark-mode {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+/* Sidebar */
+.dark-mode .sidebar {
+  background-color: #2c2c2c;
+  color: #ccc;
+}
+
+.dark-mode .sidebar a {
+  color: #bbb;
+}
+
+.dark-mode .sidebar a:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+/* Dropdowns da Sidebar */
+.dark-mode .sidebar .dropdown-menu {
+  background-color: #3c3c3c;
+  border: none;
+}
+
+.dark-mode .sidebar .dropdown-item {
+  color: #ddd;
+}
+
+.dark-mode .sidebar .dropdown-item:hover {
+  background-color: #555;
+  color: #fff;
+}
+
+/* Cards */
+.dark-mode .card {
+  background-color: #2c2c2c !important;
+  color: #ddd !important;
+  border: 1px solid #444 !important;
+}
+
+.dark-mode header {
+  background-color: #2c2c2c  !important; /* Azul escuro no modo noturno */
+  color: #fff !important;
+  border:none
+}
+.dark-mode header a{
+  color: #fff !important;
+}
+.dark-mode header ul{
+  background-color: #3c3c3c;
+  border: none;
+}
+.dark-mode .card-header {
+  background-color: #004080 !important; /* Azul escuro no modo noturno */
+  color: #fff !important;
+}
+.dark-mode .default {
+  background-color: #004080 !important; /* Azul escuro no modo noturno */
+  color: #fff !important;
+}
+
+.dark-mode .card-body {
+  color: #ccc !important;
+}
+
+.dark-mode .card-text {
+  color: #bbb !important;
+}
+/* Botões */
+.dark-mode .btn-blue {
+  background-color: #444 !important;
+  color: #fff !important;
+}
+
+.dark-mode .btn-blue:hover {
+  background-color: #555 !important;
+  border: 1px solid #8ab6d6 !important;
+}
+
+/* Rodapé */
+.dark-mode footer {
+  color: #bbb !important;
+}
+
+.dark-mode .table tbody tr:hover {
+  background-color: #555;
+  cursor: pointer;
+}
+
+.dark-mode .table tbody tr:hover td {
+  background-color: #555;
 }
