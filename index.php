@@ -12,6 +12,7 @@ include __DIR__ . '/routes/agendados.php';
 include __DIR__ . '/routes/ajax.php';
 include __DIR__ . '/routes/perdidas.php';
 include __DIR__ . '/routes/fila.php';
+include __DIR__ . '/routes/apps.php';
 
 
 //IMPRIME O RESPONSE DA PÁGINA

@@ -135,6 +135,12 @@ class Page
                     'link' => URL . '/fila',
                     'content' => []
                 ],
+                [
+                    'name' => 'Apps',
+                    'icon' => 'bi bi-tools',
+                    'link' => URL . '/apps',
+                    'content' => []
+                ],
 
             ],
             'GESTÃO' => [

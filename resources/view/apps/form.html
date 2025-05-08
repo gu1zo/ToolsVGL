@@ -1,0 +1,53 @@
+<div class="d-flex justify-content-center">
+  <div
+    class="card mt-3 text-dark text-center shadow card-no-hover"
+    style="width: 100%; max-width: 600px"
+  >
+    <div class="card-header">
+      <h1 class="h4 mb-0">{{title}}</h1>
+    </div>
+
+    <div class="card-body">
+      <form method="post">
+        <!-- Titulo -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Titulo:</label>
+          <input
+            name="titulo"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o titulo"
+            required
+          />
+        </div>
+        <!-- URL -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Link:</label>
+          <input
+            name="link"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite a URL do app"
+            required
+          />
+        </div>
+        <!--Imagem-->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="protocolo-isp" class="form-label">Imagem:</label>
+          <input
+            name="img"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite a url da imagem"
+            required
+          />
+        </div>
+        <!-- Botões -->
+        <div class="d-flex justify-content-center gap-3 mb-2">
+          <a href="{{URL}}/app" class="shadow btn btn-blue">Voltar</a>
+          <button type="submit" class="shadow btn btn-blue">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
