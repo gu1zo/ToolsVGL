@@ -2,6 +2,7 @@
 namespace App\Controller\Notas;
 
 use \App\Utils\View;
+use \App\Utils\Alert;
 use \App\Controller\Pages\Page;
 use \App\Model\Entity\Notas as EntityNotas;
 use DateTime;
@@ -12,7 +13,8 @@ class Notas extends Page
     public static function getNotas($request)
     {
         $content = View::render('notas/form', [
-            'equipes' => self::getEquipes()
+            'equipes' => self::getEquipes(),
+            'status' => self::getStatus($request)
         ]);
 
         return parent::getPage('Notas > ToolsVGL', $content);
@@ -80,6 +82,11 @@ class Notas extends Page
             $total++;
         }
 
+        if ($total <= 0) {
+            $request->getRouter()->redirect('/notas?status=nenhuma');
+            exit;
+        }
+
         $content = '';
         $status = [
             [
@@ -136,5 +143,19 @@ class Notas extends Page
             ]);
         }
         return $itens;
+    }
+    private static function getStatus($request)
+    {
+        $queryParams = $request->getQueryParams();
+
+        if (!isset($queryParams['status']))
+            return '';
+
+        switch ($queryParams['status']) {
+            case 'nenhuma':
+                return Alert::getError('Nenhuma nota cadastrada no período!');
+                break;
+        }
+        return '';
     }
 }
