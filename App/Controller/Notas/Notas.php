@@ -69,6 +69,7 @@ class Notas extends Page
         $promotores = 0;
         $neutros = 0;
         $total = 0;
+        $totalNotas = 0;
 
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
             $nota = $obNotas->nota;
@@ -79,6 +80,7 @@ class Notas extends Page
             } else if ($nota > 3) {
                 $promotores++;
             }
+            $totalNotas += $nota;
             $total++;
         }
 
@@ -108,10 +110,10 @@ class Notas extends Page
                 'porcentagem' => number_format(($detratores / $total) * 100, 2) . "%"
             ],
             [
-                'name' => 'Total',
+                'name' => 'Nota Média',
                 'color' => 'darkblue',
                 'total' => '',
-                'porcentagem' => $total
+                'porcentagem' => number_format(($totalNotas / $total), 2)
             ],
             [
                 'name' => 'CSAT',
