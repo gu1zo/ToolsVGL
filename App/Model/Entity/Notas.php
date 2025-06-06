@@ -46,7 +46,7 @@ class Notas
             return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND canal = "' . $canal . '"');
 
         }
-        return self::getNotas('data BETWEEN "' . $dataInicio . '" AND "' . $dataFim . '" AND canal = "' . $canal . '" AND equipe = "' . $equipe . '"');
+        return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND canal = "' . $canal . '" AND equipe = "' . $equipe . '"');
     }
 
     public static function getNotasByProtocolo($protocolo)
