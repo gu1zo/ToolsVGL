@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row row-cols-1 row-cols-md-5 g-4">
+    <!-- Card Em Análise -->
+    {{cards}}
+  </div>
+  <div class="card mt-4 shadow-sm border-1">
+    <div class="card-header">
+      <h5 class="card-title">Notas</h5>
+    </div>
+    <div class="card-body">
+      <table id="table" class="table table-bordered text-center shadow">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col" class="text-center">Protocolo</th>
+            <th scope="col" class="text-center">Data</th>
+            <th scope="col" class="text-center">Nota</th>
+            <th scope="col" class="text-center">Equipe</th>
+            <th scope="col" class="text-center">Mensagem</th>
+            <th scope="col" class="text-center">Agente</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{itens}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

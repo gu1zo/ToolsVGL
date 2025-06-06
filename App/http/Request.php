@@ -48,6 +48,17 @@ class Request
         $this->router = $router;
         $this->queryParams = $_GET ?? [];
         $this->postVars = $_POST ?? [];
+        $contentType = $_SERVER['CONTENT_TYPE'] ?? $_SERVER['HTTP_CONTENT_TYPE'] ?? '';
+
+        // Se $_POST estiver vazio e a requisição for JSON, pegar os dados corretamente
+        if (empty($this->postVars) && strpos($contentType, 'application/json') !== false) {
+            $jsonInput = file_get_contents('php://input');
+            $jsonData = json_decode($jsonInput, true);
+
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $this->postVars = $jsonData;
+            }
+        }
         $this->headers = getallheaders();
         $this->httpMethod = $_SERVER['REQUEST_METHOD'] ?? '';
         $this->setUri();

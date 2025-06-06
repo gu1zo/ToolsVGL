@@ -156,6 +156,12 @@ class Page
                     'link' => URL . '/fila/gestao',
                     'content' => []
                 ],
+                [
+                    'name' => 'Notas',
+                    'icon' => 'bi bi-graph-up-arrow',
+                    'link' => URL . '/notas',
+                    'content' => []
+                ],
             ],
             'USUÁRIOS' => [
                 [

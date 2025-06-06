@@ -13,6 +13,8 @@ include __DIR__ . '/routes/ajax.php';
 include __DIR__ . '/routes/perdidas.php';
 include __DIR__ . '/routes/fila.php';
 include __DIR__ . '/routes/apps.php';
+include __DIR__ . '/routes/notas.php';
+include __DIR__ . '/routes/api.php';
 
 
 //IMPRIME O RESPONSE DA PÁGINA
