@@ -64,6 +64,7 @@ class Notas extends Page
         $dataFim = $queryParams['data_final'];
         $canal = $queryParams['canal'];
         $equipe = $queryParams['equipe'];
+
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $canal, $equipe);
         $detratores = 0;
         $promotores = 0;
