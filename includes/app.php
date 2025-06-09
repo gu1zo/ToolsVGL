@@ -34,7 +34,8 @@ MiddlewareQueue::setMap([
     'password-reset-confirm' => App\http\Middleware\PasswordResetConfirm::class,
     'required-login-permission' => App\http\Middleware\RequireLoginPermission::class,
     'required-admin' => App\http\Middleware\RequireAdmin::class,
-    'required-admin-fila' => App\http\Middleware\RequireAdminFila::class
+    'required-admin-fila' => App\http\Middleware\RequireAdminFila::class,
+    'required-admin-nota' => App\http\Middleware\RequireAdminNota::class
 ]);
 
 

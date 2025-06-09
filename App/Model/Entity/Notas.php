@@ -54,6 +54,10 @@ class Notas
         return self::getNotas('protocolo = "' . $protocolo . '"')->fetchObject(self::class);
     }
 
+    public static function getNotaById($id)
+    {
+        return self::getNotas('id = "' . $id . '"')->fetchObject(self::class);
+    }
     public static function getEquipes()
     {
         return self::getNotas(null, null, null, 'equipe', 'equipe');

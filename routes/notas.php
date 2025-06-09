@@ -14,9 +14,30 @@ $obRouter->get('/notas', [
 
 $obRouter->get('/notas/table', [
     'middlewares' => [
-        'required-login'
+        'required-login',
+        'required-admin-nota'
     ],
     function ($request) {
         return new response(200, Notas::getNotasTable($request));
+    }
+]);
+
+$obRouter->get('/notas/delete', [
+    'middlewares' => [
+        'required-login',
+        'required-admin-nota'
+    ],
+    function ($request) {
+        return new response(200, Notas::getDeleteNota($request));
+    }
+]);
+
+$obRouter->post('/notas/delete', [
+    'middlewares' => [
+        'required-login',
+        'required-admin-nota'
+    ],
+    function ($request) {
+        return new response(200, Notas::setDeleteNota($request));
     }
 ]);

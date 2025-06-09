@@ -24,6 +24,7 @@ class Notas extends Page
     {
         $content = View::render('notas/table', [
             'cards' => self::getCards($request),
+            'status' => self::getStatus($request),
             'itens' => self::getTableItens($request)
         ]);
 
@@ -37,21 +38,47 @@ class Notas extends Page
         $dataFim = $queryParams['data_final'];
         $canal = $queryParams['canal'];
         $equipe = $queryParams['equipe'];
+        $tipo = $queryParams['tipo'] ?? 'todos';
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $canal, $equipe);
-
+        $uri = str_replace("/table", "/delete", $_SERVER['REQUEST_URI']);
 
         $itens = '';
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
+            $seguir = false;
             $data = (new DateTime($obNotas->data))->format('d/m/Y H:i');
-            $itens .= View::render('notas/item', [
-                'id' => $obNotas->id,
-                'protocolo' => $obNotas->protocolo,
-                'data' => $data,
-                'nota' => $obNotas->nota,
-                'equipe' => $obNotas->equipe,
-                'mensagem' => $obNotas->mensagem,
-                'agente' => $obNotas->agente,
-            ]);
+
+            switch ($tipo) {
+                case 'promotores':
+                    if ($obNotas->nota >= 4) {
+                        $seguir = true;
+                    }
+                    break;
+                case 'neutros':
+                    if ($obNotas->nota == 3) {
+                        $seguir = true;
+                    }
+                    break;
+                case 'detratores':
+                    if ($obNotas->nota < 3) {
+                        $seguir = true;
+                    }
+                    break;
+                default:
+                    $seguir = true;
+            }
+            if ($seguir) {
+                $itens .= View::render('notas/item', [
+                    'id' => $obNotas->id,
+                    'protocolo' => $obNotas->protocolo,
+                    'data' => $data,
+                    'nota' => $obNotas->nota,
+                    'equipe' => $obNotas->equipe,
+                    'mensagem' => $obNotas->mensagem,
+                    'agente' => $obNotas->agente,
+                    'URI' => $uri
+                ]);
+            }
+
         }
 
         return $itens;
@@ -64,6 +91,7 @@ class Notas extends Page
         $dataFim = $queryParams['data_final'];
         $canal = $queryParams['canal'];
         $equipe = $queryParams['equipe'];
+        $uri = $_SERVER['REQUEST_URI'];
 
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $canal, $equipe);
         $detratores = 0;
@@ -96,31 +124,36 @@ class Notas extends Page
                 'name' => 'Promotores',
                 'color' => 'green',
                 'total' => $promotores,
-                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%"
+                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
+                'link' => $uri . '&tipo=promotores'
             ],
             [
                 'name' => 'Neutros',
                 'color' => 'lightblue',
                 'total' => $neutros,
-                'porcentagem' => number_format(($neutros / $total) * 100, 2) . "%"
+                'porcentagem' => number_format(($neutros / $total) * 100, 2) . "%",
+                'link' => $uri . '&tipo=neutros'
             ],
             [
                 'name' => 'Detratores',
                 'color' => 'red',
                 'total' => $detratores,
-                'porcentagem' => number_format(($detratores / $total) * 100, 2) . "%"
+                'porcentagem' => number_format(($detratores / $total) * 100, 2) . "%",
+                'link' => $uri . '&tipo=detratores'
             ],
             [
                 'name' => 'Nota Média',
                 'color' => 'darkblue',
                 'total' => '',
-                'porcentagem' => number_format(($totalNotas / $total), 2)
+                'porcentagem' => number_format(($totalNotas / $total), 2),
+                'link' => $uri . '&tipo=todos'
             ],
             [
                 'name' => 'CSAT',
                 'color' => 'green',
                 'total' => '',
-                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%"
+                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
+                'link' => $uri . '&tipo=todos'
             ],
         ];
 
@@ -130,7 +163,8 @@ class Notas extends Page
                 'titulo' => $card['name'],
                 'color' => $card['color'],
                 'total' => $card['total'],
-                'porcentagem' => $card['porcentagem']
+                'porcentagem' => $card['porcentagem'],
+                'link' => $card['link']
             ]);
         }
 
@@ -157,8 +191,53 @@ class Notas extends Page
         switch ($queryParams['status']) {
             case 'nenhuma':
                 return Alert::getError('Nenhuma nota cadastrada no período!');
-                break;
+            case 'no-permission':
+                return Alert::getError('Você não tem permissão');
+            case 'deleted':
+                return Alert::getSuccess('Nota excluída com sucesso');
         }
         return '';
+    }
+
+    public static function getDeleteNota($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+
+
+        $obNotas = EntityNotas::getNotaById($id);
+
+        if (!$obNotas instanceof EntityNotas) {
+            $request->getRouter()->redirect('/notas');
+            exit;
+        }
+
+        $content = View::render('notas/delete', [
+            'protocolo' => $obNotas->protocolo,
+            'equipe' => $obNotas->equipe,
+            'agente' => $obNotas->agente,
+        ]);
+
+        //Retorna a página
+        return parent::getPage('Excluir Nota > ToolsVGL', $content);
+    }
+
+    public static function setDeleteNota($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+        $uri = http_build_query($queryParams);
+
+
+        $obNotas = EntityNotas::getNotaById($id);
+
+        if (!$obNotas instanceof EntityNotas) {
+            $request->getRouter()->redirect('/notas');
+            exit;
+        }
+        $obNotas->excluir();
+
+        $request->getRouter()->redirect('/notas/table?' . $uri . '&status=deleted');
+        exit;
     }
 }
