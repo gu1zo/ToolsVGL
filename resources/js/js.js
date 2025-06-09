@@ -209,7 +209,7 @@ $(document).ready(function () {
   setInterval(function() {
     verificarFila();
     tabelaFila.ajax.reload(null, false);  // Recarrega os dados sem resetar a página
-}, 5000);
+}, 500);
 });
   /**
    * Toottips 
