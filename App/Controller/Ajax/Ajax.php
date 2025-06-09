@@ -180,20 +180,31 @@ class Ajax
     public static function passarVez($request)
     {
         $id_usuario = Login::getId();
-        $total = 1;
-        $obFila = EntityFila::getFilaById($id_usuario);
 
-        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
+        // Obter o usuário atual na fila
+        $obFila = EntityFila::getFilaById($id_usuario);
+        if (!$obFila) {
+            return false; // usuário não encontrado
+        }
+
+        $posicaoAtual = $obFila->posicao;
+
+        // Obter total de usuários na fila para definir a nova posição
+        $totalUsuarios = EntityFila::getTotalUsuarios(); // Presumindo que exista método que retorna total
+
+        // Atualizar posições dos usuários atrás do atual
+        $results = EntityFila::getFila('posicao > "' . $posicaoAtual . '"');
 
         while ($row = $results->fetchObject(EntityFila::class)) {
             $row->posicao = $row->posicao - 1;
             $row->atualizar();
-            $total++;
         }
 
-        $obFila->posicao = $total;
+        // Colocar o usuário atual na última posição da fila
+        $obFila->posicao = $totalUsuarios;
         $obFila->atualizar();
 
         return true;
     }
+
 }

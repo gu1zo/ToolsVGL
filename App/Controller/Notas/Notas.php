@@ -36,10 +36,9 @@ class Notas extends Page
         $queryParams = $request->getQueryParams();
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
-        $canal = $queryParams['canal'];
         $equipe = $queryParams['equipe'];
         $tipo = $queryParams['tipo'] ?? 'todos';
-        $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $canal, $equipe);
+        $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
         $uri = str_replace("/table", "/delete", $_SERVER['REQUEST_URI']);
 
         $itens = '';
@@ -89,11 +88,10 @@ class Notas extends Page
         $queryParams = $request->getQueryParams();
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
-        $canal = $queryParams['canal'];
         $equipe = $queryParams['equipe'];
         $uri = $_SERVER['REQUEST_URI'];
 
-        $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $canal, $equipe);
+        $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
         $detratores = 0;
         $promotores = 0;
         $neutros = 0;

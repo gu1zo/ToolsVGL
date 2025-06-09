@@ -47,4 +47,10 @@ class Fila
     {
         return self::getFila('id_usuario ="' . $id . '"', 'posicao ASC')->fetchObject(self::class);
     }
+    public static function getTotalUsuarios()
+    {
+        $result = (new Database('fila'))->select(null, null, null, 'COUNT(*) as total')->fetch();
+        return (int) $result['total'];
+    }
+
 }
