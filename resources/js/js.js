@@ -259,3 +259,14 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+$(document).ready(function() {
+    $('.equipe').select2({
+        placeholder: "Selecione a Equipe", 
+        multiple: false,                  
+        closeOnSelect: true,               
+        theme: "bootstrap-5",          
+        search:true
+        });
+        $('.equipe').next('.select2-container').find('.select2-selection').addClass('shadow');
+});
+    
