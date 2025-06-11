@@ -14,6 +14,7 @@ class Relatorio
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
         $equipe = $queryParams['equipe'];
+        $tipo = $queryParams['tipo'] ?? 'todos';
 
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
         $data = [
@@ -21,15 +22,38 @@ class Relatorio
         ];
 
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
-            $data[] = [
-                $obNotas->protocolo,
-                $obNotas->data,
-                $obNotas->nota,
-                $obNotas->equipe,
-                $obNotas->mensagem,
-                $obNotas->agente,
-                $obNotas->canal,
-            ];
+            $seguir = false;
+
+            switch ($tipo) {
+                case 'promotores':
+                    if ($obNotas->nota >= 4) {
+                        $seguir = true;
+                    }
+                    break;
+                case 'neutros':
+                    if ($obNotas->nota == 3) {
+                        $seguir = true;
+                    }
+                    break;
+                case 'detratores':
+                    if ($obNotas->nota < 3) {
+                        $seguir = true;
+                    }
+                    break;
+                default:
+                    $seguir = true;
+            }
+            if ($seguir) {
+                $data[] = [
+                    $obNotas->protocolo,
+                    $obNotas->data,
+                    $obNotas->nota,
+                    $obNotas->equipe,
+                    $obNotas->mensagem,
+                    $obNotas->agente,
+                    $obNotas->canal
+                ];
+            }
         }
 
         // Nome do arquivo CSV
