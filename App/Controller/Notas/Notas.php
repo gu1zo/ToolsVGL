@@ -22,10 +22,13 @@ class Notas extends Page
 
     public static function getNotasTable($request)
     {
+        $queryParams = $request->getQueryParams();
+        $uri = http_build_query($queryParams);
         $content = View::render('notas/table', [
             'cards' => self::getCards($request),
             'status' => self::getStatus($request),
-            'itens' => self::getTableItens($request)
+            'itens' => self::getTableItens($request),
+            'URI' => $uri
         ]);
 
         return parent::getPage('Notas > ToolsVGL', $content);

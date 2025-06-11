@@ -2,6 +2,7 @@
 
 use \App\http\Response;
 use \App\Controller\Notas\Notas;
+use \App\Controller\Relatorios\Relatorio;
 
 $obRouter->get('/notas', [
     'middlewares' => [
@@ -39,5 +40,15 @@ $obRouter->post('/notas/delete', [
     ],
     function ($request) {
         return new response(200, Notas::setDeleteNota($request));
+    }
+]);
+
+$obRouter->get('/notas/relatorios', [
+    'middlewares' => [
+        'required-login',
+        'required-admin-nota'
+    ],
+    function ($request) {
+        return new response(200, Relatorio::getNotasCSV($request));
     }
 ]);
