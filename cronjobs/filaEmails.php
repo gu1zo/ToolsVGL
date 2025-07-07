@@ -10,8 +10,8 @@ use DateTimeZone;
 
 $limite = 1000;
 
-$results = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $limite);
-$qtd = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $limite, 'COUNT(*) as qtd')->fetchObject()->qtd;
+$results = EntityFilaEmails::getFilaEmails('status != "pendente"', 'id ASC', $limite);
+$qtd = EntityFilaEmails::getFilaEmails('status != "pendente"', 'id ASC', $limite, 'COUNT(*) as qtd')->fetchObject()->qtd;
 if ($qtd > 0) {
     while ($obFilaEmails = $results->fetchObject(EntityFilaEmails::class)) {
         $success = Email::sendFila($obFilaEmails->email, $obFilaEmails->body);
