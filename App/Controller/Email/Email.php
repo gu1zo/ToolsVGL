@@ -5,7 +5,8 @@ namespace App\Controller\Email;
 use \App\Utils\View;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+use DateTime;
+use DateTimeZone;
 class Email
 {
 
@@ -69,7 +70,8 @@ class Email
             $mail->send();
             return true;
         } catch (Exception $e) {
-            echo $e->getMessage();
+            $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
+            echo $e->getMessage() . "-" . $data->format('d/m/Y H:i:s') . "\n";
             return false;
         }
 
