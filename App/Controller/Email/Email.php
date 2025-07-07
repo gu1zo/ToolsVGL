@@ -45,7 +45,6 @@ class Email
     public static function sendFila($email, $body)
     {
         try {
-            echo $body;
             $mail = new PHPMailer(true);
             $body = str_replace('.html', '', $body);
             $body = View::render("emails/" . $body);
