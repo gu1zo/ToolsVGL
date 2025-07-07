@@ -45,6 +45,7 @@ class Email
     public static function sendFila($email, $body)
     {
         try {
+            echo $body;
             $mail = new PHPMailer(true);
             $body = str_replace('.html', '', $body);
             $body = View::render("emails/" . $body);
@@ -71,7 +72,7 @@ class Email
             return true;
         } catch (Exception $e) {
             $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
-            echo $e->getMessage() . "-" . $data->format('d/m/Y H:i:s') . "\n";
+            echo "Erro: " . $email . " - " . $e->getMessage() . "-" . $data->format('d/m/Y H:i:s') . "\n";
             return false;
         }
 
