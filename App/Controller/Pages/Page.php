@@ -162,6 +162,21 @@ class Page
                     'link' => URL . '/notas',
                     'content' => []
                 ],
+                [
+                    'name' => 'E-mails',
+                    'icon' => 'bi bi-envelope-at',
+                    'link' => URL . '/emails',
+                    'content' => [
+                        [
+                            'item' => 'Novo',
+                            'link' => URL . '/emails'
+                        ],
+                        [
+                            'item' => 'Ver E-mails',
+                            'link' => URL . '/emails/table'
+                        ]
+                    ]
+                ],
             ],
             'USUÁRIOS' => [
                 [

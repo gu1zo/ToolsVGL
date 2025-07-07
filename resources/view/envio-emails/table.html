@@ -1,0 +1,27 @@
+<!-- Card de Tabela de Eventos -->
+<div class="container">
+  <div class="card mt-4 shadow border-1">
+    <div class="card-header">
+      <h5 class="card-title">E-mails</h5>
+    </div>
+    <div class="card-body">
+      <table id="table" class="table table-bordered shadow">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col" class="text-center">Email</th>
+            <th scope="col" class="text-center">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{itens}}
+        </tbody>
+      </table>
+      <div class="d-flex justify-content-center gap-3 mb-2">
+        <a href="{{URL}}/emails/table" class="shadow btn btn-pink shadow"
+          >Voltar</a
+        >
+      </div>
+    </div>
+  </div>
+</div>

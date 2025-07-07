@@ -15,7 +15,7 @@ class RequireAdmin
     public function handle($request, $next)
     {
         if (!SessionLogin::isAdmin()) {
-            $request->getRouter()->redirect('/usuario?status=no-permission');
+            $request->getRouter()->redirect('?status=no-permission');
             exit;
         }
         return $next($request);

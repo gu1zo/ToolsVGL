@@ -1,0 +1,59 @@
+<div class="d-flex justify-content-center">
+  <div
+    class="card mt-3 text-dark text-center shadow card-no-hover"
+    style="width: 100%; max-width: 600px"
+  >
+    <div class="card-header">
+      <h1 class="h4 mb-0">{{title}}</h1>
+    </div>
+
+    <div class="card-body">
+      {{status}}
+      <form method="post" enctype="multipart/form-data">
+        <!-- Título -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="titulo" class="form-label">Título:</label>
+          <input
+            name="titulo"
+            id="titulo"
+            type="text"
+            class="form-control shadow text-center"
+            placeholder="Digite o título da tarefa"
+            required
+          />
+        </div>
+
+        <!-- CSV -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="arquivo_csv" class="form-label">Emails (CSV):</label>
+          <input
+            type="file"
+            name="arquivo_csv"
+            id="arquivo_csv"
+            class="form-control"
+            accept=".csv"
+            required
+          />
+        </div>
+
+        <!-- HTML -->
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="arquivo_html" class="form-label">Body (HTML):</label>
+          <input
+            type="file"
+            name="arquivo_html"
+            id="arquivo_html"
+            class="form-control"
+            accept=".html"
+          />
+        </div>
+
+        <!-- Botões -->
+        <div class="d-flex justify-content-center gap-3 mb-2">
+          <a href="{{URL}}/" class="shadow btn btn-blue">Voltar</a>
+          <button type="submit" class="shadow btn btn-blue">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

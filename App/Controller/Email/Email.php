@@ -41,6 +41,40 @@ class Email
 
     }
 
+    public static function sendFila($email, $body)
+    {
+        try {
+            $mail = new PHPMailer(true);
+            $body = str_replace('.html', '', $body);
+            $body = View::render("emails/" . $body);
+            $mail->isSMTP();
+
+            //$mail->SMTPDebug = SMTP::DEBUG_SERVER;
+            //$mail->Host = 'smtp.gegnet.com.br';
+            $mail->Host = getenv('SMTP_HOST');
+            $mail->SMTPAuth = true;
+            $mail->Username = getenv('SMTP_USER');
+            $mail->Password = getenv('SMTP_PASS');
+            $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+            $mail->Port = 465;
+            $mail->CharSet = 'UTF-8';
+
+            $mail->setFrom(getenv('SMTP_USER')); #remetente do email
+            $mail->isHTML(true); #define o email com formato html
+            $mail->Subject = "Não Responda"; #define o assunto do email
+            $mail->Body = $body;
+
+            $mail->clearAddresses(); // Limpa destinatários anteriores
+            $mail->addAddress($email);
+            $mail->send();
+            return true;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+    }
+
+
     private static function getEmailBody($tipo, $vars, $cliente)
     {
         switch ($tipo) {
