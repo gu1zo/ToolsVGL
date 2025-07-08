@@ -43,13 +43,6 @@ class Graficos
             }
             $total++;
         }
-        $nota1 = round(($nota1 / $total) * 100, 2);
-        $nota2 = round(($nota2 / $total) * 100, 2);
-        $nota3 = round(($nota3 / $total) * 100, 2);
-        $nota4 = round(($nota4 / $total) * 100, 2);
-        $nota5 = round(($nota5 / $total) * 100, 2);
-
-
 
         $labels = ['1', '2', '3', '4', '5'];
         $data = [
@@ -86,11 +79,6 @@ class Graficos
             $totalNotas += $nota;
             $total++;
         }
-        $promotores = round(($promotores / $total) * 100, 2);
-        $neutros = round(($neutros / $total) * 100, 2);
-        $detratores = round(($detratores / $total) * 100, 2);
-
-
 
         $labels = ['Promotores', 'Neutros', 'Detratores'];
         $data = [
@@ -107,11 +95,10 @@ class Graficos
         $dataFim = $queryParams['data_final'] ?? null;
         $equipe = $queryParams['equipe'] ?? null;
 
-        // Busca todos os registros do período filtrado
+        // Busca todos os agentes que têm notas no período
         $resultados = EntityNotas::getAgentesByFilter($dataInicio, $dataFim, $equipe);
 
         $elogiosPorAgente = [];
-        $totalElogios = 0;
 
         while ($row = $resultados->fetchObject()) {
             $agente = $row->agente;
@@ -128,31 +115,23 @@ class Graficos
 
             if ($qtdElogios > 0) {
                 $elogiosPorAgente[$agente] = $qtdElogios;
-                $totalElogios += $qtdElogios;
             }
         }
 
-        // Ordena os agentes pelo total de elogios
+        // Ordena pelos maiores e pega os top 10
         arsort($elogiosPorAgente);
-
-        // Pega os top 10
         $elogiosTop10 = array_slice($elogiosPorAgente, 0, 10, true);
 
-        // Monta o resultado
-        $labels = [];
-        $valores = [];
-
-        foreach ($elogiosTop10 as $agente => $qtdElogios) {
-            $labels[] = $agente;
-            $percentual = $totalElogios > 0 ? round(($qtdElogios / $totalElogios) * 100, 2) : 0;
-            $valores[] = $percentual;
-        }
+        // Monta JSON
+        $labels = array_keys($elogiosTop10);
+        $values = array_values($elogiosTop10);
 
         return json_encode([
             'labels' => $labels,
-            'values' => $valores
+            'values' => $values
         ], JSON_PRETTY_PRINT);
     }
+
 
 
 
@@ -166,7 +145,6 @@ class Graficos
         $resultados = EntityNotas::getAgentesByFilter($dataInicio, $dataFim, $equipe);
 
         $criticasPorAgente = [];
-        $totalCriticas = 0;
 
         while ($row = $resultados->fetchObject()) {
             $agente = $row->agente;
@@ -182,27 +160,21 @@ class Graficos
 
             if ($qtdCriticas > 0) {
                 $criticasPorAgente[$agente] = $qtdCriticas;
-                $totalCriticas += $qtdCriticas;
             }
         }
 
         arsort($criticasPorAgente);
         $criticasTop10 = array_slice($criticasPorAgente, 0, 10, true);
 
-        $labels = [];
-        $valores = [];
-
-        foreach ($criticasTop10 as $agente => $qtdCriticas) {
-            $labels[] = $agente;
-            $percentual = $totalCriticas > 0 ? round(($qtdCriticas / $totalCriticas) * 100, 2) : 0;
-            $valores[] = $percentual;
-        }
+        $labels = array_keys($criticasTop10);
+        $values = array_values($criticasTop10);
 
         return json_encode([
             'labels' => $labels,
-            'values' => $valores
+            'values' => $values
         ], JSON_PRETTY_PRINT);
     }
+
 
     public static function getGraficoLinhaNotas($request)
     {
