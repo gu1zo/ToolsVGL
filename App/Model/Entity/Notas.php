@@ -69,7 +69,7 @@ class Notas
     public static function getNotasByEquipe($equipe)
     {
         if ($equipe == 'todas') {
-            return self::getNotas();
+            return self::getNotas('1=1');
 
         }
         return self::getNotas('equipe = "' . $equipe . '"');
