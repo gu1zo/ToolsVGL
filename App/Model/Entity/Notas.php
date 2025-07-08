@@ -52,7 +52,7 @@ class Notas
     public static function getNotasByAgente($agente, $dataInicio, $dataFim, $equipe)
     {
         if ($equipe == 'todas') {
-            return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND agente=' . $agente . '"');
+            return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND agente="' . $agente . '"');
 
         }
         return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND equipe = "' . $equipe . '" AND agente="' . $agente . '"');
@@ -69,7 +69,7 @@ class Notas
     public static function getNotasByEquipe($equipe)
     {
         if ($equipe == 'todas') {
-            return self::getNotas('1=1');
+            return self::getNotas();
 
         }
         return self::getNotas('equipe = "' . $equipe . '"');
