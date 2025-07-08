@@ -241,4 +241,15 @@ class Notas extends Page
         $request->getRouter()->redirect('/notas/table?' . $uri . '&status=deleted');
         exit;
     }
+
+    public static function getGraficos($request)
+    {
+        $queryParams = $request->getQueryParams();
+
+        $content = View::render('graficos/graficos', [
+            'itens' => ''
+        ]);
+
+        return self::getPage('Gráficos > ToolsVGL', $content);
+    }
 }

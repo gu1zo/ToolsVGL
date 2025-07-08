@@ -2,6 +2,7 @@
 
 use \App\http\Response;
 use \App\Controller\Ajax\Ajax;
+use \App\Controller\Ajax\Graficos;
 
 $obRouter->get('/ajax/agendados', [
     'middlewares' => [
@@ -70,5 +71,36 @@ $obRouter->post('/ajax/fila/passar', [
     ],
     function ($request) {
         return new response(200, Ajax::passarVez($request));
+    }
+]);
+$obRouter->get('/ajax/graficos/notas', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoNotas($request));
+    }
+]);
+$obRouter->get('/ajax/graficos/csat', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoCSAT($request));
+    }
+]);
+$obRouter->get('/ajax/graficos/agentesPositivo', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoElogiosPorAgente($request));
+    }
+]);
+$obRouter->get('/ajax/graficos/agentesNegativo', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoCriticasPorAgente($request));
+    }
+]);
+
+$obRouter->get('/ajax/graficos/notasAno', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoLinhaNotas($request));
     }
 ]);

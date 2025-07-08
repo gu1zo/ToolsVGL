@@ -52,3 +52,13 @@ $obRouter->get('/notas/relatorios', [
         return new response(200, Relatorio::getNotasCSV($request));
     }
 ]);
+
+$obRouter->get('/notas/graficos', [
+    'middlewares' => [
+        'required-login',
+        'required-admin-nota'
+    ],
+    function ($request) {
+        return new response(200, Relatorio::getGraficos($request));
+    }
+]);

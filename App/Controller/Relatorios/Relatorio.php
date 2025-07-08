@@ -3,9 +3,11 @@
 namespace App\Controller\Relatorios;
 
 use App\Model\Entity\Notas as EntityNotas;
+use App\Utils\View;
+use App\Controller\Pages\Page;
 use DateTime;
 
-class Relatorio
+class Relatorio extends Page
 {
     public static function getNotasCSV($request)
     {
@@ -80,5 +82,26 @@ class Relatorio
         fclose($output);
         exit;
 
+    }
+
+    public static function getGraficos($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $uri = http_build_query($queryParams);
+
+        $content = View::render('graficos/graficos', [
+            'itens' => self::getGraficosItem($request),
+            'URI' => $uri
+        ]);
+
+        return self::getPage('Gráficos > ToolsVGL', $content);
+    }
+
+    private static function getGraficosItem($request)
+    {
+        $content = View::render('graficos/graficos-item', [
+        ]);
+
+        return $content;
     }
 }
