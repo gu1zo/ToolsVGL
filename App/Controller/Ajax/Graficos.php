@@ -237,6 +237,64 @@ class Graficos
 
         return json_encode($data, JSON_PRETTY_PRINT);
     }
+    public static function getGraficoLinhaMediaNotas($request)
+    {
+        // Pega filtros opcionais (ex.: equipe)
+        $queryParams = $request->getQueryParams();
+        $equipe = $queryParams['equipe'] ?? null;
+
+        // Cria os últimos 12 meses (no formato "m/Y" para exibição)
+        $labels = [];
+        $current = new \DateTime('first day of this month');
+        for ($i = 11; $i >= 0; $i--) {
+            $month = (clone $current)->modify("-$i months");
+            $labels[] = $month->format('m/Y');
+        }
+
+        // Inicializa arrays para somatório e contagem
+        $somas = array_fill(0, 12, 0);
+        $quantidades = array_fill(0, 12, 0);
+
+        // Consulta do banco
+        $resultados = EntityNotas::getNotasByEquipe($equipe);
+
+        while ($obNota = $resultados->fetchObject(EntityNotas::class)) {
+            $nota = (float) $obNota->nota;
+            $data = new \DateTime($obNota->data); // ajuste conforme nome do campo de data
+            $mesAno = $data->format('m/Y');
+
+            // Se está dentro dos últimos 12 meses
+            $index = array_search($mesAno, $labels);
+            if ($index !== false) {
+                $somas[$index] += $nota;
+                $quantidades[$index]++;
+            }
+        }
+
+        // Calcula média
+        $medias = [];
+        foreach ($somas as $i => $soma) {
+            if ($quantidades[$i] > 0) {
+                $medias[$i] = round($soma / $quantidades[$i], 2);
+            } else {
+                $medias[$i] = 0; // Ou 0, ou deixar null para aparecer "vazio" no gráfico
+            }
+        }
+
+        // Monta JSON para Chart.js
+        $data = [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Média das Notas',
+                    'data' => $medias
+                ]
+            ]
+        ];
+
+        return json_encode($data, JSON_PRETTY_PRINT);
+    }
+
 
 
 

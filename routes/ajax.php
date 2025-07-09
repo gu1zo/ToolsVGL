@@ -104,3 +104,10 @@ $obRouter->get('/ajax/graficos/notasAno', [
         return new response(200, Graficos::getGraficoLinhaNotas($request));
     }
 ]);
+
+$obRouter->get('/ajax/graficos/mediaNotasAno', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoLinhaMediaNotas($request));
+    }
+]);
