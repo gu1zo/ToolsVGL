@@ -14,6 +14,7 @@
         <div class="form-group mb-3 w-75 mx-auto text-center">
           <label for="protocolo-isp" class="form-label">Nome:</label>
           <input
+            disabled
             name="nome"
             type="text"
             class="form-control shadow text-center"
@@ -25,13 +26,14 @@
 
         <!-- E-mail -->
         <div class="form-group mb-3 w-75 mx-auto text-center">
-          <label for="protocolo-isp" class="form-label">E-mail:</label>
+          <label for="login" class="form-label">Login:</label>
           <input
-            name="email"
-            type="email"
+            disabled
+            name="login"
+            type="text"
             class="form-control shadow text-center"
-            placeholder="Digite o E-mail"
-            value="{{email}}"
+            placeholder="Digite o Login"
+            value="{{login}}"
             required
           />
         </div>
@@ -42,7 +44,6 @@
         <div class="d-flex justify-content-center gap-3 mb-2">
           <a href="{{URL}}/" class="shadow btn btn-blue">Voltar</a>
           <button type="submit" class="shadow btn btn-blue">Salvar</button>
-          {{buttons}}
         </div>
       </form>
     </div>

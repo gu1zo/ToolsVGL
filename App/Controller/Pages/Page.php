@@ -180,12 +180,6 @@ class Page
             ],
             'USUÁRIOS' => [
                 [
-                    'name' => 'Cadastrar Usuários',
-                    'icon' => 'bi bi-person-add',
-                    'link' => URL . '/usuario/novo',
-                    'content' => []
-                ],
-                [
                     'name' => 'Listar Usuários',
                     'icon' => 'bi bi-people-fill',
                     'link' => URL . '/usuario',

@@ -15,7 +15,7 @@ class Login
     }
     /**
      * Método responsável por criar o login do usuario
-     * @param User $obUser
+     * @param  $obUser
      * @return boolean
      */
     public static function login($obUser)
@@ -27,7 +27,7 @@ class Login
         $_SESSION['usuario'] = [
             'id' => $obUser->id,
             'nome' => $obUser->nome,
-            'email' => $obUser->email,
+            'login' => $obUser->login,
             'privilegio' => $obUser->privilegio
         ];
 

@@ -10,30 +10,27 @@ class User
 
     public $nome;
 
-    public $email;
-
-    public $senha;
+    public $login;
 
     public $privilegio;
-
+    public $setor;
+    public $email;
+    public $senha;
     public $recovery_token;
-
-    public static function getUserByEmail($email)
-    {
-        return (new Database('usuarios'))->select('email = "' . $email . '"')->fetchObject(self::class);
-    }
 
     public static function getUsers($where = null, $order = null, $limit = null, $fields = '*')
     {
         return (new Database('usuarios'))->select($where, $order, $limit, $fields);
     }
-
+    public static function getUserByLogin($login)
+    {
+        return (new Database('usuarios'))->select('login = "' . $login . '"')->fetchObject(self::class);
+    }
     public function cadastrar()
     {
         $this->id = (new Database('usuarios'))->insert([
             'nome' => $this->nome,
-            'email' => $this->email,
-            'senha' => $this->senha,
+            'login' => $this->login,
             'privilegio' => $this->privilegio
         ]);
 
@@ -44,10 +41,8 @@ class User
     {
         return (new Database('usuarios'))->update('id =' . $this->id, [
             'nome' => $this->nome,
-            'email' => $this->email,
-            'senha' => $this->senha,
-            'privilegio' => $this->privilegio,
-            'recovery_token' => $this->recovery_token
+            'login' => $this->login,
+            'privilegio' => $this->privilegio
         ]);
     }
 

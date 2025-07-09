@@ -27,22 +27,16 @@ class Usuario extends Page
         switch ($queryParams['status']) {
             case 'created':
                 return Alert::getSuccess('Usuário criado com sucesso!');
-                break;
             case 'updated':
                 return Alert::getSuccess('Usuário atualizado com sucesso!');
-                break;
             case 'deleted':
                 return Alert::getSuccess('Usuário excluido com sucesso!');
-                break;
             case 'duplicated':
                 return Alert::getError('O e-mail informado já está sendo utilizado por outro usuário.');
-                break;
             case 'passwordError':
                 return Alert::getError('As senhas não são iguais');
-                break;
             case 'no-permission':
                 return Alert::getError('Você não tem permissão');
-                break;
         }
         return '';
     }
@@ -86,67 +80,11 @@ class Usuario extends Page
             $itens .= View::render('/usuario/table/item', [
                 'id' => $obUser->id,
                 'nome' => $obUser->nome,
-                'email' => $obUser->email,
+                'login' => $obUser->login,
                 'privilegio' => $obUser->privilegio
             ]);
         }
         return $itens;
-    }
-
-    /**
-     * Método responsável por retornar a view do formulário para cadastro de usuário renderuzada
-     * @param Request $request
-     * @return string
-     */
-    public static function getNewUser($request)
-    {
-        $content = View::render('/usuario/form', [
-            'title' => 'Novo Usuário',
-            'nome' => '',
-            'email' => '',
-            'privilegio' => self::getPrivilegio(),
-            'status' => self::getStatus($request),
-            'buttons' => ''
-        ]);
-
-        return parent::getPage('Novo Usuario > ToolsVGL', $content);
-    }
-
-
-    /**
-     * Métido responsável por cadastrar um novo usuário
-     * @param Request $request
-     * @return never
-     */
-    public static function setNewUser($request)
-    {
-
-        $postVars = $request->getPostVars();
-
-        $email = $postVars['email'] ?? '';
-        $nome = $postVars['nome'] ?? '';
-        $senha = bin2hex(random_bytes(32));
-        $privilegio = $postVars['privilegio'] ?? '';
-
-        $obUser = EntityUser::getUserByEmail($email);
-
-        if ($obUser instanceof EntityUser) {
-            $request->getRouter()->redirect('/usuario/novo?status=duplicated');
-            exit;
-        }
-
-
-        $obUser = new EntityUser;
-        $obUser->nome = trim($nome);
-        $obUser->email = trim($email);
-        $obUser->privilegio = $privilegio;
-        $obUser->senha = password_hash($senha, PASSWORD_DEFAULT);
-
-        $obUser->cadastrar();
-
-
-        $request->getRouter()->redirect('/usuario/edit?id=' . $obUser->id . '&status=created');
-        exit;
     }
 
     /**
@@ -177,25 +115,12 @@ class Usuario extends Page
         $content = View::render('/usuario/form', [
             'title' => 'Editar Usuário',
             'nome' => $obUser->nome,
-            'email' => $obUser->email,
+            'login' => $obUser->login,
             'privilegio' => $privilegio,
             'status' => self::getStatus($request),
-            'buttons' => self::getButtons($request)
         ]);
         return parent::getPage('Editar Usuario > ToolsVGL', $content);
     }
-
-    private static function getButtons($request)
-    {
-        $queryParams = $request->getQueryParams();
-        $id = $queryParams['id'];
-        $obUser = EntityUser::getUserById(Login::getId());
-        if (Login::isLogged() && $id == $obUser->id) {
-            return View::render('usuario/elements/button');
-        }
-        return '';
-    }
-
     /**
      * Método responsável por retornar a view renderizada dos radio button de privilegio
      * @param Request $request
@@ -246,22 +171,8 @@ class Usuario extends Page
         }
 
         $postVars = $request->getPostVars();
-        $nome = $postVars['nome'] ?? $obUser->nome;
-        $email = $postVars['email'] ?? $obUser->email;
         $privilegio = $postVars['privilegio'] ?? $obUser->privilegio;
 
-        $obUserEmail = EntityUser::getUserByEmail($email);
-
-        if (isset($obUserEmail->id)) {
-            if (($obUser instanceof EntityUser) && ($id != $obUserEmail->id)) {
-                $request->getRouter()->redirect('/usuario/edit?id=' . $id . '&status=duplicated');
-                exit;
-            }
-        }
-        //Atualização da instancia
-
-        $obUser->nome = $nome;
-        $obUser->email = $email;
         $obUser->privilegio = $privilegio;
 
 
@@ -272,56 +183,6 @@ class Usuario extends Page
         }
 
         $request->getRouter()->redirect('/usuario/edit?id=' . $id . '&status=updated');
-        exit;
-    }
-
-
-    /**
-     * Método responsável por retornar a view com o formulário de remoção do usuário
-     * @param Request $request
-     * @return string
-     */
-    public static function getDeleteUser($request)
-    {
-        $queryParams = $request->getQueryParams();
-        $id = $queryParams['id'];
-
-
-        $obUser = EntityUser::getUserById($id);
-
-        if (!$obUser instanceof EntityUser) {
-            $request->getRouter()->redirect('usuario');
-            exit;
-        }
-
-        $content = View::render('usuario/delete', [
-            'nome' => $obUser->nome,
-            'email' => $obUser->email
-        ]);
-
-        //Retorna a página
-        return parent::getPage('Excluir usuário > ToolsVGL', $content);
-    }
-
-
-    /**
-     * Método responsável por realizar a remoção do usuário do banco de Ddados
-     * @param Request $request
-     * @return never
-     */
-    public static function setDeleteUser($request)
-    {
-        $queryParams = $request->getQueryParams();
-        $id = $queryParams['id'];
-        $obUser = EntityUser::getUserById($id);
-
-        if (!$obUser instanceof EntityUser) {
-            $request->getRouter()->redirect('/usuario');
-            exit;
-        }
-        $obUser->excluir();
-
-        $request->getRouter()->redirect('/usuario?status=deleted');
         exit;
     }
 
