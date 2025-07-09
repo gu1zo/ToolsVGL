@@ -77,12 +77,14 @@ class Usuario extends Page
         $results = EntityUser::getUsers(null, 'id DESC');
 
         while ($obUser = $results->fetchObject(EntityUser::class)) {
-            $itens .= View::render('/usuario/table/item', [
-                'id' => $obUser->id,
-                'nome' => $obUser->nome,
-                'login' => $obUser->login,
-                'privilegio' => $obUser->privilegio
-            ]);
+            if ($obUser->login != null) {
+                $itens .= View::render('/usuario/table/item', [
+                    'id' => $obUser->id,
+                    'nome' => $obUser->nome,
+                    'login' => $obUser->login,
+                    'privilegio' => $obUser->privilegio
+                ]);
+            }
         }
         return $itens;
     }
