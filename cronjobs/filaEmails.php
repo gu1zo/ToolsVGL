@@ -13,14 +13,41 @@ $results = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $lim
 $processes = [];
 $pipesList = [];
 
-// Intervalo entre disparos em microssegundos
-$intervaloMicro = 330000; // 0.33 segundos
+// Configuração
+$intervaloMicro = 330000; // 0.33s = 3 envios por segundo
+$maxProcessosSimultaneos = 5;
 
 while ($obFilaEmails = $results->fetchObject(EntityFilaEmails::class)) {
+    // Enquanto já tiver muitos processos ativos, aguarda
+    while (count($processes) >= $maxProcessosSimultaneos) {
+        foreach ($processes as $index => $proc) {
+            $status = proc_get_status($proc);
+            if (!$status['running']) {
+                // Leitura da saída
+                $stdout = stream_get_contents($pipesList[$index][1]);
+                fclose($pipesList[$index][1]);
+                $stderr = stream_get_contents($pipesList[$index][2]);
+                fclose($pipesList[$index][2]);
+                proc_close($proc);
+
+                // Exibir
+                echo $stdout;
+                if (!empty($stderr)) {
+                    echo "Erro: " . $stderr;
+                }
+
+                // Remove da lista
+                unset($processes[$index]);
+                unset($pipesList[$index]);
+            }
+        }
+        usleep(100000); // espera 0.1s antes de verificar de novo
+    }
+
+    // Dispara novo processo
     $cmd = 'php ' . escapeshellarg(__DIR__ . '/send_email.php') . ' ' .
         escapeshellarg($obFilaEmails->id);
 
-    // Abre o processo e captura stdout/stderr
     $descriptorspec = [
         1 => ['pipe', 'w'],
         2 => ['pipe', 'w']
@@ -33,27 +60,23 @@ while ($obFilaEmails = $results->fetchObject(EntityFilaEmails::class)) {
         $pipesList[] = $pipes;
     }
 
-    // Dorme antes de disparar o próximo (exceto no último)
     usleep($intervaloMicro);
 }
 
-// Ler saídas
+// Aguarda todos os últimos processos terminarem
 foreach ($processes as $index => $process) {
     $stdout = stream_get_contents($pipesList[$index][1]);
     fclose($pipesList[$index][1]);
-
     $stderr = stream_get_contents($pipesList[$index][2]);
     fclose($pipesList[$index][2]);
-
     proc_close($process);
 
-    // Exibir o que cada subprocesso imprimiu
     echo $stdout;
     if (!empty($stderr)) {
         echo "Erro: " . $stderr;
     }
 }
 
-// Registrar conclusão do lote
+// Registrar conclusão
 $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
 echo "Lote concluído em paralelo - " . $data->format('d/m/Y H:i') . "\n";
