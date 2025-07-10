@@ -31,36 +31,3 @@ $obRouter->get('/logout', [
         return new Response(200, Usuario\Login::setLogout($request));
     }
 ]);
-
-$obRouter->get('/recuperar-senha', [
-    'middlewares' => [
-    ],
-    function ($request) {
-        return new Response(200, Usuario\Login::getRecuperarSenha($request));
-    }
-]);
-
-$obRouter->post('/recuperar-senha', [
-    'middlewares' => [
-    ],
-    function ($request) {
-        return new Response(200, Usuario\Login::setRecuperarSenha($request));
-    }
-]);
-
-$obRouter->get('/recuperacao', [
-    'middlewares' => [
-    ],
-    function ($request) {
-        return new Response(200, Usuario\Login::getRecuperar($request));
-    }
-]);
-
-$obRouter->post('/recuperacao', [
-    'middlewares' => [
-        'password-reset-confirm'
-    ],
-    function ($request) {
-        return new Response(200, Usuario\Login::setRecuperar($request));
-    }
-]);
