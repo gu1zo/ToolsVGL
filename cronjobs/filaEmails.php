@@ -1,4 +1,12 @@
 <?php
+
+namespace App\Cronjobs;
+require __DIR__ . '/../includes/app.php';
+
+use \App\Model\Entity\FilaEmails as EntityFilaEmails;
+use DateTime;
+use DateTimeZone;
+
 $maxParallel = 10; // limite de processos ativos
 $processes = [];
 $pipesList = [];
