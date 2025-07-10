@@ -7,7 +7,7 @@ use \App\Model\Entity\FilaEmails as EntityFilaEmails;
 use DateTime;
 use DateTimeZone;
 
-$limite = 300;
+$limite = 500;
 $results = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $limite);
 
 $processes = [];
