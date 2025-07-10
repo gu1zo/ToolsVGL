@@ -13,15 +13,17 @@ $results = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $lim
 $processes = [];
 $pipesList = [];
 
-// Dispara subprocessos
+// Intervalo entre disparos em microssegundos
+$intervaloMicro = 330000; // 0.33 segundos
+
 while ($obFilaEmails = $results->fetchObject(EntityFilaEmails::class)) {
     $cmd = 'php ' . escapeshellarg(__DIR__ . '/send_email.php') . ' ' .
         escapeshellarg($obFilaEmails->id);
 
-    // Abre o processo e captura stdout
+    // Abre o processo e captura stdout/stderr
     $descriptorspec = [
-        1 => ['pipe', 'w'], // stdout
-        2 => ['pipe', 'w']  // stderr (opcional)
+        1 => ['pipe', 'w'],
+        2 => ['pipe', 'w']
     ];
 
     $process = proc_open($cmd, $descriptorspec, $pipes);
@@ -30,6 +32,9 @@ while ($obFilaEmails = $results->fetchObject(EntityFilaEmails::class)) {
         $processes[] = $process;
         $pipesList[] = $pipes;
     }
+
+    // Dorme antes de disparar o próximo (exceto no último)
+    usleep($intervaloMicro);
 }
 
 // Ler saídas
