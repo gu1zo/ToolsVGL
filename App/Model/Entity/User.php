@@ -7,16 +7,14 @@ use WilliamCosta\DatabaseManager\Database;
 class User
 {
     public $id;
-
     public $nome;
-
     public $login;
-
     public $privilegio;
     public $setor;
     public $email;
     public $senha;
     public $recovery_token;
+    public $ldap;
 
     public static function getUsers($where = null, $order = null, $limit = null, $fields = '*')
     {
@@ -31,7 +29,8 @@ class User
         $this->id = (new Database('usuarios'))->insert([
             'nome' => $this->nome,
             'login' => $this->login,
-            'privilegio' => $this->privilegio
+            'privilegio' => $this->privilegio,
+            'ldap' => $this->ldap
         ]);
 
         return true;
@@ -42,7 +41,8 @@ class User
         return (new Database('usuarios'))->update('id =' . $this->id, [
             'nome' => $this->nome,
             'login' => $this->login,
-            'privilegio' => $this->privilegio
+            'privilegio' => $this->privilegio,
+            'ldap' => $this->ldap
         ]);
     }
 
