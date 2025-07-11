@@ -47,11 +47,6 @@ class Ldap
     public static function getUsers($ldap)
     {
         $instance = new self($ldap);
-
-        echo '<pre>';
-        print_r($instance);
-        echo '</pre>';
-
         $ldap_conn = ldap_connect($instance->uri);
 
         ldap_set_option($ldap_conn, LDAP_OPT_PROTOCOL_VERSION, 3);
