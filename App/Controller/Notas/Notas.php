@@ -195,7 +195,7 @@ class Notas extends Page
             case 'no-permission':
                 return Alert::getError('Você não tem permissão');
             case 'deleted':
-                return Alert::getSuccess('Nota excluída com sucesso');
+                return Alert::getSuccess('Notas excluídas com sucesso');
         }
         return '';
     }
@@ -238,6 +238,25 @@ class Notas extends Page
         }
         $obNotas->excluir();
 
+        $request->getRouter()->redirect('/notas/table?' . $uri . '&status=deleted');
+        exit;
+    }
+
+    public static function setDeleteNotasByGroup($request)
+    {
+        $postVars = $request->getPostVars();
+        $queryParams = $request->getQueryParams();
+        $notas = $postVars['notas'] ?? [];
+        $uri = http_build_query($queryParams);
+
+        foreach ($notas as $nota) {
+            $obNotas = EntityNotas::getNotaById($nota);
+
+            if ($obNotas instanceof EntityNotas) {
+                $obNotas->excluir();
+            }
+
+        }
         $request->getRouter()->redirect('/notas/table?' . $uri . '&status=deleted');
         exit;
     }

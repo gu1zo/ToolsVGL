@@ -172,13 +172,14 @@ footer {
   color: inherit; /* Mantém a cor original */
 }
 
-#agendados, #table, #fila {
+#agendados, #table, #fila, #notas {
   table-layout: fixed;
   width: 100%;
 }
 
 #agendados th:nth-child(1), #agendados td:nth-child(1),
 #table th:nth-child(1), #table td:nth-child(1),
+#notas th:nth-child(1), #notas td:nth-child(1),
 #fila th:nth-child(1), #fila td:nth-child(1) {
   overflow: hidden;
   text-overflow: ellipsis;

@@ -20,7 +20,6 @@ $(document).ready(function () {
       }
   });
 });
-
 $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   let tipo = urlParams.get('tipo');
@@ -270,3 +269,57 @@ $(document).ready(function() {
         $('.equipe').next('.select2-container').find('.select2-selection').addClass('shadow');
 });
     
+
+$(document).ready(function () {
+  var selecoes = new Set(); 
+
+  var tabela = $('#notas').DataTable({
+      paging: true,        // Ativa a paginação
+      searching: true,     // Ativa a pesquisa
+      ordering: true,      // Permite ordenação nas colunas
+      info: true,          // Exibe informações sobre os registros
+      autoWidth: false,    // Impede que as colunas tenham largura automática
+      responsive: true,    // Torna a tabela responsiva
+      language: {
+          url: "/resources/json/datatable-pt-br.json"  // Tradução para português
+      },
+      columnDefs: [
+          { width: "8px", targets: 0 }  // Ajusta a largura da primeira coluna
+      ],
+      createdRow: function (row, data, dataIndex) {
+        $(row).find('td').eq(0).addClass('default');  // Adiciona a classe à primeira coluna (status)
+      }
+  });
+
+  $("#notas tbody input[type='checkbox'][name='notas[]']").each(function () {
+      if ($(this).is(":checked")) {
+          selecoes.add($(this).val());
+      }
+  });
+
+  // Atualizar os checkboxes ao mudar de página ou usar a barra de pesquisa
+  tabela.on("draw.dt", function () {
+      $("#notas tbody input[type='checkbox'][name='notas[]']").each(function () {
+          var id = $(this).val();
+          $(this).prop("checked", selecoes.has(id)); // Mantém a seleção
+      });
+  });
+
+  // Capturar clique nos checkboxes individuais
+  $("#notas tbody").on("change", 'input[type="checkbox"][name="notas[]"]', function () {
+      var id = $(this).val();
+      if ($(this).is(":checked")) {
+          selecoes.add(id);
+      } else {
+          selecoes.delete(id);
+      }
+  });
+
+  // Antes de enviar o formulário, cria inputs ocultos com os IDs selecionados
+  $("#formNotas").on("submit", function () {
+      $("#inputsHidden").empty(); // Limpa os inputs ocultos
+      selecoes.forEach(function (id) {
+          $("#inputsHidden").append('<input type="hidden" name="notas[]" value="' + id + '">');
+      });
+  });
+});

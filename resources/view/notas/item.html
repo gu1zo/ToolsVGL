@@ -7,8 +7,9 @@
   <td class="text-center">{{mensagem}}</td>
   <td class="text-center">{{agente}}</td>
   <td class="text-center">
-    <a href="{{URL}}{{URI}}&id={{id}}">
-      <button type="button" class="shadow btn btn-danger">Excluir</button>
-    </a>
+    <input type="checkbox" name="notas[]" value="{{id}}" /><a
+      style="display: none"
+      >{{nota}}</a
+    >
   </td>
 </tr>

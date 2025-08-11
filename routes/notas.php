@@ -39,7 +39,7 @@ $obRouter->post('/notas/delete', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Notas::setDeleteNota($request));
+        return new response(200, Notas::setDeleteNotasByGroup($request));
     }
 ]);
 
