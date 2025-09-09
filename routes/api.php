@@ -10,3 +10,11 @@ $obRouter->post('/api/setNota', [
         return new response(200, Api::setNota($request));
     }
 ]);
+
+$obRouter->post('/api/setNota/cordialidade', [
+    'middlewares' => [
+    ],
+    function ($request) {
+        return new response(200, Api::setNotaCordialidade($request));
+    }
+]);

@@ -160,7 +160,16 @@ class Page
                     'name' => 'Notas',
                     'icon' => 'bi bi-graph-up-arrow',
                     'link' => URL . '/notas',
-                    'content' => []
+                    'content' => [
+                        [
+                            'item' => 'Resolutividade',
+                            'link' => URL . '/notas'
+                        ],
+                        [
+                            'item' => 'Cordialidade',
+                            'link' => URL . '/notas-cordialidade'
+                        ]
+                    ]
                 ],
                 [
                     'name' => 'E-mails',

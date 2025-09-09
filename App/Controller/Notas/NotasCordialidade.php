@@ -4,15 +4,15 @@ namespace App\Controller\Notas;
 use \App\Utils\View;
 use \App\Utils\Alert;
 use \App\Controller\Pages\Page;
-use \App\Model\Entity\Notas as EntityNotas;
+use \App\Model\Entity\NotasCordialidade as EntityNotas;
 use DateTime;
 
-class Notas extends Page
+class NotasCordialidade extends Page
 {
 
     public static function getNotas($request)
     {
-        $content = View::render('/notas/notas/form', [
+        $content = View::render('/notas/notas-cordialidade/form', [
             'equipes' => self::getEquipes(),
             'status' => self::getStatus($request)
         ]);
@@ -24,7 +24,7 @@ class Notas extends Page
     {
         $queryParams = $request->getQueryParams();
         $uri = http_build_query($queryParams);
-        $content = View::render('/notas/notas/table', [
+        $content = View::render('/notas/notas-cordialidade/table', [
             'cards' => self::getCards($request),
             'status' => self::getStatus($request),
             'itens' => self::getTableItens($request),
@@ -69,13 +69,12 @@ class Notas extends Page
                     $seguir = true;
             }
             if ($seguir) {
-                $itens .= View::render('/notas/notas/item', [
+                $itens .= View::render('/notas/notas-cordialidade/item', [
                     'id' => $obNotas->id,
                     'protocolo' => $obNotas->protocolo,
                     'data' => $data,
                     'nota' => $obNotas->nota,
                     'equipe' => $obNotas->equipe,
-                    'mensagem' => $obNotas->mensagem,
                     'agente' => $obNotas->agente,
                     'URI' => $uri
                 ]);
@@ -115,7 +114,7 @@ class Notas extends Page
         }
 
         if ($total <= 0) {
-            $request->getRouter()->redirect('/notas?status=nenhuma');
+            $request->getRouter()->redirect('/notas-cordialidade?status=nenhuma');
             exit;
         }
 
@@ -160,7 +159,7 @@ class Notas extends Page
 
 
         foreach ($status as $card) {
-            $content .= View::render('/notas/notas/card', [
+            $content .= View::render('/notas/notas-cordialidade/card', [
                 'titulo' => $card['name'],
                 'color' => $card['color'],
                 'total' => $card['total'],
@@ -176,7 +175,7 @@ class Notas extends Page
         $results = EntityNotas::getEquipes();
         $itens = '';
         while ($obNotas = $results->fetchObject(EntityNotas::class)) {
-            $itens .= View::render('/notas/notas/option', [
+            $itens .= View::render('/notas/notas-cordialidade/option', [
                 'equipe' => $obNotas->equipe
             ]);
         }
@@ -209,11 +208,11 @@ class Notas extends Page
         $obNotas = EntityNotas::getNotaById($id);
 
         if (!$obNotas instanceof EntityNotas) {
-            $request->getRouter()->redirect('/notas');
+            $request->getRouter()->redirect('/notas-cordialidade');
             exit;
         }
 
-        $content = View::render('/notas/notas/delete', [
+        $content = View::render('/notas/notas-cordialidade/delete', [
             'protocolo' => $obNotas->protocolo,
             'equipe' => $obNotas->equipe,
             'agente' => $obNotas->agente,
@@ -233,12 +232,12 @@ class Notas extends Page
         $obNotas = EntityNotas::getNotaById($id);
 
         if (!$obNotas instanceof EntityNotas) {
-            $request->getRouter()->redirect('/notas');
+            $request->getRouter()->redirect('/notas-cordialidade');
             exit;
         }
         $obNotas->excluir();
 
-        $request->getRouter()->redirect('/notas/notas/table?' . $uri . '&status=deleted');
+        $request->getRouter()->redirect('/notas-cordialidade/table?' . $uri . '&status=deleted');
         exit;
     }
 
@@ -257,7 +256,7 @@ class Notas extends Page
             }
 
         }
-        $request->getRouter()->redirect('/notas/notas/table?' . $uri . '&status=deleted');
+        $request->getRouter()->redirect('/notas-cordialidade/table?' . $uri . '&status=deleted');
         exit;
     }
 }
