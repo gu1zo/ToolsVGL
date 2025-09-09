@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\http\Request;
 use App\Model\Entity\Notas as EntityNotas;
-use App\Model\Entity\Notas as EntityNotasCordialidade;
+use App\Model\Entity\NotasCordialidade as EntityNotasCordialidade;
 use DateTime;
 use Exception;
 
