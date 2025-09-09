@@ -238,7 +238,7 @@ class Notas extends Page
         }
         $obNotas->excluir();
 
-        $request->getRouter()->redirect('/notas/notas/table?' . $uri . '&status=deleted');
+        $request->getRouter()->redirect('/notas/table?' . $uri . '&status=deleted');
         exit;
     }
 
@@ -257,7 +257,7 @@ class Notas extends Page
             }
 
         }
-        $request->getRouter()->redirect('/notas/notas/table?' . $uri . '&status=deleted');
+        $request->getRouter()->redirect('/notas/table?' . $uri . '&status=deleted');
         exit;
     }
 }
