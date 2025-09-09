@@ -3,12 +3,18 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoNotas", url: "/ajax/graficos/notas" },
     { id: "graficoCSAT", url: "/ajax/graficos/csat" },
     { id: "graficoAgentesPositivo", url: "/ajax/graficos/agentesPositivo" },
-    { id: "graficoAgentesNegativo", url: "/ajax/graficos/agentesNegativo" }
+    { id: "graficoAgentesNegativo", url: "/ajax/graficos/agentesNegativo" },
+    { id: "graficoNotasCordialidade", url: "/ajax/graficos/notasCordialidade" },
+    { id: "graficoCSATCordialidade", url: "/ajax/graficos/csatCordialidade" },
+    { id: "graficoAgentesPositivoCordialidade", url: "/ajax/graficos/agentesPositivoCordialidade" },
+    { id: "graficoAgentesNegativoCordialidade", url: "/ajax/graficos/agentesNegativoCordialidade" }
   ];
 
   var lineChartsConfig = [
     { id: "graficoAno", url: "/ajax/graficos/notasAno", yType: "logarithmic" },
-    { id: "graficoMediasAno", url: "/ajax/graficos/mediaNotasAno", yType: "linear" }
+    { id: "graficoMediasAno", url: "/ajax/graficos/mediaNotasAno", yType: "linear" },
+    { id: "graficoAnoCordialidade", url: "/ajax/graficos/notasAnoCordialidade", yType: "logarithmic" },
+    { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" }
   ];
 
   var queryParams = {};

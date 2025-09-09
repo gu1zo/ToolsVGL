@@ -49,7 +49,7 @@ $obRouter->get('/notas-cordialidade/relatorios', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Relatorio::getNotasCSV($request));
+        return new response(200, Relatorio::getNotasCordialidadeCSV($request));
     }
 ]);
 
@@ -59,6 +59,6 @@ $obRouter->get('/notas-cordialidade/graficos', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Relatorio::getGraficos($request));
+        return new response(200, Relatorio::getGraficosCordialidade($request));
     }
 ]);
