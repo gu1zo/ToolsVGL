@@ -122,7 +122,7 @@ class Notas extends Page
         $content = '';
         $status = [
             [
-                'name' => 'Promotores',
+                'name' => 'Satisfatórios',
                 'color' => 'green',
                 'total' => $promotores,
                 'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
@@ -136,7 +136,7 @@ class Notas extends Page
                 'link' => $uri . '&tipo=neutros'
             ],
             [
-                'name' => 'Detratores',
+                'name' => 'Insatisfatórios',
                 'color' => 'red',
                 'total' => $detratores,
                 'porcentagem' => number_format(($detratores / $total) * 100, 2) . "%",

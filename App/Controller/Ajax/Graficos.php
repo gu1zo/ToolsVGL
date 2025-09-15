@@ -80,7 +80,7 @@ class Graficos
             $total++;
         }
 
-        $labels = ['Promotores', 'Neutros', 'Detratores'];
+        $labels = ['Satisfatórios', 'Neutros', 'Insatisfatórios'];
         $data = [
             'labels' => $labels,
             'values' => [$promotores, $neutros, $detratores]
@@ -221,7 +221,7 @@ class Graficos
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Promotores',
+                    'label' => 'Satisfatórios',
                     'data' => $promotores
                 ],
                 [
@@ -229,7 +229,7 @@ class Graficos
                     'data' => $neutros
                 ],
                 [
-                    'label' => 'Detratores',
+                    'label' => 'Insatisfatórios',
                     'data' => $detratores
                 ]
             ]

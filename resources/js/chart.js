@@ -47,6 +47,8 @@ document.addEventListener("DOMContentLoaded", function () {
             colors = ['#f5a6a6', '#f7b267', '#b0c4de', '#a6f5b5', '#76c7a6'];
           } else if(config.id === "graficoCSAT"){
             colors = ['#a6f5b5', '#a1c4e8', '#f5a6a6'];
+          }else if(config.id === "graficoCSATCordialidade"){
+            colors = ['#a6f5b5', '#a1c4e8', '#f5a6a6'];
           } else {
             colors = [
               '#a1c4e8', '#5a8fbf', '#a6f5b5', '#76c7a6',
@@ -144,9 +146,9 @@ document.addEventListener("DOMContentLoaded", function () {
     var gridColor = isDarkMode ? '#444' : '#ddd';
 
     var colors = {
-      "Promotores": "#a6f5b5",
+      "Satisfatórios": "#a6f5b5",
       "Neutros": "#a1c4e8",
-      "Detratores": "#f5a6a6",
+      "Insatisfatórios": "#f5a6a6",
       "Média das Notas": "#5a8fbf"
     };
 
