@@ -6,42 +6,69 @@ namespace Composer\Autoload;
 
 class ComposerStaticInit9743642d6983ecee831de14ef53a1543
 {
-    public static $prefixLengthsPsr4 = array(
-        'W' =>
-            array(
-                'WilliamCosta\\DotEnv\\' => 20,
-                'WilliamCosta\\DatabaseManager\\' => 29,
-            ),
-        'P' =>
-            array(
-                'PHPMailer\\PHPMailer\\' => 20,
-            ),
-        'A' =>
-            array(
-                'App\\' => 4,
-            ),
+    public static $files = array (
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
     );
 
-    public static $prefixDirsPsr4 = array(
-        'WilliamCosta\\DotEnv\\' =>
-            array(
-                0 => __DIR__ . '/..' . '/william-costa/dot-env/src',
-            ),
-        'WilliamCosta\\DatabaseManager\\' =>
-            array(
-                0 => __DIR__ . '/..' . '/william-costa/database-manager/src',
-            ),
-        'PHPMailer\\PHPMailer\\' =>
-            array(
-                0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
-            ),
-        'App\\' =>
-            array(
-                0 => __DIR__ . '/../..' . '/App',
-            ),
+    public static $prefixLengthsPsr4 = array (
+        'W' => 
+        array (
+            'WilliamCosta\\DotEnv\\' => 20,
+            'WilliamCosta\\DatabaseManager\\' => 29,
+        ),
+        'S' => 
+        array (
+            'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'Spatie\\PdfToImage\\' => 18,
+        ),
+        'P' => 
+        array (
+            'PHPMailer\\PHPMailer\\' => 20,
+        ),
+        'A' => 
+        array (
+            'App\\' => 4,
+        ),
     );
 
-    public static $classMap = array(
+    public static $prefixDirsPsr4 = array (
+        'WilliamCosta\\DotEnv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/william-costa/dot-env/src',
+        ),
+        'WilliamCosta\\DatabaseManager\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/william-costa/database-manager/src',
+        ),
+        'Symfony\\Polyfill\\Mbstring\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'Spatie\\PdfToImage\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spatie/pdf-to-image/src',
+        ),
+        'PHPMailer\\PHPMailer\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'App\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/App',
+        ),
+    );
+
+    public static $prefixesPsr0 = array (
+        'S' => 
+        array (
+            'Smalot\\PdfParser\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/smalot/pdfparser/src',
+            ),
+        ),
+    );
+
+    public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
     );
 
@@ -50,6 +77,7 @@ class ComposerStaticInit9743642d6983ecee831de14ef53a1543
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit9743642d6983ecee831de14ef53a1543::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit9743642d6983ecee831de14ef53a1543::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit9743642d6983ecee831de14ef53a1543::$prefixesPsr0;
             $loader->classMap = ComposerStaticInit9743642d6983ecee831de14ef53a1543::$classMap;
 
         }, null, ClassLoader::class);
