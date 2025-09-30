@@ -10,6 +10,7 @@
         "william-costa/database-manager": "^0.1.0",
         "phpmailer/phpmailer": "^6.9",
         "smalot/pdfparser": "^2.12",
-        "spatie/pdf-to-image": "^1.2"
+        "spatie/pdf-to-image": "^1.2",
+        "intervention/image": "^3.11"
     }
 }
