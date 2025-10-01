@@ -162,11 +162,11 @@ class Page
                     'link' => URL . '/notas',
                     'content' => [
                         [
-                            'item' => 'Resolutividade',
+                            'item' => 'Atendimento',
                             'link' => URL . '/notas'
                         ],
                         [
-                            'item' => 'Cordialidade',
+                            'item' => 'Resolutividade',
                             'link' => URL . '/notas-cordialidade'
                         ]
                     ]

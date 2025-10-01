@@ -3,7 +3,7 @@
 use \App\http\Response;
 use \App\Controller\Ajax\Ajax;
 use \App\Controller\Ajax\Graficos;
-use \App\Controller\Ajax\GraficosCordialidade;
+use \App\Controller\Ajax\GraficosResolutividade;
 
 $obRouter->get('/ajax/agendados', [
     'middlewares' => [
@@ -120,38 +120,38 @@ $obRouter->get('/ajax/graficos/mediaNotasAno', [
 $obRouter->get('/ajax/graficos/notasCordialidade', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosCordialidade::getGraficoNotas($request));
+        return new response(200, GraficosResolutividade::getGraficoNotas($request));
     }
 ]);
 $obRouter->get('/ajax/graficos/csatCordialidade', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosCordialidade::getGraficoCSAT($request));
+        return new response(200, GraficosResolutividade::getGraficoResolutividade($request));
     }
 ]);
 $obRouter->get('/ajax/graficos/agentesPositivoCordialidade', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosCordialidade::getGraficoElogiosPorAgente($request));
+        return new response(200, GraficosResolutividade::getGraficoResolutividadePorAgente($request));
     }
 ]);
 $obRouter->get('/ajax/graficos/agentesNegativoCordialidade', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosCordialidade::getGraficoCriticasPorAgente($request));
+        return new response(200, GraficosResolutividade::getGraficoNResolutividadePorAgente($request));
     }
 ]);
 
 $obRouter->get('/ajax/graficos/notasAnoCordialidade', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosCordialidade::getGraficoLinhaNotas($request));
+        return new response(200, GraficosResolutividade::getGraficoLinhaResolutividadeIndividual($request));
     }
 ]);
 
 $obRouter->get('/ajax/graficos/mediaNotasAnoCordialidade', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosCordialidade::getGraficoLinhaMediaNotas($request));
+        return new response(200, GraficosResolutividade::getGraficoLinhaResolutividade($request));
     }
 ]);

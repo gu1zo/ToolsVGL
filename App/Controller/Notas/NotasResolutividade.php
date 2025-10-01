@@ -4,10 +4,10 @@ namespace App\Controller\Notas;
 use \App\Utils\View;
 use \App\Utils\Alert;
 use \App\Controller\Pages\Page;
-use \App\Model\Entity\NotasCordialidade as EntityNotas;
+use \App\Model\Entity\NotasResolutividade as EntityNotas;
 use DateTime;
 
-class NotasCordialidade extends Page
+class NotasResolutividade extends Page
 {
 
     public static function getNotas($request)
@@ -43,25 +43,31 @@ class NotasCordialidade extends Page
         $tipo = $queryParams['tipo'] ?? 'todos';
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
         $uri = str_replace("/table", "/delete", $_SERVER['REQUEST_URI']);
-
+        $nota = '-';
         $itens = '';
+
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
             $seguir = false;
             $data = (new DateTime($obNotas->data))->format('d/m/Y H:i');
 
+
+            if ($obNotas->nota == 1) {
+                $nota = "✔️";
+            }
+            if ($obNotas->nota == 0) {
+                $nota = "❌";
+            }
+
             switch ($tipo) {
-                case 'promotores':
-                    if ($obNotas->nota >= 4) {
+                case 'resolvidos':
+                    if ($obNotas->nota == 1) {
+                        $nota = "Sim";
                         $seguir = true;
                     }
                     break;
-                case 'neutros':
-                    if ($obNotas->nota == 3) {
-                        $seguir = true;
-                    }
-                    break;
-                case 'detratores':
-                    if ($obNotas->nota < 3) {
+                case 'nresolvidos':
+                    if ($obNotas->nota == 0) {
+                        $nota = "Não";
                         $seguir = true;
                     }
                     break;
@@ -73,7 +79,7 @@ class NotasCordialidade extends Page
                     'id' => $obNotas->id,
                     'protocolo' => $obNotas->protocolo,
                     'data' => $data,
-                    'nota' => $obNotas->nota,
+                    'nota' => $nota,
                     'equipe' => $obNotas->equipe,
                     'agente' => $obNotas->agente,
                     'URI' => $uri
@@ -94,20 +100,17 @@ class NotasCordialidade extends Page
         $uri = $_SERVER['REQUEST_URI'];
 
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
-        $detratores = 0;
-        $promotores = 0;
-        $neutros = 0;
+        $nresolvidos = 0;
+        $resolvidos = 0;
         $total = 0;
         $totalNotas = 0;
 
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
             $nota = $obNotas->nota;
-            if ($nota <= 2) {
-                $detratores++;
-            } else if ($nota == 3) {
-                $neutros++;
-            } else if ($nota > 3) {
-                $promotores++;
+            if ($nota == 0) {
+                $nresolvidos++;
+            } else if ($nota == 1) {
+                $resolvidos++;
             }
             $totalNotas += $nota;
             $total++;
@@ -121,38 +124,24 @@ class NotasCordialidade extends Page
         $content = '';
         $status = [
             [
-                'name' => 'Satisfatórios',
+                'name' => 'Resolvidos',
                 'color' => 'green',
-                'total' => $promotores,
-                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=promotores'
+                'total' => $resolvidos,
+                'porcentagem' => number_format(($resolvidos / $total) * 100, 2) . "%",
+                'link' => $uri . '&tipo=resolvidos'
             ],
             [
-                'name' => 'Neutros',
-                'color' => 'lightblue',
-                'total' => $neutros,
-                'porcentagem' => number_format(($neutros / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=neutros'
-            ],
-            [
-                'name' => 'Insatisfatórios',
+                'name' => 'Não Resolvidos',
                 'color' => 'red',
-                'total' => $detratores,
-                'porcentagem' => number_format(($detratores / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=detratores'
+                'total' => $nresolvidos,
+                'porcentagem' => number_format(($nresolvidos / $total) * 100, 2) . "%",
+                'link' => $uri . '&tipo=nresolvidos'
             ],
             [
-                'name' => 'Nota Média',
+                'name' => 'Resolutividade',
                 'color' => 'darkblue',
                 'total' => '',
-                'porcentagem' => number_format(($totalNotas / $total), 2),
-                'link' => $uri . '&tipo=todos'
-            ],
-            [
-                'name' => 'CSAT',
-                'color' => 'green',
-                'total' => '',
-                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
+                'porcentagem' => number_format(($totalNotas / $total), 2) * 100 . "%",
                 'link' => $uri . '&tipo=todos'
             ],
         ];

@@ -1,35 +1,21 @@
 <div class="graficos">
-  <div class="d-flex justify-content-center gap-3">
-    <!-- Primeiro gráfico (meia largura) -->
-    <div class="card mt-4 shadow border-1" style="width: 100%">
-      <div class="card-header">
-        <h5 class="card-title text-center">Notas (%)</h5>
-      </div>
-      <div class="card-body">
-        <div class="chart">
-          <canvas id="graficoNotasCordialidade"></canvas>
-        </div>
-      </div>
+  <!-- Primeiro gráfico menor -->
+  <div class="card mt-4 shadow border-1" style="width: 70%; margin: 0 auto">
+    <div class="card-header">
+      <h5 class="card-title text-center">Resolutividade (%)</h5>
     </div>
-
-    <!-- Segundo gráfico (meia largura) -->
-    <div class="card mt-4 shadow border-1" style="width: 100%">
-      <div class="card-header">
-        <h5 class="card-title text-center">CSAT (%)</h5>
-      </div>
-      <div class="card-body">
-        <div class="chart">
-          <canvas id="graficoCSATCordialidade"></canvas>
-        </div>
+    <div class="card-body">
+      <div class="chart">
+        <canvas id="graficoNotasCordialidade"></canvas>
       </div>
     </div>
   </div>
 
+  <!-- Gráficos de linha originais -->
   <div class="d-flex justify-content-center gap-3">
-    <!-- Primeiro gráfico (meia largura) -->
     <div class="card mt-4 shadow border-1" style="width: 100%">
       <div class="card-header">
-        <h5 class="card-title text-center">Elogios por agente (%)</h5>
+        <h5 class="card-title text-center">Resolução por agente (%)</h5>
       </div>
       <div class="card-body">
         <div class="chart">
@@ -38,10 +24,9 @@
       </div>
     </div>
 
-    <!-- Segundo gráfico (meia largura) -->
     <div class="card mt-4 shadow border-1" style="width: 100%">
       <div class="card-header">
-        <h5 class="card-title text-center">Críticas por agente (%)</h5>
+        <h5 class="card-title text-center">Irresolução por agente (%)</h5>
       </div>
       <div class="card-body">
         <div class="chart">
@@ -51,10 +36,11 @@
     </div>
   </div>
 </div>
+
 <div class="graficos">
   <div class="card mt-4 shadow border-1">
     <div class="card-header">
-      <h5 class="card-title text-center">Histórico de Notas</h5>
+      <h5 class="card-title text-center">Histórico de Resolutividade</h5>
     </div>
     <div class="card-body">
       <div class="chart">
@@ -64,7 +50,7 @@
   </div>
   <div class="card mt-4 shadow border-1">
     <div class="card-header">
-      <h5 class="card-title text-center">Nota Média Mês a Mês</h5>
+      <h5 class="card-title text-center">Resolutividade Mês a Mês</h5>
     </div>
     <div class="card-body">
       <div class="chart">
