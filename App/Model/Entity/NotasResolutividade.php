@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 
 use WilliamCosta\DatabaseManager\Database;
 
-class NotasCordialidade
+class NotasResolutividade
 {
     public $id;
     public $nota;

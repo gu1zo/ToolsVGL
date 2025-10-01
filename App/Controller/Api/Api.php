@@ -4,7 +4,7 @@ namespace App\Controller\Api;
 
 use App\http\Request;
 use App\Model\Entity\Notas as EntityNotas;
-use App\Model\Entity\NotasCordialidade as EntityNotasCordialidade;
+use App\Model\Entity\NotasResolutividade as EntityNotasResolutividade;
 use DateTime;
 use Exception;
 
@@ -67,13 +67,13 @@ class Api
             $agente = $postVars['agente'] ?? throw new Exception('Agente não definido');
             $canal = $postVars['canal'] ?? throw new Exception('Canal não definido');
 
-            $obNotas = EntityNotasCordialidade::getNotasByProtocolo($protocolo);
+            $obNotas = EntityNotasResolutividade::getNotasByProtocolo($protocolo);
 
-            if ($obNotas instanceof EntityNotasCordialidade) {
+            if ($obNotas instanceof EntityNotasResolutividade) {
                 throw new Exception('Protocolo já cadastrado');
             }
 
-            $obNotas = new EntityNotasCordialidade;
+            $obNotas = new EntityNotasResolutividade;
             $obNotas->protocolo = $protocolo;
             $obNotas->nota = $nota;
             $obNotas->equipe = $equipe;

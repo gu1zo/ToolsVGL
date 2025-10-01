@@ -45,9 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
           var colors;
           if(config.id === "graficoNotas"){
             colors = ['#f5a6a6', '#f7b267', '#b0c4de', '#a6f5b5', '#76c7a6'];
+          }else if(config.id === "graficoNotasCordialidade"){
+            colors = ['#76c7a6', '#f5a6a6'];
           } else if(config.id === "graficoCSAT"){
-            colors = ['#a6f5b5', '#a1c4e8', '#f5a6a6'];
-          }else if(config.id === "graficoCSATCordialidade"){
             colors = ['#a6f5b5', '#a1c4e8', '#f5a6a6'];
           } else {
             colors = [
@@ -140,85 +140,91 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function createLineChart(canvasId, labels, datasets, yType) {
-    var ctx = document.getElementById(canvasId).getContext('2d');
-    var isDarkMode = document.body.classList.contains('dark-mode');
-    var textColor = isDarkMode ? '#ddd' : '#333';
-    var gridColor = isDarkMode ? '#444' : '#ddd';
+  var ctx = document.getElementById(canvasId).getContext('2d');
+  var isDarkMode = document.body.classList.contains('dark-mode');
+  var textColor = isDarkMode ? '#ddd' : '#333';
+  var gridColor = isDarkMode ? '#444' : '#ddd';
 
-    var colors = {
-      "Satisfatórios": "#a6f5b5",
-      "Neutros": "#a1c4e8",
-      "Insatisfatórios": "#f5a6a6",
-      "Média das Notas": "#5a8fbf"
+  var colors = {
+    "Resolvidos": "#a6f5b5",
+    "Não Resolvidos": "#f5a6a6",
+    "Resolutividade": "#5a8fbf"
+  };
+
+  var chartDatasets = datasets.map(function(ds) {
+    var color = colors[ds.label] || '#888';
+    return {
+      label: ds.label,
+      data: ds.data,
+      borderColor: color,
+      backgroundColor: color + '55',
+      fill: false,
+      borderWidth: 4,
+      pointRadius: 7,
+      pointHoverRadius: 9,
+      pointBackgroundColor: color,
+      tension: 0.1
     };
+  });
 
-    var chartDatasets = datasets.map(function(ds) {
-      var color = colors[ds.label] || '#888';
-      return {
-        label: ds.label,
-        data: ds.data,
-        borderColor: color,
-        backgroundColor: color + '55',
-        fill: false,
-        borderWidth: 4,
-        pointRadius: 7,
-        pointHoverRadius: 9,
-        pointBackgroundColor: color,
-        tension: 0.1
-      };
-    });
-
-    new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: chartDatasets
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: {
-            labels: {
-              color: textColor,
-              font: { size: 25, weight: 'bold' }
-            }
-          },
-          tooltip: {
-            bodyFont: { size: 25, weight: 'bold' },
-            callbacks: {
-              label: function(context) {
-                return `${context.dataset.label}: ${context.parsed.y}`;
-              }
-            }
-          },
-          datalabels: {
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: chartDatasets
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
             color: textColor,
-            font: { size: 20, weight: 'bold' },
-            align: 'top',
-            anchor: 'end',
-            formatter: function(value) {
-              return value;
+            font: { size: 25, weight: 'bold' }
+          }
+        },
+        tooltip: {
+          bodyFont: { size: 25, weight: 'bold' },
+          callbacks: {
+            label: function(context) {
+              return `${context.dataset.label}: ${context.parsed.y}`;
             }
           }
         },
-        scales: {
-          x: {
-            title: { display: true, text: 'Meses', color: textColor, font: { size: 25, weight: 'bold' } },
-            ticks: { color: textColor, font: { size: 25, weight: 'bold' } },
-            grid: { color: gridColor }
-          },
-          y: {
-            type: yType || 'linear',
-            title: { display: true, text: 'Quantidade', color: textColor, font: { size: 25, weight: 'bold' } },
-            ticks: {
-              color: textColor,
-              font: { size: 25, weight: 'bold' },
-              callback: function(value) { return value; }
-            },
-            grid: { color: gridColor }
+        datalabels: {
+          color: textColor,
+          font: { size: 20, weight: 'bold' },
+          align: 'top',
+          anchor: 'end',
+          formatter: function(value, context) {
+            // Apenas para o graficoMediasAnoCordialidade
+            if(context.chart.canvas.id === "graficoMediasAnoCordialidade") {
+              var percentual = value; // valor já é média em %
+              return `${percentual}%`;
+            }
+            return value;
           }
         }
+      },
+      scales: {
+        x: {
+          title: { display: true, text: 'Meses', color: textColor, font: { size: 25, weight: 'bold' } },
+          ticks: { color: textColor, font: { size: 25, weight: 'bold' } },
+          grid: { color: gridColor }
+        },
+        y: {
+          type: yType || 'linear',
+          title: { display: true, text: 'Quantidade', color: textColor, font: { size: 25, weight: 'bold' } },
+          ticks: {
+            color: textColor,
+            font: { size: 25, weight: 'bold' },
+            callback: function(value) { return value; }
+          },
+          grid: { color: gridColor }
+        }
       }
-    });
-  }
+    },
+    plugins: [ChartDataLabels] // garante que o plugin esteja ativo
+  });
+}
+
 });

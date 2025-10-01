@@ -1,7 +1,7 @@
 <?php
 
 use \App\http\Response;
-use \App\Controller\Notas\NotasCordialidade;
+use \App\Controller\Notas\NotasResolutividade;
 use \App\Controller\Relatorios\Relatorio;
 
 $obRouter->get('/notas-cordialidade', [
@@ -9,7 +9,7 @@ $obRouter->get('/notas-cordialidade', [
         'required-login'
     ],
     function ($request) {
-        return new response(200, NotasCordialidade::getNotas($request));
+        return new response(200, NotasResolutividade::getNotas($request));
     }
 ]);
 
@@ -19,7 +19,7 @@ $obRouter->get('/notas-cordialidade/table', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, NotasCordialidade::getNotasTable($request));
+        return new response(200, NotasResolutividade::getNotasTable($request));
     }
 ]);
 
@@ -29,7 +29,7 @@ $obRouter->get('/notas-cordialidade/delete', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, NotasCordialidade::getDeleteNota($request));
+        return new response(200, NotasResolutividade::getDeleteNota($request));
     }
 ]);
 
@@ -39,7 +39,7 @@ $obRouter->post('/notas-cordialidade/delete', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, NotasCordialidade::setDeleteNotasByGroup($request));
+        return new response(200, NotasResolutividade::setDeleteNotasByGroup($request));
     }
 ]);
 
@@ -49,7 +49,7 @@ $obRouter->get('/notas-cordialidade/relatorios', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Relatorio::getNotasCordialidadeCSV($request));
+        return new response(200, Relatorio::getNotasResolutividadeCSV($request));
     }
 ]);
 

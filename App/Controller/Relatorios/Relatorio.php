@@ -3,7 +3,7 @@
 namespace App\Controller\Relatorios;
 
 use App\Model\Entity\Notas as EntityNotas;
-use App\Model\Entity\NotasCordialidade as EntityNotasCordialidade;
+use App\Model\Entity\NotasResolutividade as EntityNotasResolutividade;
 use App\Utils\View;
 use App\Controller\Pages\Page;
 use DateTime;
@@ -105,7 +105,7 @@ class Relatorio extends Page
 
         return $content;
     }
-    public static function getNotasCordialidadeCSV($request)
+    public static function getNotasResolutividadeCSV($request)
     {
         date_default_timezone_set('America/Sao_Paulo');
         $queryParams = $request->getQueryParams();
@@ -114,12 +114,12 @@ class Relatorio extends Page
         $equipe = $queryParams['equipe'];
         $tipo = $queryParams['tipo'] ?? 'todos';
 
-        $resultados = EntityNotasCordialidade::getNotasByFilter($dataInicio, $dataFim, $equipe);
+        $resultados = EntityNotasResolutividade::getNotasByFilter($dataInicio, $dataFim, $equipe);
         $data = [
             ['protocolo', 'data', 'nota', 'equipe', 'mensagem', 'agente', 'canal']
         ];
 
-        while ($obNotas = $resultados->fetchObject(EntityNotasCordialidade::class)) {
+        while ($obNotas = $resultados->fetchObject(EntityNotasResolutividade::class)) {
             $seguir = false;
 
             switch ($tipo) {

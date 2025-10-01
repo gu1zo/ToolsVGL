@@ -1,9 +1,9 @@
 <?php
 namespace App\Controller\Ajax;
 
-use App\Model\Entity\NotasCordialidade as EntityNotas;
+use App\Model\Entity\NotasResolutividade as EntityNotas;
 
-class GraficosCordialidade
+class GraficosResolutividade
 {
 
     public static function getGraficoNotas($request)
@@ -12,83 +12,65 @@ class GraficosCordialidade
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
         $equipe = $queryParams['equipe'];
+        $uri = $_SERVER['REQUEST_URI'];
 
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
-        $nota1 = 0;
-        $nota2 = 0;
-        $nota3 = 0;
-        $nota4 = 0;
-        $nota5 = 0;
-        $total = 0;
-        $totalNotas = 0;
+        $resolvido = 0;
+        $nresolvido = 0;
 
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
             $nota = $obNotas->nota;
-            switch ($nota) {
-                case 1:
-                    $nota1++;
-                    break;
-                case 2:
-                    $nota2++;
-                    break;
-                case 3:
-                    $nota3++;
-                    break;
-                case 4:
-                    $nota4++;
-                    break;
-                case 5:
-                    $nota5++;
-                    break;
+            if ($nota == 1) {
+                $resolvido++;
+            } else if ($nota == 0) {
+                $nresolvido++;
             }
-            $total++;
         }
 
-        $labels = ['1', '2', '3', '4', '5'];
+        $labels = ['Resolvido', 'Não Resolvido'];
         $data = [
             'labels' => $labels,
-            'values' => [$nota1, $nota2, $nota3, $nota4, $nota5]
+            'values' => [$resolvido, $nresolvido]
         ];
         return json_encode($data, JSON_PRETTY_PRINT);
     }
 
-    public static function getGraficoCSAT($request)
+    public static function getGraficoResolutividade($request)
     {
         $queryParams = $request->getQueryParams();
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
         $equipe = $queryParams['equipe'];
-        $uri = $_SERVER['REQUEST_URI'];
 
         $resultados = EntityNotas::getNotasByFilter($dataInicio, $dataFim, $equipe);
-        $detratores = 0;
-        $promotores = 0;
-        $neutros = 0;
-        $total = 0;
-        $totalNotas = 0;
+        $resolvido = 0;
+        $nresolvido = 0;
 
         while ($obNotas = $resultados->fetchObject(EntityNotas::class)) {
             $nota = $obNotas->nota;
-            if ($nota <= 2) {
-                $detratores++;
-            } else if ($nota == 3) {
-                $neutros++;
-            } else if ($nota > 3) {
-                $promotores++;
+            if ($nota == 1) {
+                $resolvido++;
+            } elseif ($nota == 0) {
+                $nresolvido++;
             }
-            $totalNotas += $nota;
-            $total++;
         }
 
-        $labels = ['Satisfatórios', 'Neutros', 'Insatisfatórios'];
+        $total = $resolvido + $nresolvido;
+
+        $percentResolvido = $total > 0 ? round(($resolvido / $total) * 100, 2) : 0;
+        $percentNaoResolvido = $total > 0 ? round(($nresolvido / $total) * 100, 2) : 0;
+
+        $labels = ['Resolvido', 'Não Resolvido'];
         $data = [
             'labels' => $labels,
-            'values' => [$promotores, $neutros, $detratores]
+            'values' => [$percentResolvido, $percentNaoResolvido]
         ];
+
         return json_encode($data, JSON_PRETTY_PRINT);
     }
 
-    public static function getGraficoElogiosPorAgente($request)
+
+    public static function getGraficoResolutividadePorAgente($request)
     {
         $queryParams = $request->getQueryParams();
         $dataInicio = $queryParams['data_inicial'] ?? null;
@@ -108,7 +90,7 @@ class GraficosCordialidade
             $qtdElogios = 0;
 
             while ($notaObj = $notasAgente->fetchObject()) {
-                if ($notaObj->nota >= 4 && $notaObj->nota <= 5) {
+                if ($notaObj->nota == 1) {
                     $qtdElogios++;
                 }
             }
@@ -135,7 +117,7 @@ class GraficosCordialidade
 
 
 
-    public static function getGraficoCriticasPorAgente($request)
+    public static function getGraficoNResolutividadePorAgente($request)
     {
         $queryParams = $request->getQueryParams();
         $dataInicio = $queryParams['data_inicial'] ?? null;
@@ -153,7 +135,7 @@ class GraficosCordialidade
             $qtdCriticas = 0;
 
             while ($notaObj = $notasAgente->fetchObject()) {
-                if ($notaObj->nota >= 1 && $notaObj->nota <= 2) {
+                if ($notaObj->nota == 0) {
                     $qtdCriticas++;
                 }
             }
@@ -176,7 +158,7 @@ class GraficosCordialidade
     }
 
 
-    public static function getGraficoLinhaNotas($request)
+    public static function getGraficoLinhaResolutividadeIndividual($request)
     {
         // Pega filtros opcionais (ex.: equipe)
         $queryParams = $request->getQueryParams();
@@ -190,60 +172,53 @@ class GraficosCordialidade
             $labels[] = $month->format('m/Y');
         }
 
-        // Inicializa arrays para cada linha
-        $promotores = array_fill(0, 12, 0);
-        $neutros = array_fill(0, 12, 0);
-        $detratores = array_fill(0, 12, 0);
+        // Inicializa arrays para resolvidos e não resolvidos
+        $resolvidos = array_fill(0, 12, 0);
+        $naoResolvidos = array_fill(0, 12, 0);
 
         // Consulta do banco
         $resultados = EntityNotas::getNotasByEquipe($equipe);
 
         while ($obNota = $resultados->fetchObject(EntityNotas::class)) {
-            $nota = (int) $obNota->nota;
-            $data = new \DateTime($obNota->data); // ajuste conforme nome do campo de data
+            $nota = (int) $obNota->nota; // 0 ou 1
+            $data = new \DateTime($obNota->data);
             $mesAno = $data->format('m/Y');
 
             // Se está dentro dos últimos 12 meses
             $index = array_search($mesAno, $labels);
             if ($index !== false) {
-                if ($nota >= 4) {
-                    $promotores[$index]++;
-                } elseif ($nota == 3) {
-                    $neutros[$index]++;
-                } elseif ($nota <= 2) {
-                    $detratores[$index]++;
+                if ($nota === 1) {
+                    $resolvidos[$index]++;
+                } else {
+                    $naoResolvidos[$index]++;
                 }
             }
         }
 
-        // Monta JSON para Chart.js
+        // Monta JSON para Chart.js (mesmo padrão de linha)
         $data = [
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Satisfatórios',
-                    'data' => $promotores
+                    'label' => 'Resolvidos',
+                    'data' => $resolvidos
                 ],
                 [
-                    'label' => 'Neutros',
-                    'data' => $neutros
-                ],
-                [
-                    'label' => 'Insatisfatórios',
-                    'data' => $detratores
+                    'label' => 'Não Resolvidos',
+                    'data' => $naoResolvidos
                 ]
             ]
         ];
 
         return json_encode($data, JSON_PRETTY_PRINT);
     }
-    public static function getGraficoLinhaMediaNotas($request)
+
+    public static function getGraficoLinhaResolutividade($request)
     {
-        // Pega filtros opcionais (ex.: equipe)
         $queryParams = $request->getQueryParams();
         $equipe = $queryParams['equipe'] ?? null;
 
-        // Cria os últimos 12 meses (no formato "m/Y" para exibição)
+        // Cria os últimos 12 meses
         $labels = [];
         $current = new \DateTime('first day of this month');
         for ($i = 11; $i >= 0; $i--) {
@@ -252,32 +227,33 @@ class GraficosCordialidade
         }
 
         // Inicializa arrays para somatório e contagem
-        $somas = array_fill(0, 12, 0);
-        $quantidades = array_fill(0, 12, 0);
+        $resolvidos = array_fill(0, 12, 0); // quantidade de resolvidos
+        $total = array_fill(0, 12, 0);      // total de chamados
 
         // Consulta do banco
         $resultados = EntityNotas::getNotasByEquipe($equipe);
 
         while ($obNota = $resultados->fetchObject(EntityNotas::class)) {
-            $nota = (float) $obNota->nota;
-            $data = new \DateTime($obNota->data); // ajuste conforme nome do campo de data
+            $nota = (int) $obNota->nota; // 0 ou 1
+            $data = new \DateTime($obNota->data);
             $mesAno = $data->format('m/Y');
 
-            // Se está dentro dos últimos 12 meses
             $index = array_search($mesAno, $labels);
             if ($index !== false) {
-                $somas[$index] += $nota;
-                $quantidades[$index]++;
+                $total[$index]++;
+                if ($nota === 1) {
+                    $resolvidos[$index]++;
+                }
             }
         }
 
-        // Calcula média
-        $medias = [];
-        foreach ($somas as $i => $soma) {
-            if ($quantidades[$i] > 0) {
-                $medias[$i] = round($soma / $quantidades[$i], 2);
+        // Calcula % de resolutividade
+        $percentuais = [];
+        foreach ($total as $i => $qtd) {
+            if ($qtd > 0) {
+                $percentuais[$i] = round(($resolvidos[$i] / $qtd) * 100, 2);
             } else {
-                $medias[$i] = 0; // Ou 0, ou deixar null para aparecer "vazio" no gráfico
+                $percentuais[$i] = 0;
             }
         }
 
@@ -286,14 +262,15 @@ class GraficosCordialidade
             'labels' => $labels,
             'datasets' => [
                 [
-                    'label' => 'Média das Notas',
-                    'data' => $medias
+                    'label' => 'Resolutividade',
+                    'data' => $percentuais
                 ]
             ]
         ];
 
         return json_encode($data, JSON_PRETTY_PRINT);
     }
+
 
 
 
