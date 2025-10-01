@@ -148,7 +148,11 @@ document.addEventListener("DOMContentLoaded", function () {
   var colors = {
     "Resolvidos": "#a6f5b5",
     "Não Resolvidos": "#f5a6a6",
-    "Resolutividade": "#5a8fbf"
+    "Resolutividade": "#5a8fbf",
+    "Satisfatórios": "#a6f5b5",
+    "Neutros": "#a1c4e8",
+    "Insatisfatórios": "#f5a6a6",
+    "Média das Notas": "#5a8fbf"
   };
 
   var chartDatasets = datasets.map(function(ds) {
