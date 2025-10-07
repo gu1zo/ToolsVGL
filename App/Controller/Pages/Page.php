@@ -187,6 +187,14 @@ class Page
                     ]
                 ],
             ],
+            'ORDENS DE SERVIÇO' => [
+                [
+                    'name' => 'Ordens Serviço',
+                    'icon' => 'bi bi-table',
+                    'link' => URL . '/os/form',
+                    'content' => []
+                ],
+            ],
             'USUÁRIOS' => [
                 [
                     'name' => 'Listar Usuários',
@@ -201,7 +209,7 @@ class Page
 
 
     /**
-     * Método responsável por retonrar a seção individual da sidebar renderuzada
+     * Método responsável por retonrar a seção individual da sidebar renderizada
      * @param array $vars
      * @return string
      */

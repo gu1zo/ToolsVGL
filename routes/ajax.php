@@ -155,3 +155,10 @@ $obRouter->get('/ajax/graficos/mediaNotasAnoCordialidade', [
         return new response(200, GraficosResolutividade::getGraficoLinhaResolutividade($request));
     }
 ]);
+
+$obRouter->get('/ajax/tecnicos', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getTecnicos($request));
+    }
+]);

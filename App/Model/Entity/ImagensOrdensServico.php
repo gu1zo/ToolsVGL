@@ -4,7 +4,7 @@ namespace App\Model\Entity;
 
 use WilliamCosta\DatabaseManager\Database;
 
-class ImagensOrdensServicoOrdensServico
+class ImagensOrdensServico
 {
     public $id;
     public $idOs;
@@ -13,7 +13,7 @@ class ImagensOrdensServicoOrdensServico
 
     public function cadastrar()
     {
-        $this->id = (new Database('imagens-ordens-servico'))->insert([
+        $this->id = (new Database('imagens_ordens_servico'))->insert([
             'id_os' => $this->idOs,
             'url' => $this->url,
             'descricao' => $this->descricao,
@@ -24,12 +24,18 @@ class ImagensOrdensServicoOrdensServico
 
     public static function getImagensOrdensServico($where = null, $order = null, $limit = null, $fields = '*')
     {
-        return (new Database('imagens-ordens-servico'))->select($where, $order, $limit, $fields);
+        return (new Database('imagens_ordens_servico'))->select($where, $order, $limit, $fields);
     }
 
     public static function getImagemOrdemServicoByIdOs($idOs)
     {
         return self::getImagensOrdensServico('id_os = "' . $idOs . '"')->fetchObject(self::class);
+
+    }
+
+    public static function getTotalImagesByIdOs($idOs)
+    {
+        return self::getImagensOrdensServico('id_os = "' . $idOs . '"', null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
 
     }
 }

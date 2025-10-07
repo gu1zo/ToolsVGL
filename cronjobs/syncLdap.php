@@ -47,4 +47,4 @@ foreach ($results as $ldap) {
     }
 }
 $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo')); // Definir o fuso horário de Brasília
-echo "Usuários sincornizados com o LDAP - ALT - " . $data->format('d/m/Y H:i') . "\n"; // Formatar para o padrão brasileiro
+echo "Usuários sincronizados com o LDAP - ALT - " . $data->format('d/m/Y H:i') . "\n"; // Formatar para o padrão brasileiro

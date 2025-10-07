@@ -1,0 +1,31 @@
+<div class="container">
+  <div class="card mt-4 shadow-sm border-1">
+    <div class="card-header">
+      <h5 class="card-title">Ordens de Serviço</h5>
+    </div>
+    <div class="card-body">
+      {{status}}
+      <form method="post" action="delete?{{URI}}" id="formNotas">
+        <table id="table" class="table table-bordered text-center shadow">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" class="text-center">Número</th>
+              <th scope="col" class="text-center">Data</th>
+              <th scope="col" class="text-center">Tipo</th>
+              <th scope="col" class="text-center">Técnico</th>
+              <th scope="col" class="text-center">Cliente</th>
+              <th scope="col" class="text-center">Imagens</th>
+              <th scope="col" class="text-center">Materiais</th>
+              <th scope="col" class="text-center">Avaliado</th>
+              <th scope="col" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{itens}}
+          </tbody>
+        </table>
+      </form>
+    </div>
+  </div>
+</div>

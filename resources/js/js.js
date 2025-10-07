@@ -7,7 +7,7 @@ $(document).ready(function () {
       searching: true,     // Ativa a pesquisa
       ordering: true,      // Permite ordenação nas colunas
       info: true,          // Exibe informações sobre os registros
-      autoWidth: false,    // Impede que as colunas tenham largura automática
+      autoWidth: false,    
       responsive: true,    // Torna a tabela responsiva
       language: {
           url: "/resources/json/datatable-pt-br.json"  // Tradução para português
@@ -322,4 +322,44 @@ $(document).ready(function () {
           $("#inputsHidden").append('<input type="hidden" name="notas[]" value="' + id + '">');
       });
   });
+});
+
+
+$(document).ready(function () {
+  // Inicialização do Select2 com AJAX
+  $("#tecnicos").select2({
+    ajax: {
+      url: "/ajax/tecnicos", 
+      dataType: "json",         
+      delay: 250,                
+      data: function (params) {  
+        return {
+          search: params.term,   
+          page: params.page || 1 
+        };
+      },
+      processResults: function (data, params) { 
+        params.page = params.page || 1;
+
+        // Ordenar os resultados em ordem alfabética
+        if (data && data.results) {
+          data.results.sort(function (a, b) {
+            return a.text.localeCompare(b.text);
+          });
+        }
+
+        return {
+          results: data.results,
+          pagination: {
+            more: data.pagination && data.pagination.more
+          }
+        };
+      }
+    },
+    placeholder: "Selecione um Técnico", 
+    multiple: false,        
+    closeOnSelect: true, 
+    theme: "bootstrap-5"   
+  });
+  $('#tecnicos').next('.select2-container').find('.select2-selection').addClass('shadow');
 });
