@@ -22,16 +22,13 @@ class Massiva extends Page
     {
         $postVars = $request->getPostVars();
 
-        $dataInicio = (new DateTime($postVars['dataInicio']))->format('d/m/Y H:i');
-        $dataFim = (new DateTime($postVars['dataFim']))->format('d/m/Y H:i');
-
         $obMassiva = new EntityMassivas;
 
         $obMassiva->evento = $postVars['evento'];
-        $obMassiva->dataInicio = $dataInicio;
-        $obMassiva->dataFim = $dataFim;
+        $obMassiva->dataInicio = $postVars['dataInicio'];
+        $obMassiva->dataFim = $postVars['dataFim'];
         $obMassiva->cadastrar();
-        $request->getRouter()->redirect('/massiva?status=created');
+        $request->getRouter()->redirect('/massivas?status=created');
         exit;
     }
 
@@ -43,7 +40,7 @@ class Massiva extends Page
             'status' => self::getStatus($request)
         ]);
         //Retorna a página
-        return parent::getPage('Perdidas > ToolsVGL', $content);
+        return parent::getPage('Massivas > ToolsVGL', $content);
     }
 
     private static function getMassivasItens($request)
@@ -60,11 +57,11 @@ class Massiva extends Page
         $results = EntityMassivas::getMassivas(null, 'id DESC');
 
         while ($obMassivas = $results->fetchObject(EntityMassivas::class)) {
-            $itens .= View::render('/massivas/table/item', [
+            $itens .= View::render('/massivas/item', [
                 'id' => $obMassivas->id,
-                'evento' => $obMassivas->motivo,
-                'dataInicio' => $obMassivas->espera,
-                'dataFim' => $obMassivas->posicao,
+                'evento' => $obMassivas->evento,
+                'dataInicio' => $obMassivas->dataInicio,
+                'dataFim' => $obMassivas->dataFim,
             ]);
         }
         return $itens;

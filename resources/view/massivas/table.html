@@ -9,15 +9,27 @@
       <table id="table" class="table table-bordered text-center shadow">
         <thead>
           <tr>
-            <th scope="col">ID</th>
-            <th scope="col">Evento</th>
-            <th scope="col">Data Inicio</th>
-            <th scope="col">Data Fim</th>
+            <th class="text-center" scope="col">ID</th>
+            <th class="text-center" scope="col">Evento</th>
+            <th class="text-center" scope="col">Data Inicio</th>
+            <th class="text-center" scope="col">Data Fim</th>
           </tr>
         </thead>
         <tbody>
           {{itens}}
         </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="4" class="text-center">
+              <a
+                href="{{URL}}/massivas/form"
+                class="btn btn-outline-primary shadow"
+              >
+                <i class="bi bi-clipboard-plus"></i> Novo
+              </a>
+            </td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
