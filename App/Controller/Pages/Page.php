@@ -186,6 +186,21 @@ class Page
                         ]
                     ]
                 ],
+                [
+                    'name' => 'Eventos Massivos',
+                    'icon' => 'bi bi-hdd-stack',
+                    'link' => URL . '/notas',
+                    'content' => [
+                        [
+                            'item' => 'Novo Evento',
+                            'link' => URL . '/massivas/form'
+                        ],
+                        [
+                            'item' => 'Listar Eventos',
+                            'link' => URL . '/massivas'
+                        ]
+                    ]
+                ],
             ],
             'USUÁRIOS' => [
                 [

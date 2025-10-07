@@ -1,0 +1,24 @@
+<!-- Card de Tabela de Eventos -->
+<div class="container">
+  <div class="card mt-4 shadow-sm border-1">
+    <div class="card-header">
+      <h5 class="card-title">Eventos Massivos</h5>
+    </div>
+    <div class="card-body">
+      {{status}}
+      <table id="table" class="table table-bordered text-center shadow">
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Evento</th>
+            <th scope="col">Data Inicio</th>
+            <th scope="col">Data Fim</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{itens}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
