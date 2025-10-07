@@ -10,24 +10,12 @@
     <div class="card-body">
       {{status}}
       <form method="post">
-        <!-- Nome -->
-        <div class="form-group mb-3 w-75 mx-auto text-center">
-          <label for="evento" class="form-label">Evento Originador:</label>
-          <input
-            name="evento"
-            type="text"
-            class="form-control shadow text-center"
-            placeholder="Digite o evento originador"
-            required
-          />
-        </div>
         <div class="form-group mb-3 w-75 mx-auto text-center">
           <label for="dataInicio" class="form-label">Data Inicio:</label>
           <input
             name="dataInicio"
             type="datetime-local"
             class="form-control shadow text-center"
-            placeholder="Digite o originador"
             required
           />
         </div>
@@ -37,9 +25,12 @@
             name="dataFim"
             type="datetime-local"
             class="form-control shadow text-center"
-            placeholder="Digite o originador"
             required
           />
+        </div>
+        <div class="form-group mb-3 w-75 mx-auto text-center">
+          <label for="evento" class="form-label">Evento Originador:</label>
+          <textarea name="evento" class="form-control shadow"></textarea>
         </div>
         <div class="d-flex justify-content-center gap-3 mb-2">
           <a href="{{URL}}/" class="shadow btn btn-blue">Voltar</a>
