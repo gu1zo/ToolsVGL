@@ -4,6 +4,7 @@ namespace App\Controller\Relatorios;
 
 use App\Model\Entity\Notas as EntityNotas;
 use App\Model\Entity\NotasResolutividade as EntityNotasResolutividade;
+use App\Model\Entity\Massiva as EntityMassivas;
 use App\Utils\View;
 use App\Controller\Pages\Page;
 use DateTime;
@@ -157,6 +158,50 @@ class Relatorio extends Page
         // Nome do arquivo CSV
 
         $filename = "Relatório Notas " . date('d-m-Y') . ".csv";
+
+        // Definir cabeçalhos para download
+        // Cabeçalhos
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+        // Abrir saída
+        $output = fopen('php://output', 'w');
+
+        // BOM para UTF-8
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        // Escrever dados com conversão explícita para UTF-8
+        foreach ($data as $row) {
+            $utf8Row = array_map(fn($val) => mb_convert_encoding($val, 'UTF-8', 'auto'), $row);
+            fputcsv($output, $utf8Row, ';');
+        }
+
+        fclose($output);
+        exit;
+
+    }
+
+
+    public static function getMassivasCSV($request)
+    {
+        date_default_timezone_set('America/Sao_Paulo');
+
+        $resultados = EntityMassivas::getMassivas();
+        $data = [
+            ['evento', 'dataInicio', 'dataFim']
+        ];
+
+        while ($obMassivas = $resultados->fetchObject(EntityMassivas::class)) {
+            $data[] = [
+                $obMassivas->evento,
+                $obMassivas->dataInicio,
+                $obMassivas->dataFim,
+            ];
+        }
+
+        // Nome do arquivo CSV
+
+        $filename = "Relatório Massivas " . date('d-m-Y') . ".csv";
 
         // Definir cabeçalhos para download
         // Cabeçalhos

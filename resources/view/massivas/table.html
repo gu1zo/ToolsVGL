@@ -6,7 +6,7 @@
     </div>
     <div class="card-body">
       {{status}}
-      <table id="table" class="table table-bordered text-center shadow">
+      <table id="massiva" class="table table-bordered text-center shadow">
         <thead>
           <tr>
             <th class="text-center" scope="col">ID</th>
@@ -26,6 +26,12 @@
                 class="btn btn-outline-primary shadow"
               >
                 <i class="bi bi-clipboard-plus"></i> Novo
+              </a>
+              <a
+                class="btn btn-outline-primary shadow"
+                href="{{URL}}/massivas/relatorios"
+              >
+                <i class="bi bi-cloud-download"></i> Baixar CSV
               </a>
             </td>
           </tr>

@@ -54,7 +54,7 @@ class Massiva extends Page
             $itens = '';
         }
 
-        $results = EntityMassivas::getMassivas(null, 'id DESC');
+        $results = EntityMassivas::getMassivas(null, 'id ASC');
 
         while ($obMassivas = $results->fetchObject(EntityMassivas::class)) {
             $itens .= View::render('/massivas/item', [

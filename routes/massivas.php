@@ -2,6 +2,7 @@
 
 use \App\http\Response;
 use \App\Controller\Massiva\Massiva;
+use \App\Controller\Relatorios\Relatorio;
 
 $obRouter->get('/massivas', [
     'middlewares' => [
@@ -30,5 +31,15 @@ $obRouter->post('/massivas/form', [
     ],
     function ($request) {
         return new response(200, Massiva::setNovaMassiva($request));
+    }
+]);
+
+$obRouter->get('/massivas/relatorios', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Relatorio::getMassivasCSV($request));
     }
 ]);

@@ -21,6 +21,27 @@ $(document).ready(function () {
   });
 });
 $(document).ready(function () {
+  $('#massiva').DataTable({
+      paging: true,
+      searching: true,
+      ordering: true,
+      info: true,
+      autoWidth: false,
+      responsive: true,
+      language: {
+          url: "/resources/json/datatable-pt-br.json"
+      },
+      columnDefs: [
+          { width: "8px", targets: 0 }
+      ],
+      createdRow: function (row, data, dataIndex) {
+          $(row).find('td').eq(0).addClass('default');
+      },
+      order: [[2, 'desc']] 
+  });
+});
+
+$(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
   let tipo = urlParams.get('tipo');
 
