@@ -191,11 +191,13 @@ class Relatorio extends Page
             ['evento', 'dataInicio', 'dataFim']
         ];
 
+
         while ($obMassivas = $resultados->fetchObject(EntityMassivas::class)) {
+            $dataFim = $obMassivas->dataFim == null ? '' : $obMassivas->dataFim;
             $data[] = [
                 $obMassivas->evento,
                 $obMassivas->dataInicio,
-                $obMassivas->dataFim,
+                $dataFim,
             ];
         }
 
