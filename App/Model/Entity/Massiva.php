@@ -15,7 +15,6 @@ class Massiva
     {
         $this->id = (new Database('massiva'))->insert([
             'dataInicio' => $this->dataInicio,
-            'dataFim' => $this->dataFim,
             'evento' => $this->evento
 
         ]);
@@ -27,6 +26,11 @@ class Massiva
     {
         return (new Database('massiva'))->select($where, $order, $limit, $fields, $group);
     }
+    public static function getMassivaById($id)
+    {
+        return self::getMassivas('id = "' . $id . '"')->fetchObject(self::class);
+    }
+
     public function atualizar()
     {
         return (new Database('massiva'))->update('id =' . $this->id, [

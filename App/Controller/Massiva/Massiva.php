@@ -12,7 +12,10 @@ class Massiva extends Page
     public static function getNovaMassiva($request)
     {
         $content = View::render('massivas/form', [
-            'status' => self::getStatus($request)
+            'status' => self::getStatus($request),
+            'data-inicio' => '',
+            'data-fim' => '',
+            'evento' => ''
         ]);
 
         return parent::getPage('Nova Massiva > ToolsVGL', $content);
@@ -26,7 +29,6 @@ class Massiva extends Page
 
         $obMassiva->evento = $postVars['evento'];
         $obMassiva->dataInicio = $postVars['dataInicio'];
-        $obMassiva->dataFim = $postVars['dataFim'];
         $obMassiva->cadastrar();
         $request->getRouter()->redirect('/massivas?status=created');
         exit;
@@ -57,14 +59,96 @@ class Massiva extends Page
         $results = EntityMassivas::getMassivas(null, 'id ASC');
 
         while ($obMassivas = $results->fetchObject(EntityMassivas::class)) {
+            $dataFim = $obMassivas->dataFim == null ? '-' : $obMassivas->dataFim;
             $itens .= View::render('/massivas/item', [
                 'id' => $obMassivas->id,
                 'evento' => $obMassivas->evento,
                 'dataInicio' => $obMassivas->dataInicio,
-                'dataFim' => $obMassivas->dataFim,
+                'dataFim' => $dataFim
             ]);
         }
         return $itens;
+    }
+
+    public static function getEditMassiva($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+
+        $obMassiva = EntityMassivas::getMassivaById($id);
+
+        if (!$obMassiva instanceof EntityMassivas) {
+            $request->getRouter()->redirect('/massivas?status=undefined');
+            exit;
+        }
+
+        $dataFim = $obMassiva->dataFim == null ? '' : $obMassiva->dataFim;
+
+        $content = View::render('massivas/form', [
+            'status' => self::getStatus($request),
+            'data-inicio' => $obMassiva->dataInicio,
+            'data-fim' => $dataFim,
+            'evento' => $obMassiva->evento
+        ]);
+
+        return parent::getPage('Nova Massiva > ToolsVGL', $content);
+    }
+
+    public static function setEditMassiva($request)
+    {
+        $postVars = $request->getPostVars();
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+
+        $obMassiva = EntityMassivas::getMassivaById($id);
+
+        if (!$obMassiva instanceof EntityMassivas) {
+            $request->getRouter()->redirect('/massivas?status=undefined');
+            exit;
+        }
+
+        $obMassiva->evento = $postVars['evento'];
+        $obMassiva->dataInicio = $postVars['dataInicio'];
+        $obMassiva->dataFim = $postVars['dataFim'];
+        $obMassiva->atualizar();
+        $request->getRouter()->redirect('/massivas?status=updated');
+        exit;
+    }
+
+    public static function getDeleteMassiva($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+
+        $obMassiva = EntityMassivas::getMassivaById($id);
+
+        if (!$obMassiva instanceof EntityMassivas) {
+            $request->getRouter()->redirect('/massivas?status=undefined');
+            exit;
+        }
+
+        $content = View::render('massivas/delete', [
+        ]);
+
+        return parent::getPage('Nova Massiva > ToolsVGL', $content);
+
+    }
+
+    public static function setDeleteMassiva($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+
+        $obMassiva = EntityMassivas::getMassivaById($id);
+
+        if (!$obMassiva instanceof EntityMassivas) {
+            $request->getRouter()->redirect('/massivas?status=undefined');
+            exit;
+        }
+
+        $obMassiva->excluir();
+        $request->getRouter()->redirect('/massivas?status=deleted');
+        exit;
     }
 
 
@@ -77,7 +161,13 @@ class Massiva extends Page
 
         switch ($queryParams['status']) {
             case 'created':
-                return Alert::getSuccess('Massiva cadastrada com sucesso!');
+                return Alert::getSuccess('Evento cadastrado com sucesso!');
+            case 'updated':
+                return Alert::getSuccess('Evento atualizado com sucesso!');
+            case 'deleted':
+                return Alert::getSuccess('Evento excluído com sucesso!');
+            case 'undefined':
+                return Alert::getError('Evento não localizado!');
         }
         return '';
     }

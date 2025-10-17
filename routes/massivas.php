@@ -34,6 +34,46 @@ $obRouter->post('/massivas/form', [
     }
 ]);
 
+$obRouter->get('/massivas/form/edit', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Massiva::getEditMassiva($request));
+    }
+]);
+
+$obRouter->post('/massivas/form/edit', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Massiva::setEditMassiva($request));
+    }
+]);
+
+$obRouter->get('/massivas/delete', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Massiva::getDeleteMassiva($request));
+    }
+]);
+
+$obRouter->post('/massivas/delete', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Massiva::setDeleteMassiva($request));
+    }
+]);
+
 $obRouter->get('/massivas/relatorios', [
     'middlewares' => [
         'required-login',
