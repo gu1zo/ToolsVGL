@@ -25,10 +25,13 @@ class Massiva extends Page
     {
         $postVars = $request->getPostVars();
 
+
         $obMassiva = new EntityMassivas;
+        $dataFim = $postVars['dataFim'] == '' ? null : $postVars['dataFim'];
 
         $obMassiva->evento = $postVars['evento'];
         $obMassiva->dataInicio = $postVars['dataInicio'];
+        $obMassiva->dataFim = $dataFim;
         $obMassiva->cadastrar();
         $request->getRouter()->redirect('/massivas?status=created');
         exit;
@@ -107,9 +110,11 @@ class Massiva extends Page
             exit;
         }
 
+        $dataFim = $postVars['dataFim'] == '' ? null : $postVars['dataFim'];
+
         $obMassiva->evento = $postVars['evento'];
         $obMassiva->dataInicio = $postVars['dataInicio'];
-        $obMassiva->dataFim = $postVars['dataFim'];
+        $obMassiva->dataFim = $dataFim;
         $obMassiva->atualizar();
         $request->getRouter()->redirect('/massivas?status=updated');
         exit;

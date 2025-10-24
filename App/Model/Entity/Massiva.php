@@ -15,6 +15,7 @@ class Massiva
     {
         $this->id = (new Database('massiva'))->insert([
             'dataInicio' => $this->dataInicio,
+            'dataFim' => $this->dataFim,
             'evento' => $this->evento
 
         ]);
