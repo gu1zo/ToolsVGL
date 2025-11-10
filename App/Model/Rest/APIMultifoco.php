@@ -2,6 +2,8 @@
 
 namespace App\Model\Rest;
 
+use DateTime;
+
 class APIMultifoco
 {
     private $uri;
@@ -152,6 +154,18 @@ class APIMultifoco
 
         if (!empty($data['items'])) {
             $item = $data['items'];
+            $dataInicio = $item['serviceExecution']['execution']['startFormatted']; // "06/11/2025 13:30"
+            $dataFim = $item['serviceExecution']['execution']['endFormatted'];     // "06/11/2025 22:47"
+
+            $inicio = DateTime::createFromFormat('d/m/Y H:i', $dataInicio);
+            $fim = DateTime::createFromFormat('d/m/Y H:i', $dataFim);
+
+            $tempo = '';
+            if ($inicio && $fim) {
+                $intervalo = $inicio->diff($fim);
+                $tempo = sprintf('%02d:%02d', ($intervalo->days * 24) + $intervalo->h, $intervalo->i);
+            }
+
             $osData = [
                 'numero' => $item['number'] ?? '',
                 'data' => $item['schedule']['schedulingEndFormatted'] ?? '',
@@ -159,9 +173,14 @@ class APIMultifoco
                 'nome-tecnico' => $item['technician']['name'] ?? '',
                 'cliente' => $item['client']['name'] ?? '',
                 'tipo' => $item['modelDoc']['name'] ?? '',
+                'obs' => $item['schedule']['serviceExecution']['fields']['5_TEXTO_LONGO'] ?? '',
+                'pppoe' => $item['customFields']['login'] ?? '',
+                'solicitado' => $item['expectedService'] ?? '',
+                'plano' => $item['customFields']['planName'] ?? '',
+                'tipo_fechamento' => $item['serviceExecution']['fields']['12_LISTA_COM_MULTIPLA_ESCOLHA']['label'] ?? '',
+                'tempo' => $tempo
             ];
         }
-
         return $osData;
     }
 

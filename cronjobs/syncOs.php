@@ -29,6 +29,12 @@ foreach ($response as $item) {
         $obOrdemServico->nome_tecnico = $OrdemServico['nome-tecnico'];
         $obOrdemServico->cliente = $OrdemServico['cliente'];
         $obOrdemServico->tipo = $OrdemServico['tipo'];
+        $obOrdemServico->obs = $OrdemServico['obs'];
+        $obOrdemServico->pppoe = $OrdemServico['pppoe'];
+        $obOrdemServico->solicitado = $OrdemServico['solicitado'];
+        $obOrdemServico->plano = $OrdemServico['plano'];
+        $obOrdemServico->tipo_fechamento = $OrdemServico['tipo_fechamento'];
+        $obOrdemServico->tempo = $OrdemServico['tempo'];
         $obOrdemServico->cadastrar();
 
         foreach ($imagens as $i) {
@@ -43,9 +49,10 @@ foreach ($response as $item) {
             $obEquipamentosOrdemServico = new EntityEquipamentosOrdemServico();
             $obEquipamentosOrdemServico->idOs = $obOrdemServico->id;
             $obEquipamentosOrdemServico->item = $e['nome'];
-            $obEquipamentosOrdemServico->qtd = $e['qtd'];
+            $obEquipamentosOrdemServico->qtd = is_numeric($e['qtd']) ? (double) $e['qtd'] : 0.0;
             $obEquipamentosOrdemServico->cadastrar();
         }
+
     }
 }
 

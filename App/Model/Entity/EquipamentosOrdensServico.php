@@ -11,6 +11,8 @@ class EquipamentosOrdensServico
     public $item;
     public $qtd;
 
+    public $id_os;
+
     public function cadastrar()
     {
         $this->id = (new Database('equipamentos_ordens_servico'))->insert([

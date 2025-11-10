@@ -3,6 +3,7 @@ namespace App\Controller\Ajax;
 
 use App\Controller\Api\EvolutionAPI;
 use App\Controller\Agendados\Agendados;
+use App\Controller\OrdensServico\OrdensServico;
 use \App\Model\Entity\Agendados as EntityAgendados;
 use \App\Model\Entity\Fila as EntityFila;
 use \App\Model\Entity\User as EntityUser;
@@ -256,5 +257,32 @@ class Ajax
         // Retornar JSON
         return json_encode($response);
     }
+
+    public static function getOnu($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $pppoe = $queryParams['pppoe'] ?? null;
+
+        if (!$pppoe) {
+            return json_encode(['error' => 'PPPoE não informado']);
+        }
+
+        $data = OrdensServico::getOnu($pppoe);
+        return $data;
+    }
+
+    public static function getRoteador($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $pppoe = $queryParams['pppoe'] ?? null;
+
+        if (!$pppoe) {
+            return json_encode(['error' => 'PPPoE não informado']);
+        }
+
+        $data = OrdensServico::getRoteador($pppoe);
+        return $data;
+    }
+
 
 }

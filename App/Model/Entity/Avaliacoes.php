@@ -16,7 +16,7 @@ class Avaliacoes
     {
         $this->id = (new Database('avaliacoes'))->insert([
             'id_os' => $this->idOs,
-            'idTecnico' => $this->idTecnico,
+            'id_tecnico' => $this->idTecnico,
             'nota' => $this->nota,
             'descricao' => $this->descricao,
         ]);

@@ -8,6 +8,7 @@ class ImagensOrdensServico
 {
     public $id;
     public $idOs;
+    public $id_os;
     public $url;
     public $descricao;
 
@@ -29,7 +30,7 @@ class ImagensOrdensServico
 
     public static function getImagemOrdemServicoByIdOs($idOs)
     {
-        return self::getImagensOrdensServico('id_os = "' . $idOs . '"')->fetchObject(self::class);
+        return self::getImagensOrdensServico('id_os = "' . $idOs . '"');
 
     }
 

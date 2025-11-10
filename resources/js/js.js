@@ -210,6 +210,10 @@ $(document).ready(function () {
     tabelaFila.ajax.reload(null, false);  // Recarrega os dados sem resetar a página
 }, 500);
 });
+
+
+
+
   /**
    * Toottips 
    */

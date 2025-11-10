@@ -22,3 +22,23 @@ $obRouter->get('/os/table', [
         return new response(200, OrdensServico::getOsTable($request));
     }
 ]);
+
+$obRouter->get('/os', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, OrdensServico::getOsDetails($request));
+    }
+]);
+
+$obRouter->post('/os/avaliar', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, OrdensServico::setAvaliacao($request));
+    }
+]);

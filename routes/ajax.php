@@ -162,3 +162,17 @@ $obRouter->get('/ajax/tecnicos', [
         return new response(200, Ajax::getTecnicos($request));
     }
 ]);
+
+$obRouter->get('/ajax/os/router', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getRoteador($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/onu', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getOnu($request));
+    }
+]);
