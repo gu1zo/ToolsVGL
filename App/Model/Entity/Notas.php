@@ -42,40 +42,61 @@ class Notas
 
     public static function getNotasByFilter($dataInicio, $dataFim, $equipe)
     {
-        if ($equipe == 'todas') {
-            return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"');
+        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"';
 
+        if ($equipe == 'todas') {
+            return self::getNotas($periodo);
         }
-        return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND equipe = "' . $equipe . '"');
+
+        if ($equipe == 'ggnet' || $equipe == 'alt') {
+            return self::getNotas($periodo . ' AND canal = "' . $equipe . '"');
+        }
+
+        return self::getNotas($periodo . ' AND equipe = "' . $equipe . '"');
     }
 
     public static function getNotasByAgente($agente, $dataInicio, $dataFim, $equipe)
     {
-        if ($equipe == 'todas') {
-            return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND agente="' . $agente . '"');
+        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"';
 
+        if ($equipe == 'todas') {
+            return self::getNotas($periodo . ' AND agente="' . $agente . '"');
         }
-        return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND equipe = "' . $equipe . '" AND agente="' . $agente . '"');
+
+        if ($equipe == 'ggnet' || $equipe == 'alt') {
+            return self::getNotas($periodo . ' AND canal = "' . $equipe . '" AND agente="' . $agente . '"');
+        }
+
+        return self::getNotas($periodo . ' AND equipe = "' . $equipe . '" AND agente="' . $agente . '"');
     }
+
     public static function getAgentesByFilter($dataInicio, $dataFim, $equipe)
     {
-        if ($equipe == 'todas') {
-            return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"', null, null, '*', 'agente');
+        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"';
 
+        if ($equipe == 'todas') {
+            return self::getNotas($periodo, null, null, '*', 'agente');
         }
-        return self::getNotas('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND equipe = "' . $equipe . '"', null, null, '*', 'agente');
+
+        if ($equipe == 'ggnet' || $equipe == 'alt') {
+            return self::getNotas($periodo . ' AND canal = "' . $equipe . '"', null, null, '*', 'agente');
+        }
+
+        return self::getNotas($periodo . ' AND equipe = "' . $equipe . '"', null, null, '*', 'agente');
     }
 
     public static function getNotasByEquipe($equipe)
     {
         if ($equipe == 'todas') {
             return self::getNotas();
-
         }
+
+        if ($equipe == 'ggnet' || $equipe == 'alt') {
+            return self::getNotas('canal = "' . $equipe . '"');
+        }
+
         return self::getNotas('equipe = "' . $equipe . '"');
     }
-
-
 
     public static function getNotasByProtocolo($protocolo)
     {
@@ -86,6 +107,7 @@ class Notas
     {
         return self::getNotas('id = "' . $id . '"')->fetchObject(self::class);
     }
+
     public static function getEquipes()
     {
         return self::getNotas(null, null, null, 'equipe', 'equipe');
@@ -107,6 +129,5 @@ class Notas
     public function excluir()
     {
         return (new Database('notas'))->delete('id =' . $this->id);
-
     }
 }
