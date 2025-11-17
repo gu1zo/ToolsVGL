@@ -108,8 +108,8 @@ class Emails extends Page
             $itens .= View::render('envio-emails/item', [
                 'titulo' => $obFilaEmails->titulo
             ]);
-            return $itens;
         }
+        return $itens;
     }
 
 
