@@ -2,6 +2,7 @@
 
 use \App\http\Response;
 use \App\Controller\OrdensServico\OrdensServico;
+use \App\Controller\Relatorios\Relatorio;
 
 $obRouter->get('/os/form', [
     'middlewares' => [
@@ -40,5 +41,14 @@ $obRouter->post('/os/avaliar', [
     ],
     function ($request) {
         return new response(200, OrdensServico::setAvaliacao($request));
+    }
+]);
+$obRouter->get('/os/graficos', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Relatorio::getGraficosOs($request));
     }
 ]);

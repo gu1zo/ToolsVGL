@@ -192,7 +192,16 @@ class Page
                     'name' => 'Ordens Serviço',
                     'icon' => 'bi bi-table',
                     'link' => URL . '/os/form',
-                    'content' => []
+                    'content' => [
+                        [
+                            'item' => 'Ver Ordens de Serviço',
+                            'link' => URL . '/os/form'
+                        ],
+                        [
+                            'item' => 'Gráficos',
+                            'link' => URL . '/os/graficos'
+                        ]
+                    ]
                 ],
             ],
             'USUÁRIOS' => [

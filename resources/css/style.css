@@ -499,3 +499,51 @@ footer {
 .dark-mode .select2-container--default .select2-selection--single .select2-selection__arrow b {
   border-color: #fff transparent transparent transparent !important;
 }
+.os-wrapper {
+    position: relative;
+}
+
+/* Botões laterais */
+.btn-os {
+    position: sticky;
+    top: 50vh;
+    transform: translateY(-50%);
+
+    width: 55px;
+    height: 55px;
+
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+
+    font-size: 28px;
+    background: #0d6efd;
+    color: #fff;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    z-index: 50;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25);
+
+    transition: 0.2s ease;
+}
+
+.btn-os:hover {
+    background: #084298;
+    transform: translateY(-50%) scale(1.1);
+}
+
+/* Agora realmente nas LATERAIS do container */
+.btn-os-left {
+    position: absolute;
+    left: 50px;    /* distância lateral */
+    margin: 50px;
+}
+
+.btn-os-right {
+    position: absolute;
+    right: 50px;   /* distância lateral */
+    margin: 50px;
+}

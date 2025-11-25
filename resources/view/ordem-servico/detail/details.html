@@ -1,170 +1,186 @@
-<div class="container my-4">
-  {{status}}
-  <!-- BLOCO 1: Dados da Ordem de Serviço -->
-  <h1 class="h1">Ordem de Serviço {{id}}</h1>
-  <div class="card mt-4 shadow-sm border-1">
-    <div class="card-header">
-      <h5 class="card-title mb-0">Dados da Ordem de Serviço</h5>
-    </div>
-    <div class="card-body">
-      <!-- Linha 1 -->
-      <div class="row mb-3">
-        <div class="col-md-1">
-          <label class="form-label fw-bold mb-1">Nº OS:</label>
-          <input type="text" class="form-control" value="{{id}}" disabled />
-        </div>
-        <div class="col-md-2">
-          <label class="form-label fw-bold mb-1">Data:</label>
-          <input type="text" class="form-control" value="{{data}}" disabled />
-        </div>
-        <div class="col-md-3">
-          <label class="form-label fw-bold mb-1">Técnico Responsável:</label>
-          <input
-            type="text"
-            class="form-control"
-            value="{{tecnico}}"
-            disabled
-          />
-        </div>
-        <div class="col-md-4">
-          <label class="form-label fw-bold mb-1">Tipo:</label>
-          <input
-            type="text"
-            class="form-control"
-            value="{{tipo_os}}"
-            disabled
-          />
-        </div>
-        <div class="col-md-2">
-          <label class="form-label fw-bold mb-1">Tipo de Fechamento:</label>
-          <input
-            type="text"
-            class="form-control"
-            value="{{tipo_fechamento}}"
-            disabled
-          />
-        </div>
-      </div>
+<div class="os-wrapper position-relative">
+  {{buttons}}
 
-      <!-- Linha 2 -->
-      <div class="row mb-3">
-        <div class="col-md-4">
-          <label class="form-label fw-bold mb-1">Cliente:</label>
-          <input
-            type="text"
-            class="form-control"
-            value="{{cliente}}"
-            disabled
-          />
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold mb-1">Plano do Cliente:</label>
-          <input type="text" class="form-control" value="{{plano}}" disabled />
-        </div>
-        <div class="col-md-2">
-          <label class="form-label fw-bold mb-1">Tempo de Execução:</label>
-          <input type="text" class="form-control" value="{{tempo}}" disabled />
-        </div>
+  <div class="container my-4">
+    {{status}}
+    <!-- BLOCO 1: Dados da Ordem de Serviço -->
+    <h1 class="h1">Ordem de Serviço {{id}}</h1>
+    <div class="card mt-4 shadow-sm border-1">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Dados da Ordem de Serviço</h5>
       </div>
+      <div class="card-body">
+        <!-- Linha 1 -->
+        <div class="row mb-3">
+          <div class="col-md-1">
+            <label class="form-label fw-bold mb-1">Nº OS:</label>
+            <input type="text" class="form-control" value="{{id}}" disabled />
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-bold mb-1">Data:</label>
+            <input type="text" class="form-control" value="{{data}}" disabled />
+          </div>
+          <div class="col-md-3">
+            <label class="form-label fw-bold mb-1">Técnico Responsável:</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{tecnico}}"
+              disabled
+            />
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-bold mb-1">Tipo:</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{tipo_os}}"
+              disabled
+            />
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-bold mb-1">Tipo de Fechamento:</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{tipo_fechamento}}"
+              disabled
+            />
+          </div>
+        </div>
 
-      <!-- Linha 3: Serviço Solicitado e Relato -->
-      <div class="row">
-        <div class="col-md-6">
-          <label class="form-label fw-bold mb-1">Serviço Solicitado:</label>
-          <textarea
-            class="form-control"
-            rows="4"
-            disabled
-            style="white-space: pre-wrap"
-          >
+        <!-- Linha 2 -->
+        <div class="row mb-3">
+          <div class="col-md-4">
+            <label class="form-label fw-bold mb-1">Cliente:</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{cliente}}"
+              disabled
+            />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold mb-1">Plano do Cliente:</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{plano}}"
+              disabled
+            />
+          </div>
+          <div class="col-md-2">
+            <label class="form-label fw-bold mb-1">Tempo de Execução:</label>
+            <input
+              type="text"
+              class="form-control"
+              value="{{tempo}}"
+              disabled
+            />
+          </div>
+        </div>
+
+        <!-- Linha 3: Serviço Solicitado e Relato -->
+        <div class="row">
+          <div class="col-md-6">
+            <label class="form-label fw-bold mb-1">Serviço Solicitado:</label>
+            <textarea
+              class="form-control"
+              rows="4"
+              disabled
+              style="white-space: pre-wrap"
+            >
 {{solicitado}}</textarea
-          >
-        </div>
-        <div class="col-md-6">
-          <label class="form-label fw-bold mb-1">Relato do Técnico:</label>
-          <textarea
-            class="form-control"
-            rows="4"
-            disabled
-            style="white-space: pre-wrap"
-          >
+            >
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-bold mb-1">Relato do Técnico:</label>
+            <textarea
+              class="form-control"
+              rows="4"
+              disabled
+              style="white-space: pre-wrap"
+            >
 {{obs}}</textarea
-          >
+            >
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- BLOCO 2: Materiais Utilizados -->
-  <div class="card mt-4 shadow-sm border-1">
-    <div class="card-header">
-      <h5 class="card-title">Materiais Utilizados</h5>
+    <!-- BLOCO 2: Materiais Utilizados -->
+    <div class="card mt-4 shadow-sm border-1">
+      <div class="card-header">
+        <h5 class="card-title">Materiais Utilizados</h5>
+      </div>
+      <div class="card-body">
+        <table id="table" class="table table-bordered text-center shadow-sm">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="text-center">Item</th>
+              <th scope="col" class="text-center">Quantidade</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{materiais}}
+          </tbody>
+        </table>
+      </div>
     </div>
-    <div class="card-body">
-      <table id="table" class="table table-bordered text-center shadow-sm">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col" class="text-center">Item</th>
-            <th scope="col" class="text-center">Quantidade</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{materiais}}
-        </tbody>
-      </table>
-    </div>
-  </div>
 
-  <!-- BLOCO 3: Imagens Cadastradas -->
-  <div class="card mt-4 shadow-sm border-1">
-    <div class="card-header">
-      <h5 class="card-title mb-0">Imagens Cadastradas</h5>
+    <!-- BLOCO 3: Imagens Cadastradas -->
+    <div class="card mt-4 shadow-sm border-1">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Imagens Cadastradas</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3 justify-content-center text-center">
+          {{imagens}}
+        </div>
+      </div>
     </div>
-    <div class="card-body">
-      <div class="row g-3 justify-content-center text-center">{{imagens}}</div>
-    </div>
-  </div>
 
-  <!-- BLOCO 4: Equipamentos Instalados -->
-  <div class="card mt-4 shadow-sm border-1">
-    <div class="card-header">
-      <h5 class="card-title">Equipamentos Tempo Real</h5>
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <!-- BLOCO ONU -->
-        <div class="col-md-6 mb-3">
-          <div class="card shadow-sm">
-            <div class="card-header">
-              <h6 class="card-title">ONU</h6>
-            </div>
-            <div class="card-body onu-container">
-              <div class="text-muted">Carregando dados da ONU...</div>
+    <!-- BLOCO 4: Equipamentos Instalados -->
+    <div class="card mt-4 shadow-sm border-1">
+      <div class="card-header">
+        <h5 class="card-title">Equipamentos Tempo Real</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <!-- BLOCO ONU -->
+          <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <h6 class="card-title">ONU</h6>
+              </div>
+              <div class="card-body onu-container">
+                <div class="text-muted">Carregando dados da ONU...</div>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- BLOCO ROTEADOR -->
-        <div class="col-md-6 mb-3">
-          <div class="card shadow-sm">
-            <div class="card-header">
-              <h6 class="card-title">Roteador</h6>
-            </div>
-            <div class="card-body roteador-container">
-              <div class="text-muted">Carregando dados do Roteador...</div>
+          <!-- BLOCO ROTEADOR -->
+          <div class="col-md-6 mb-3">
+            <div class="card shadow-sm">
+              <div class="card-header">
+                <h6 class="card-title">Roteador</h6>
+              </div>
+              <div class="card-body roteador-container">
+                <div class="text-muted">Carregando dados do Roteador...</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="text-center">
-          <button
-            type="button"
-            class="shadow btn btn-blue mt-3"
-            data-bs-toggle="modal"
-            data-bs-target="#avaliar"
-          >
-            Avaliar
-          </button>
+          <div class="text-center">
+            <button
+              type="button"
+              class="shadow btn btn-blue mt-3"
+              data-bs-toggle="modal"
+              data-bs-target="#avaliar"
+            >
+              Avaliar
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -186,6 +202,7 @@
         <form action="{{URL}}/os/avaliar" method="post">
           <input type="hidden" name="id" value="{{idOrdem}}" />
           <input type="hidden" name="idTecnico" value="{{id_tecnico}}" />
+          <input type="hidden" name="params" value="{{params}}" />
           <div class="form-group mb-3 w-75 mx-auto">
             <label class="form-label"></label>
             <label for="range" class="form-label"

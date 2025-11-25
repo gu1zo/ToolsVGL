@@ -200,4 +200,25 @@ class Relatorio extends Page
 
         return $content;
     }
+
+    public static function getGraficosOs($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $uri = http_build_query($queryParams);
+
+        $content = View::render('graficos/ordemServico/graficos', [
+            'itens' => self::getGraficosOsItens($request),
+            'URI' => $uri
+        ]);
+
+        return self::getPage('Gráficos > ToolsVGL', $content);
+    }
+
+    private static function getGraficosOsItens($request)
+    {
+        $content = View::render('graficos/ordemServico/graficos-item', [
+        ]);
+
+        return $content;
+    }
 }

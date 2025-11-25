@@ -83,32 +83,32 @@ class APIInt6
             return null;
         }
 
-        $wifi24 = 'N/A';
-        $wifi5 = 'N/A';
         // 🔹 Exemplo: extraindo apenas alguns campos da resposta
-        foreach ($data['wifi_networks'] as $wifi) {
-            // Ignora redes que não são principais
-            if (empty($wifi['is_main_wlan'])) {
-                continue;
-            }
+        if (isset($data['wifi_networks'])) {
+            foreach ($data['wifi_networks'] as $wifi) {
+                // Ignora redes que não são principais
+                if (empty($wifi['is_main_wlan'])) {
+                    continue;
+                }
 
-            // 2.4 GHz principal
-            if ($wifi['wifi_type'] === '2.4G') {
-                $wifi24 = $wifi['ssid'];
-            }
+                // 2.4 GHz principal
+                if ($wifi['wifi_type'] === '2.4G') {
+                    $wifi24 = $wifi['ssid'];
+                }
 
-            // 5 GHz principal
-            if ($wifi['wifi_type'] === '5G') {
-                $wifi5 = $wifi['ssid'];
+                // 5 GHz principal
+                if ($wifi['wifi_type'] === '5G') {
+                    $wifi5 = $wifi['ssid'];
+                }
             }
         }
 
         $response = [
-            'modelo' => $data['device_info']['model'] ?? '',
-            'firmware' => $data['device_info']['firmware_version'] ?? '',
-            'wifi24' => $wifi24 ?? '',
-            'wifi5' => $wifi5 ?? '',
-            'dns' => $data['dhcpv4_server'][0]['dnss'] ?? '',
+            'modelo' => $data['device_info']['model'] ?? 'N/A',
+            'firmware' => $data['device_info']['firmware_version'] ?? 'N/A',
+            'wifi24' => $wifi24 ?? 'N/A',
+            'wifi5' => $wifi5 ?? 'N/A',
+            'dns' => $data['dhcpv4_server'][0]['dnss'] ?? 'N/A',
         ];
 
         return $response;
@@ -188,7 +188,9 @@ class APIInt6
         if (isset($data['error'])) {
             return 'N/A';
         }
-
+        if (!isset($data['olt_hostname'])) {
+            return 'N/A';
+        }
         return $data['olt_hostname'] . ' ' . $data['ponlink'] . ' ONU: ' . $data['onu'];
     }
 

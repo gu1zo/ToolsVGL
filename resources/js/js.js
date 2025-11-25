@@ -182,8 +182,6 @@ $(document).ready(function () {
       $("#passarVez").toggleClass("d-none", !usuarioPrimeiroFila);
       if (usuarioPrimeiroFila) {
         $("#title").html("É A SUA VEZ > ToolsVGL");
-    } else {
-        $("#title").html("Fila SZ.chat > ToolsVGL");
     }
   }
 

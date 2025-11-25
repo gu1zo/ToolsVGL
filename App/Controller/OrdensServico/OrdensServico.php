@@ -20,7 +20,7 @@ class OrdensServico extends Page
             'status' => self::getStatus($request)
         ]);
 
-        return parent::getPage('Notas > ToolsVGL', $content);
+        return parent::getPage('Ordens de Serviço > ToolsVGL', $content);
     }
     private static function getStatus($request)
     {
@@ -64,7 +64,7 @@ class OrdensServico extends Page
         $tecnico = $queryParams['tecnico'];
         $resultados = EntityOrdensServico::getOsByFilter($dataInicio, $dataFim, $tecnico);
         $uri = str_replace("/table", "/delete", $_SERVER['REQUEST_URI']);
-
+        $params = http_build_query($queryParams);
         $itens = '';
         while ($obOrdens = $resultados->fetchObject(EntityOrdensServico::class)) {
             $data = (new DateTime($obOrdens->data))->format('d/m/Y H:i');
@@ -86,7 +86,8 @@ class OrdensServico extends Page
                 'imagens' => $imagens,
                 'equipamentos' => $equipamentos,
                 'confirmacao' => $confirmacao,
-                'URI' => $uri
+                'URI' => $uri,
+                'params' => $params
             ]);
         }
         return $itens;
@@ -103,7 +104,8 @@ class OrdensServico extends Page
         }
 
         $data = new DateTime($obOs->data);
-
+        array_shift($queryParams);
+        $params = http_build_query($queryParams);
         $content = View::render('ordem-servico/detail/details', [
             'status' => self::getStatus($request),
             'id' => $obOs->numero,
@@ -123,11 +125,83 @@ class OrdensServico extends Page
             'tempo' => $obOs->tempo,
             'onu' => '<div class="text-muted">Carregando dados da ONU...</div>',
             'roteador' => '<div class="text-muted">Carregando dados do roteador...</div>',
+            'buttons' => self::getNextButtons($request),
+            'params' => $params
         ]);
 
         return parent::getPage('Detalhe OS > ToolsVGL', $content);
     }
 
+    private static function getNextButtons($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = $queryParams['id'];
+
+        $dataInicio = $queryParams['data_inicial'] ?? '';
+        $dataFinal = $queryParams['data_final'] ?? '';
+        $tecnico = $queryParams['tecnico'] ?? '';
+
+
+        $results = EntityOrdensServico::getOsByFilter($dataInicio, $dataFinal, $tecnico);
+        $qtd = EntityOrdensServico::getTotalOsByFilter($dataInicio, $dataFinal, $tecnico);
+        $idAnterior = '';
+        $idProximo = '';
+        $buttons = '';
+        if ($qtd > 1) {
+
+            $ids = [];
+            while ($obNextOs = $results->fetchObject(EntityOrdensServico::class)) {
+                $ids[] = (int) $obNextOs->id;
+            }
+
+            sort($ids, SORT_NUMERIC);
+
+            $index = array_search((int) $id, $ids, true);
+
+            if ($index !== false) {
+                $idAnterior = $ids[$index - 1] ?? '';
+                $idProximo = $ids[$index + 1] ?? '';
+            } else {
+                $count = count($ids);
+                if ($count === 0) {
+                } else {
+                    foreach ($ids as $k => $v) {
+                        if ($v > (int) $id) {
+                            $idProximo = $v;
+                            $idAnterior = $ids[$k - 1] ?? '';
+                            break;
+                        }
+                    }
+                    if ($idProximo === '') {
+                        $idAnterior = $ids[$count - 1];
+                    }
+                }
+            }
+            array_shift($queryParams);
+            if (isset($queryParams['status'])) {
+                array_shift($queryParams);
+            }
+            $params = http_build_query($queryParams);
+            if ($idProximo != '') {
+                $buttons .= View::render('ordem-servico/detail/buttons', [
+                    'id' => $idProximo,
+                    'params' => $params,
+                    'type' => 'right'
+                ]);
+
+            }
+            if ($idAnterior != '') {
+                $buttons .= View::render('ordem-servico/detail/buttons', [
+                    'id' => $idAnterior,
+                    'params' => $params,
+                    'type' => 'left'
+                ]);
+            }
+
+        }
+
+        return $buttons;
+    }
 
     private static function getMateriaisById($id)
     {
@@ -189,6 +263,7 @@ class OrdensServico extends Page
     public static function setAvaliacao($request)
     {
         $postVars = $request->getPostVars();
+        $params = $postVars['params'];
         $idOs = $postVars['id'];
         $obOrdem = EntityOrdensServico::getOrdemServicoById($idOs);
         if (!$obOrdem instanceof EntityOrdensServico) {
@@ -213,7 +288,7 @@ class OrdensServico extends Page
         $obOrdem->atualizar();
 
 
-        $request->getRouter()->redirect('/os/?id=' . $idOs . '&status=evaluated');
+        $request->getRouter()->redirect('/os/?id=' . $idOs . '&status=evaluated&' . $params);
         exit;
 
     }

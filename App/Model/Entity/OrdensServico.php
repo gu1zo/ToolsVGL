@@ -20,6 +20,7 @@ class OrdensServico
     public $plano;
     public $tipo_fechamento;
     public $tempo;
+    public $qtd;
 
     public function cadastrar()
     {
@@ -56,10 +57,20 @@ class OrdensServico
         return self::getOrdensServico('numero = "' . $number . '"')->fetchObject(self::class);
 
     }
-    public static function getOsByFilter($dataInicio, $dataFim, $tecnico)
+    public static function getOsByFilter($dataInicio, $dataFim, $tecnico, $avaliado = false)
     {
+        if ($avaliado) {
+            return self::getOrdensServico('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND id_tecnico = "' . $tecnico . '"');
+        } else {
+            return self::getOrdensServico('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND id_tecnico = "' . $tecnico . '" AND confirmacao = 0');
 
-        return self::getOrdensServico('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND id_tecnico = "' . $tecnico . '"');
+        }
+
+    }
+
+    public static function getTotalOsByFilter($dataInicio, $dataFim, $tecnico)
+    {
+        return self::getOrdensServico('data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND id_tecnico = "' . $tecnico . '"', null, null, 'COUNT(*) as qtd')->fetchObject(self::class)->qtd;
     }
 
     public function atualizar()
