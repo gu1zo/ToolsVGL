@@ -2,6 +2,8 @@
 namespace App\Controller\Ajax;
 
 use App\Model\Entity\Notas as EntityNotas;
+use App\Model\Entity\Avaliacoes as EntityAvaliacao;
+use App\Model\Entity\Tecnicos as EntityTecnicos;
 
 class Graficos
 {
@@ -295,7 +297,173 @@ class Graficos
         return json_encode($data, JSON_PRETTY_PRINT);
     }
 
+    public static function getGraficoNotasOs($request)
+    {
 
+        $resultados = EntityAvaliacao::getAvaliacoes();
+        $bom = 0;
+        $neutro = 0;
+        $ruim = 0;
+        $total = 0;
+
+        while ($obNotas = $resultados->fetchObject()) {
+            $nota = $obNotas->nota;
+            if ($nota <= 4) {
+                $ruim++;
+            } else if ($nota >= 7) {
+                $bom++;
+            } else {
+                $neutro++;
+            }
+            $total++;
+        }
+
+        $labels = ['Bom', 'Neutro', 'Ruim'];
+        $data = [
+            'labels' => $labels,
+            'values' => [$bom, $neutro, $ruim]
+        ];
+        return json_encode($data, JSON_PRETTY_PRINT);
+    }
+
+    public static function getGraficoTecnicosPositividade($request)
+    {
+        // Busca todos os agentes que têm notas no período
+        $resultados = EntityAvaliacao::getTecnicos();
+
+        $elogiosPorTecnico = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $tecnico = $row->id_tecnico;
+
+            // Busca as notas desse agente
+            $notasTecnico = EntityAvaliacao::getAvaliacoesByTecnico($tecnico);
+            $qtdElogios = 0;
+
+            while ($notaObj = $notasTecnico->fetchObject()) {
+                if ($notaObj->nota >= 7 && $notaObj->nota <= 10) {
+                    $qtdElogios++;
+                }
+            }
+
+            if ($qtdElogios > 0) {
+                $obTecnico = EntityTecnicos::getTecnicosById($tecnico);
+                $nomeTecnico = $obTecnico->nome;
+                $elogiosPorTecnico[$nomeTecnico] = $qtdElogios;
+            }
+        }
+
+        // Ordena pelos maiores e pega os top 10
+        arsort($elogiosPorTecnico);
+        $elogiosTop10 = array_slice($elogiosPorTecnico, 0, 10, true);
+
+        // Monta JSON
+        $labels = array_keys($elogiosTop10);
+        $values = array_values($elogiosTop10);
+
+        return json_encode([
+            'labels' => $labels,
+            'values' => $values
+        ], JSON_PRETTY_PRINT);
+    }
+    public static function getGraficoTecnicosNegatividade($request)
+    {
+        // Busca todos os agentes que têm notas no período
+        $resultados = EntityAvaliacao::getTecnicos();
+
+        $criticaPorTecnico = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $tecnico = $row->id_tecnico;
+
+            // Busca as notas desse agente
+            $notasTecnico = EntityAvaliacao::getAvaliacoesByTecnico($tecnico);
+            $qtdCritica = 0;
+
+            while ($notaObj = $notasTecnico->fetchObject()) {
+                if ($notaObj->nota <= 4) {
+                    $qtdCritica++;
+                }
+            }
+
+            if ($qtdCritica > 0) {
+                $obTecnico = EntityTecnicos::getTecnicosById($tecnico);
+                $nomeTecnico = $obTecnico->nome;
+                $criticaPorTecnico[$nomeTecnico] = $qtdCritica;
+            }
+        }
+
+        // Ordena pelos maiores e pega os top 10
+        arsort($criticaPorTecnico);
+        $criticaTop10 = array_slice($criticaPorTecnico, 0, 10, true);
+
+        // Monta JSON
+        $labels = array_keys($criticaTop10);
+        $values = array_values($criticaTop10);
+
+        return json_encode([
+            'labels' => $labels,
+            'values' => $values
+        ], JSON_PRETTY_PRINT);
+    }
+
+    public static function getGraficoLinhaOs($request)
+    {
+        // Cria os últimos 12 meses (no formato "m/Y" para exibição)
+        $labels = [];
+        $current = new \DateTime('first day of this month');
+        for ($i = 11; $i >= 0; $i--) {
+            $month = (clone $current)->modify("-$i months");
+            $labels[] = $month->format('m/Y');
+        }
+
+        // Inicializa arrays para cada linha
+        $bom = array_fill(0, 12, 0);
+        $neutro = array_fill(0, 12, 0);
+        $ruim = array_fill(0, 12, 0);
+
+        // Consulta do banco
+        $resultados = EntityAvaliacao::getAvaliacoes();
+
+        while ($obNota = $resultados->fetchObject()) {
+            $nota = (int) $obNota->nota;
+            $data = new \DateTime($obNota->data); // ajuste conforme nome do campo de data
+            $mesAno = $data->format('m/Y');
+
+            // Se está dentro dos últimos 12 meses
+            $index = array_search($mesAno, $labels);
+            if ($index !== false) {
+                if ($nota <= 4) {
+                    $ruim[$index]++;
+                } elseif ($nota >= 7) {
+                    $bom[$index]++;
+                } else {
+                    $neutro[$index]++;
+                }
+            }
+        }
+
+        // Monta JSON para Chart.js
+        $data = [
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Bom',
+                    'data' => $bom
+                ],
+                [
+                    'label' => 'Neutro',
+                    'data' => $neutro
+                ],
+                [
+                    'label' => 'Ruim',
+                    'data' => $ruim
+                ]
+            ]
+        ];
+
+        return json_encode($data, JSON_PRETTY_PRINT);
+    }
 
 
 

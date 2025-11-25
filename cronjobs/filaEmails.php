@@ -7,7 +7,7 @@ use \App\Model\Entity\FilaEmails as EntityFilaEmails;
 use DateTime;
 use DateTimeZone;
 
-$limite = 150;
+$limite = 100;
 $results = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $limite);
 $qtd = EntityFilaEmails::getFilaEmails('status = "pendente"', 'id ASC', $limite, 'COUNT(*) as qtd')->fetchObject()->qtd;
 if ($qtd > 0) {
@@ -16,7 +16,7 @@ if ($qtd > 0) {
 
     // Configuração
     $intervaloMicro = 330000; // 0.33s = 3 envios por segundo
-    $maxProcessosSimultaneos = 5;
+    $maxProcessosSimultaneos = 4;
 
     while ($obFilaEmails = $results->fetchObject(EntityFilaEmails::class)) {
         // Enquanto já tiver muitos processos ativos, aguarda

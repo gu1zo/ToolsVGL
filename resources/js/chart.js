@@ -7,13 +7,17 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoNotasCordialidade", url: "/ajax/graficos/notasCordialidade" },
     { id: "graficoCSATCordialidade", url: "/ajax/graficos/csatCordialidade" },
     { id: "graficoAgentesPositivoCordialidade", url: "/ajax/graficos/agentesPositivoCordialidade" },
-    { id: "graficoAgentesNegativoCordialidade", url: "/ajax/graficos/agentesNegativoCordialidade" }
+    { id: "graficoAgentesNegativoCordialidade", url: "/ajax/graficos/agentesNegativoCordialidade" },
+    { id: "graficoNotasOs", url: "/ajax/os/graficoNotas" },
+    { id: "graficoTecnicosPositividade", url: "/ajax/os/graficoTecnicosPositividade" },
+    { id: "graficoTecnicosNegatividade", url: "/ajax/os/graficoTecnicosNegatividade" }
   ];
 
   var lineChartsConfig = [
     { id: "graficoAno", url: "/ajax/graficos/notasAno", yType: "logarithmic" },
     { id: "graficoMediasAno", url: "/ajax/graficos/mediaNotasAno", yType: "linear" },
     { id: "graficoAnoCordialidade", url: "/ajax/graficos/notasAnoCordialidade", yType: "logarithmic" },
+    { id: "graficoLinhaOs", url: "/ajax/os/graficoLinhaOs", yType: "logarithmic" },
     { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" }
   ];
 
@@ -47,7 +51,7 @@ document.addEventListener("DOMContentLoaded", function () {
             colors = ['#f5a6a6', '#f7b267', '#b0c4de', '#a6f5b5', '#76c7a6'];
           }else if(config.id === "graficoNotasCordialidade"){
             colors = ['#76c7a6', '#f5a6a6'];
-          } else if(config.id === "graficoCSAT"){
+          } else if(config.id === "graficoCSAT" || config.id === 'graficoNotasOs'){
             colors = ['#a6f5b5', '#a1c4e8', '#f5a6a6'];
           } else {
             colors = [
@@ -152,7 +156,10 @@ document.addEventListener("DOMContentLoaded", function () {
     "Satisfatórios": "#a6f5b5",
     "Neutros": "#a1c4e8",
     "Insatisfatórios": "#f5a6a6",
-    "Média das Notas": "#5a8fbf"
+    "Média das Notas": "#5a8fbf",
+    "Bom": "#a6f5b5",
+    "Neutro": "#a1c4e8",
+    "Ruim": "#f5a6a6"
   };
 
   var chartDatasets = datasets.map(function(ds) {

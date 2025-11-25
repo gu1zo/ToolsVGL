@@ -3,10 +3,13 @@ namespace App\Controller\Ajax;
 
 use App\Controller\Api\EvolutionAPI;
 use App\Controller\Agendados\Agendados;
+use App\Controller\OrdensServico\OrdensServico;
 use \App\Model\Entity\Agendados as EntityAgendados;
 use \App\Model\Entity\Fila as EntityFila;
 use \App\Model\Entity\User as EntityUser;
+use \App\Model\Entity\Tecnicos as EntityTecnicos;
 use \App\Session\Login\Login;
+use WilliamCosta\DatabaseManager\Pagination;
 use DateTime;
 
 class Ajax
@@ -206,5 +209,80 @@ class Ajax
 
         return true;
     }
+
+    public static function getTecnicos($request)
+    {
+        $results = [];
+
+        // Obter os parâmetros da query
+        $queryParams = $request->getQueryParams();
+
+        $paginaAtual = $queryParams['page'] ?? 1;
+        $search = $queryParams['search'] ?? '';
+
+        // Montar o filtro de busca
+        $where = null;
+        if (!empty($search)) {
+            $where = 'nome LIKE "%' . addslashes($search) . '%"';
+        }
+
+        // Obter o total de registros com o filtro
+        $quantidadetotal = EntityTecnicos::getTecnicos($where, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
+
+        // Configuração da paginação
+        $obPagination = new Pagination($quantidadetotal, $paginaAtual, 100);
+
+        // Buscar os registros filtrados
+        $res = EntityTecnicos::getTecnicos($where, 'nome ASC', $obPagination->getLimit());
+
+        // Construir a lista de resultados
+        while ($obTecnico = $res->fetchObject(EntityTecnicos::class)) {
+            $results[] = [
+                'id' => $obTecnico->id,
+                'text' => $obTecnico->nome
+            ];
+        }
+
+        // Verificar se há mais páginas
+        $hasMore = $paginaAtual * 15 < $quantidadetotal;
+        // Estrutura JSON com resultados e paginação
+        $response = [
+            'results' => $results,
+            'pagination' => [
+                'more' => $hasMore
+            ]
+        ];
+
+
+        // Retornar JSON
+        return json_encode($response);
+    }
+
+    public static function getOnu($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $pppoe = $queryParams['pppoe'] ?? null;
+
+        if (!$pppoe) {
+            return json_encode(['error' => 'PPPoE não informado']);
+        }
+
+        $data = OrdensServico::getOnu($pppoe);
+        return $data;
+    }
+
+    public static function getRoteador($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $pppoe = $queryParams['pppoe'] ?? null;
+
+        if (!$pppoe) {
+            return json_encode(['error' => 'PPPoE não informado']);
+        }
+
+        $data = OrdensServico::getRoteador($pppoe);
+        return $data;
+    }
+
 
 }

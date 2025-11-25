@@ -155,3 +155,52 @@ $obRouter->get('/ajax/graficos/mediaNotasAnoCordialidade', [
         return new response(200, GraficosResolutividade::getGraficoLinhaResolutividade($request));
     }
 ]);
+
+$obRouter->get('/ajax/tecnicos', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getTecnicos($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/router', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getRoteador($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/onu', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getOnu($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/graficoNotas', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoNotasOs($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/graficoTecnicosPositividade', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoTecnicosPositividade($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/graficoTecnicosNegatividade', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoTecnicosNegatividade($request));
+    }
+]);
+
+$obRouter->get('/ajax/os/graficoLinhaOs', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoLinhaOs($request));
+    }
+]);
