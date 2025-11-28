@@ -151,13 +151,18 @@ function alterarStatus(id) {
 
 
 $(document).ready(function () {
+
   var usuarioNaFila = false;
   var usuarioPrimeiroFila = false;
+
+  // Salva o título original da página
+  var tituloOriginal = document.title;
 
   function verificarFila() {
       $.get("/ajax/fila/usuario", function(response) {
           usuarioNaFila = response.naFila;
           usuarioPrimeiroFila = response.isFirst;
+
           atualizarBotoes();
       });
   }
@@ -201,9 +206,12 @@ $(document).ready(function () {
       $("#entrarFila").toggleClass("d-none", usuarioNaFila);
       $("#sairFila").toggleClass("d-none", !usuarioNaFila);
       $("#passarVez").toggleClass("d-none", !usuarioPrimeiroFila);
+
       if (usuarioPrimeiroFila) {
-        $("#title").html("É A SUA VEZ > ToolsVGL");
-    }
+          document.title = "É A SUA VEZ > ToolsVGL";
+      } else {
+          document.title = tituloOriginal;
+      }
   }
 
   $("#entrarFila").click(function() {
@@ -225,10 +233,12 @@ $(document).ready(function () {
   });
 
   setInterval(function() {
-    verificarFila();
-    tabelaFila.ajax.reload(null, false);  // Recarrega os dados sem resetar a página
-}, 500);
+      verificarFila();
+      tabelaFila.ajax.reload(null, false);
+  }, 500);
+
 });
+
 
 
 
