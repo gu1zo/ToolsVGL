@@ -3,6 +3,7 @@ namespace App\Controller\Ajax;
 
 use App\Controller\Api\EvolutionAPI;
 use App\Controller\Agendados\Agendados;
+use App\Controller\Api\GoogleChatAPI;
 use App\Controller\OrdensServico\OrdensServico;
 use \App\Model\Entity\Agendados as EntityAgendados;
 use \App\Model\Entity\Fila as EntityFila;
@@ -66,7 +67,7 @@ class Ajax
         }
         $mensagem = Agendados::getMessage($tipo);
 
-        EvolutionAPI::sendMessage($mensagem, $number);
+        GoogleChatAPI::sendMessage($mensagem, $number);
         return true;
     }
 
@@ -94,7 +95,7 @@ class Ajax
         }
         $mensagem = Agendados::getMessage($tipo);
 
-        EvolutionAPI::sendMessage($mensagem, $number);
+        GoogleChatAPI::sendMessage($mensagem, $number);
         return true;
     }
 
