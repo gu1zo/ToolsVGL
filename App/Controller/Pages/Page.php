@@ -164,11 +164,11 @@ class Page
                         [
                             'item' => 'Atendimento',
                             'link' => URL . '/notas'
-                        ],
-                        [
-                            'item' => 'Resolutividade',
-                            'link' => URL . '/notas-cordialidade'
-                        ]
+                        ]/*,
+                    [
+                        'item' => 'Resolutividade',
+                        'link' => URL . '/notas-cordialidade'
+                    ]*/
                     ]
                 ],
                 [
