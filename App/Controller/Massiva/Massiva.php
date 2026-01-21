@@ -15,7 +15,10 @@ class Massiva extends Page
             'status' => self::getStatus($request),
             'data-inicio' => '',
             'data-fim' => '',
-            'evento' => ''
+            'evento' => '',
+            'itens' => self::getOptions($request),
+            'qtd' => '',
+            'int6' => ''
         ]);
 
         return parent::getPage('Nova Massiva > ToolsVGL', $content);
@@ -32,6 +35,9 @@ class Massiva extends Page
         $obMassiva->evento = $postVars['evento'];
         $obMassiva->dataInicio = $postVars['dataInicio'];
         $obMassiva->dataFim = $dataFim;
+        $obMassiva->qtd = $postVars['qtd'];
+        $obMassiva->int6 = $postVars['int6'];
+        $obMassiva->regional = $postVars['regional'];
         $obMassiva->cadastrar();
         $request->getRouter()->redirect('/massivas?status=created');
         exit;
@@ -91,7 +97,10 @@ class Massiva extends Page
             'status' => self::getStatus($request),
             'data-inicio' => $obMassiva->dataInicio,
             'data-fim' => $dataFim,
-            'evento' => $obMassiva->evento
+            'evento' => $obMassiva->evento,
+            'qtd' => $obMassiva->qtd,
+            'int6' => $obMassiva->int6,
+            'itens' => self::getOptions($request)
         ]);
 
         return parent::getPage('Nova Massiva > ToolsVGL', $content);
@@ -115,6 +124,9 @@ class Massiva extends Page
         $obMassiva->evento = $postVars['evento'];
         $obMassiva->dataInicio = $postVars['dataInicio'];
         $obMassiva->dataFim = $dataFim;
+        $obMassiva->qtd = $postVars['qtd'];
+        $obMassiva->int6 = $postVars['int6'];
+        $obMassiva->regional = $postVars['regional'];
         $obMassiva->atualizar();
         $request->getRouter()->redirect('/massivas?status=updated');
         exit;
@@ -175,5 +187,52 @@ class Massiva extends Page
                 return Alert::getError('Evento não localizado!');
         }
         return '';
+    }
+
+    private static function getOptions($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = isset($queryParams['id']) ? $queryParams['id'] : null;
+        $itens = "";
+        $regionais = [
+            'CDR',
+            'VII',
+            'UVA',
+            'RSL',
+            'IRI',
+            'CNI',
+            'ITH',
+            'CBS',
+            'CTA',
+            'PYE',
+            'JBA',
+            'CCO',
+            'MFA'
+        ];
+
+
+
+        $obMassiva = EntityMassivas::getMassivaById($id);
+
+        if (!$obMassiva instanceof EntityMassivas) {
+            $regionalMassiva = "";
+        } else {
+            $regionalMassiva = $obMassiva->regional;
+        }
+        foreach ($regionais as $regional) {
+            if ($regionalMassiva == $regional) {
+                $itens .= View::render('massivas/option', [
+                    'regional' => $regional,
+                    'status' => 'selected'
+                ]);
+            }
+            $itens .= View::render('massivas/option', [
+                'regional' => $regional,
+                'status' => ''
+            ]);
+        }
+
+        return $itens;
+
     }
 }

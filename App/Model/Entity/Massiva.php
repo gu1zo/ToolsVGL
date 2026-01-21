@@ -10,13 +10,19 @@ class Massiva
     public $dataInicio;
     public $dataFim;
     public $evento;
+    public $int6;
+    public $qtd;
+    public $regional;
 
     public function cadastrar()
     {
         $this->id = (new Database('massiva'))->insert([
             'dataInicio' => $this->dataInicio,
             'dataFim' => $this->dataFim,
-            'evento' => $this->evento
+            'evento' => $this->evento,
+            'int6' => $this->int6,
+            'qtd' => $this->qtd,
+            'regional' => $this->regional
 
         ]);
 
@@ -37,7 +43,10 @@ class Massiva
         return (new Database('massiva'))->update('id =' . $this->id, [
             'dataInicio' => $this->dataInicio,
             'dataFim' => $this->dataFim,
-            'evento' => $this->evento
+            'evento' => $this->evento,
+            'int6' => $this->int6,
+            'qtd' => $this->qtd,
+            'regional' => $this->regional
         ]);
     }
 
