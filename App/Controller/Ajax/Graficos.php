@@ -4,6 +4,7 @@ namespace App\Controller\Ajax;
 use App\Model\Entity\Notas as EntityNotas;
 use App\Model\Entity\Avaliacoes as EntityAvaliacao;
 use App\Model\Entity\Tecnicos as EntityTecnicos;
+use App\Model\Entity\Massiva as EntityMassivas;
 
 class Graficos
 {
@@ -464,6 +465,170 @@ class Graficos
 
         return json_encode($data, JSON_PRETTY_PRINT);
     }
+    public static function getGraficoRegionais($request)
+    {
+        $resultados = EntityMassivas::getMassivas();
+        $regionais = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $regional = $row->regional;
+
+            if (!empty($regional)) {
+                if (!isset($regionais[$regional])) {
+                    $regionais[$regional] = 0;
+                }
+
+                $regionais[$regional]++;
+            }
+        }
+
+        $labels = array_keys($regionais);
+        $values = array_values($regionais);
+
+        return json_encode([
+            'labels' => $labels,
+            'values' => $values
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function getGraficosTipo($request)
+    {
+        $resultados = EntityMassivas::getMassivas();
+        $tipos = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $tipo = $row->tipo;
+
+            if (!empty($tipo)) {
+                if (!isset($tipos[$tipo])) {
+                    $tipos[$tipo] = 0;
+                }
+
+                $tipos[$tipo]++;
+            }
+        }
+
+        $labels = array_keys(array: $tipos);
+        $values = array_values($tipos);
+
+        return json_encode([
+            'labels' => $labels,
+            'values' => $values
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+    public static function getGraficoLinhaRegionais($request)
+    {
+        // Últimos 12 meses (labels)
+        $labels = [];
+        $current = new \DateTime('first day of this month');
+
+        for ($i = 11; $i >= 0; $i--) {
+            $month = (clone $current)->modify("-$i months");
+            $labels[] = $month->format('m/Y');
+        }
+
+        // Busca todas as massivas/eventos
+        $resultados = EntityMassivas::getMassivas();
+
+        $dadosRegionais = [];
+        $totalMensal = array_fill(0, 12, 0);
+
+        while ($row = $resultados->fetchObject()) {
+            $regional = $row->regional;
+            $data = new \DateTime($row->dataInicio); // ajuste se necessário
+            $mesAno = $data->format('m/Y');
+
+            $index = array_search($mesAno, $labels);
+            if ($index === false || empty($regional)) {
+                continue;
+            }
+
+            // Inicializa a regional se ainda não existir
+            if (!isset($dadosRegionais[$regional])) {
+                $dadosRegionais[$regional] = array_fill(0, 12, 0);
+            }
+
+            // Incrementa contadores
+            $dadosRegionais[$regional][$index]++;
+            $totalMensal[$index]++;
+        }
+
+        // Monta datasets para o Chart.js
+        $datasets = [];
+
+        foreach ($dadosRegionais as $regional => $valores) {
+            $datasets[] = [
+                'label' => $regional,
+                'data' => $valores,
+            ];
+        }
+
+        // Linha de total mensal
+        $datasets[] = [
+            'label' => 'Total de Eventos',
+            'data' => $totalMensal,
+        ];
+
+        return json_encode([
+            'labels' => $labels,
+            'datasets' => $datasets
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+
+    public static function getGraficoLinhaTipos($request)
+    {
+        // Últimos 12 meses (labels)
+        $labels = [];
+        $current = new \DateTime('first day of this month');
+
+        for ($i = 11; $i >= 0; $i--) {
+            $month = (clone $current)->modify("-$i months");
+            $labels[] = $month->format('m/Y');
+        }
+
+        // Busca todas as massivas/eventos
+        $resultados = EntityMassivas::getMassivas();
+
+        $dadosTipos = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $tipo = $row->tipo; // <-- campo do tipo do evento
+            $data = new \DateTime($row->dataInicio); // ajuste se necessário
+            $mesAno = $data->format('m/Y');
+
+            $index = array_search($mesAno, $labels);
+            if ($index === false || empty($tipo)) {
+                continue;
+            }
+
+            // Inicializa o tipo se ainda não existir
+            if (!isset($dadosTipos[$tipo])) {
+                $dadosTipos[$tipo] = array_fill(0, 12, 0);
+            }
+
+            // Incrementa contadores
+            $dadosTipos[$tipo][$index]++;
+        }
+
+        // Monta datasets para o Chart.js
+        $datasets = [];
+
+        foreach ($dadosTipos as $tipo => $valores) {
+            $datasets[] = [
+                'label' => $tipo,
+                'data' => $valores,
+            ];
+        }
+
+        return json_encode([
+            'labels' => $labels,
+            'datasets' => $datasets
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+
 
 
 

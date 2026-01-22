@@ -10,7 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoAgentesNegativoCordialidade", url: "/ajax/graficos/agentesNegativoCordialidade" },
     { id: "graficoNotasOs", url: "/ajax/os/graficoNotas" },
     { id: "graficoTecnicosPositividade", url: "/ajax/os/graficoTecnicosPositividade" },
-    { id: "graficoTecnicosNegatividade", url: "/ajax/os/graficoTecnicosNegatividade" }
+    { id: "graficoTecnicosNegatividade", url: "/ajax/os/graficoTecnicosNegatividade" },
+    { id: "graficoMassivasRegionais", url: "/ajax/massivas/graficoMassivasRegionais" },
+    { id: "graficoMassivasTipos", url: "/ajax/massivas/graficoMassivasTipos" }
   ];
 
   var lineChartsConfig = [
@@ -18,7 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoMediasAno", url: "/ajax/graficos/mediaNotasAno", yType: "linear" },
     { id: "graficoAnoCordialidade", url: "/ajax/graficos/notasAnoCordialidade", yType: "logarithmic" },
     { id: "graficoLinhaOs", url: "/ajax/os/graficoLinhaOs", yType: "logarithmic" },
-    { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" }
+    { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" },
+    { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais", yType: "linear" },
+    { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "linear" }
   ];
 
   var queryParams = {};
@@ -149,18 +153,44 @@ document.addEventListener("DOMContentLoaded", function () {
   var textColor = isDarkMode ? '#ddd' : '#333';
   var gridColor = isDarkMode ? '#444' : '#ddd';
 
-  var colors = {
-    "Resolvidos": "#a6f5b5",
-    "Não Resolvidos": "#f5a6a6",
-    "Resolutividade": "#5a8fbf",
-    "Satisfatórios": "#a6f5b5",
-    "Neutros": "#a1c4e8",
-    "Insatisfatórios": "#f5a6a6",
-    "Média das Notas": "#5a8fbf",
-    "Bom": "#a6f5b5",
-    "Neutro": "#a1c4e8",
-    "Ruim": "#f5a6a6"
-  };
+var colors = {
+  // Status / Avaliações
+  "Resolvidos": "#a6f5b5",
+  "Não Resolvidos": "#f5a6a6",
+  "Resolutividade": "#5a8fbf",
+
+  "Satisfatórios": "#a6f5b5",
+  "Neutros": "#a1c4e8",
+  "Insatisfatórios": "#f5a6a6",
+
+  "Média das Notas": "#5a8fbf",
+
+  "Bom": "#a6f5b5",
+  "Neutro": "#a1c4e8",
+  "Ruim": "#f5a6a6",
+
+  "Total de Eventos": "#ffe066",
+
+  "CDR": "#8ecae6",
+  "VII": "#b388eb", 
+  "UVA": "#6fb1a0", 
+  "RSL": "#ffb703", 
+  "IRI": "#a3c4bc", 
+  "CNI": "#f4a6a6", 
+  "ITH": "#cdb4db", 
+  "CBS": "#90dbf4", 
+  "CTA": "#ffd6a5", 
+  "PYE": "#caffbf", 
+  "JBA": "#ffadad", 
+  "CCO": "#ff6392", 
+  "MFA": "#fde68a", 
+
+  "Rompimento": "#f28b82",
+  "Falha na OLT": "#fbbc04",
+  "Falha no backbone": "#81c995"
+
+};
+
 
   var chartDatasets = datasets.map(function(ds) {
     var color = colors[ds.label] || '#888';

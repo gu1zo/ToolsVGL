@@ -204,3 +204,31 @@ $obRouter->get('/ajax/os/graficoLinhaOs', [
         return new response(200, Graficos::getGraficoLinhaOs($request));
     }
 ]);
+
+$obRouter->get('/ajax/massivas/graficoMassivasRegionais', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoRegionais($request));
+    }
+]);
+
+$obRouter->get('/ajax/massivas/graficoMassivasTipos', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficosTipo($request));
+    }
+]);
+
+$obRouter->get('/ajax/massivas/graifcoMassivasHistRegionais', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoLinhaRegionais($request));
+    }
+]);
+
+$obRouter->get('/ajax/massivas/graficoMassivasHistTipos', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoLinhaTipos($request));
+    }
+]);

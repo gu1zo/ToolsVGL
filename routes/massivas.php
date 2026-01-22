@@ -83,3 +83,13 @@ $obRouter->get('/massivas/relatorios', [
         return new response(200, Relatorio::getMassivasCSV($request));
     }
 ]);
+
+$obRouter->get('/massivas/graficos', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Relatorio::getGraficosMassiva($request));
+    }
+]);

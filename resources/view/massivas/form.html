@@ -58,11 +58,24 @@
           </div>
         </div>
         <div class="form-group mb-3 mx-auto text-center">
-          <label for="regional" class="form-label">Regional:</label>
-          <select id="regional" class="form-select shadow" name="regional">
-            <option value="" selected disabled>Selecione um Técnico</option>
-            {{itens}}
-          </select>
+          <div class="row">
+            <div class="col">
+              <label for="regional" class="form-label">Regional:</label>
+              <select id="regional" class="form-select shadow" name="regional">
+                <option value="" selected disabled>
+                  Selecione uma Regional
+                </option>
+                {{regionais}}
+              </select>
+            </div>
+            <div class="col">
+              <label for="tipo" class="form-label">Tipo:</label>
+              <select id="tipo" class="form-select shadow" name="tipo">
+                <option value="" selected disabled>Selecione o Tipo</option>
+                {{tipos}}
+              </select>
+            </div>
+          </div>
         </div>
         <div class="form-group mb-3 mx-auto text-center">
           <label for="evento" class="form-label">Descrição:</label>

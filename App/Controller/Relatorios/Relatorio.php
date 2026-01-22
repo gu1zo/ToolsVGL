@@ -188,7 +188,7 @@ class Relatorio extends Page
 
         $resultados = EntityMassivas::getMassivas();
         $data = [
-            ['evento', 'dataInicio', 'dataFim']
+            ['evento', 'dataInicio', 'dataFim', 'int6', 'qtd', 'regional', ' tipo']
         ];
 
 
@@ -198,6 +198,10 @@ class Relatorio extends Page
                 $obMassivas->evento,
                 $obMassivas->dataInicio,
                 $dataFim,
+                $obMassivas->int6,
+                $obMassivas->qtd,
+                $obMassivas->regional,
+                $obMassivas->tipo,
             ];
         }
 
@@ -260,6 +264,27 @@ class Relatorio extends Page
 
         return self::getPage('Gráficos > ToolsVGL', $content);
     }
+
+    public static function getGraficosMassiva($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $uri = http_build_query($queryParams);
+
+        $content = View::render('graficos/graficosMassiva/graficos', [
+            'itens' => self::getGraficosMassivaItens($request),
+            'URI' => $uri
+        ]);
+
+        return self::getPage('Gráficos > ToolsVGL', $content);
+    }
+    private static function getGraficosMassivaItens($request)
+    {
+        $content = View::render('graficos/graficosMassiva/graficos-item', [
+        ]);
+
+        return $content;
+    }
+
 
     private static function getGraficosOsItens($request)
     {

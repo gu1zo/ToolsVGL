@@ -16,7 +16,8 @@ class Massiva extends Page
             'data-inicio' => '',
             'data-fim' => '',
             'evento' => '',
-            'itens' => self::getOptions($request),
+            'regionais' => self::getRegionais($request),
+            'tipos' => self::getTipos($request),
             'qtd' => '',
             'int6' => ''
         ]);
@@ -38,6 +39,7 @@ class Massiva extends Page
         $obMassiva->qtd = $postVars['qtd'];
         $obMassiva->int6 = $postVars['int6'];
         $obMassiva->regional = $postVars['regional'];
+        $obMassiva->tipo = $postVars['tipo'];
         $obMassiva->cadastrar();
         $request->getRouter()->redirect('/massivas?status=created');
         exit;
@@ -100,7 +102,8 @@ class Massiva extends Page
             'evento' => $obMassiva->evento,
             'qtd' => $obMassiva->qtd,
             'int6' => $obMassiva->int6,
-            'itens' => self::getOptions($request)
+            'regionais' => self::getRegionais($request),
+            'tipos' => self::getTipos($request)
         ]);
 
         return parent::getPage('Nova Massiva > ToolsVGL', $content);
@@ -127,6 +130,7 @@ class Massiva extends Page
         $obMassiva->qtd = $postVars['qtd'];
         $obMassiva->int6 = $postVars['int6'];
         $obMassiva->regional = $postVars['regional'];
+        $obMassiva->tipo = $postVars['tipo'];
         $obMassiva->atualizar();
         $request->getRouter()->redirect('/massivas?status=updated');
         exit;
@@ -189,7 +193,7 @@ class Massiva extends Page
         return '';
     }
 
-    private static function getOptions($request)
+    private static function getRegionais($request)
     {
         $queryParams = $request->getQueryParams();
         $id = isset($queryParams['id']) ? $queryParams['id'] : null;
@@ -222,12 +226,46 @@ class Massiva extends Page
         foreach ($regionais as $regional) {
             if ($regionalMassiva == $regional) {
                 $itens .= View::render('massivas/option', [
-                    'regional' => $regional,
+                    'item' => $regional,
                     'status' => 'selected'
                 ]);
             }
             $itens .= View::render('massivas/option', [
-                'regional' => $regional,
+                'item' => $regional,
+                'status' => ''
+            ]);
+        }
+
+        return $itens;
+
+    }
+
+    private static function getTipos($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $id = isset($queryParams['id']) ? $queryParams['id'] : null;
+        $itens = "";
+        $tipos = [
+            'Rompimento',
+            'Falha na OLT',
+            'Falha no backbone'
+        ];
+
+        $obMassiva = EntityMassivas::getMassivaById($id);
+        if (!$obMassiva instanceof EntityMassivas) {
+            $tipoMassiva = "";
+        } else {
+            $tipoMassiva = $obMassiva->tipo;
+        }
+        foreach ($tipos as $tipo) {
+            if ($tipoMassiva == $tipo) {
+                $itens .= View::render('massivas/option', [
+                    'item' => $tipo,
+                    'status' => 'selected'
+                ]);
+            }
+            $itens .= View::render('massivas/option', [
+                'item' => $tipo,
                 'status' => ''
             ]);
         }

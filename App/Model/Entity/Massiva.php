@@ -13,6 +13,7 @@ class Massiva
     public $int6;
     public $qtd;
     public $regional;
+    public $tipo;
 
     public function cadastrar()
     {
@@ -22,7 +23,8 @@ class Massiva
             'evento' => $this->evento,
             'int6' => $this->int6,
             'qtd' => $this->qtd,
-            'regional' => $this->regional
+            'regional' => $this->regional,
+            'tipo' => $this->tipo
 
         ]);
 
@@ -46,7 +48,8 @@ class Massiva
             'evento' => $this->evento,
             'int6' => $this->int6,
             'qtd' => $this->qtd,
-            'regional' => $this->regional
+            'regional' => $this->regional,
+            'tipo' => $this->tipo
         ]);
     }
 
