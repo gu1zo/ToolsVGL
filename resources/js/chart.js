@@ -21,8 +21,8 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoAnoCordialidade", url: "/ajax/graficos/notasAnoCordialidade", yType: "logarithmic" },
     { id: "graficoLinhaOs", url: "/ajax/os/graficoLinhaOs", yType: "logarithmic" },
     { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" },
-    { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais", yType: "linear" },
-    { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "linear" }
+    { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais", yType: "logarithmic" },
+    { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "logarithmic" }
   ];
 
   var queryParams = {};
