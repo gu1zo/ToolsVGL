@@ -229,11 +229,12 @@ class Massiva extends Page
                     'item' => $regional,
                     'status' => 'selected'
                 ]);
+            } else {
+                $itens .= View::render('massivas/option', [
+                    'item' => $regional,
+                    'status' => ''
+                ]);
             }
-            $itens .= View::render('massivas/option', [
-                'item' => $regional,
-                'status' => ''
-            ]);
         }
 
         return $itens;
