@@ -172,7 +172,7 @@ footer {
   color: inherit; /* Mantém a cor original */
 }
 
-#agendados, #table, #fila, #notas, #massiva #ordens {
+#agendados, #table, #fila, #notas, #massivas, #ordens {
   table-layout: fixed;
   width: 100%;
 }
@@ -180,7 +180,7 @@ footer {
 #agendados th:nth-child(1), #agendados td:nth-child(1),
 #table th:nth-child(1), #table td:nth-child(1),
 #notas th:nth-child(1), #notas td:nth-child(1),
-#massiva th:nth-child(1), #massiva td:nth-child(1),
+#massivas th:nth-child(1), #massivas td:nth-child(1),
 #fila th:nth-child(1), #fila td:nth-child(1),
 #ordens th:nth-child(1), #ordens td:nth-child(1) {
   overflow: hidden;

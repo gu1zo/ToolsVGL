@@ -20,6 +20,26 @@ $(document).ready(function () {
       }
   });
 });
+$(document).ready(function () {
+  $('#massivas').DataTable({
+      paging: true,        // Ativa a paginação
+      searching: true,     // Ativa a pesquisa
+      ordering: true,      // Permite ordenação nas colunas
+      info: true,          // Exibe informações sobre os registros
+      autoWidth: false,    
+      responsive: true, 
+      order: [[2, 'desc']],
+      language: {
+          url: "/resources/json/datatable-pt-br.json"  // Tradução para português
+      },
+      columnDefs: [
+          { width: "8px", targets: 0 }  // Ajusta a largura da primeira coluna
+      ],
+      createdRow: function (row, data, dataIndex) {
+        $(row).find('td').eq(0).addClass('default');  // Adiciona a classe à primeira coluna (status)
+      }
+  });
+});
 
 $(document).ready(function () {
   const urlParams = new URLSearchParams(window.location.search);
