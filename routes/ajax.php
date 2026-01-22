@@ -219,6 +219,13 @@ $obRouter->get('/ajax/massivas/graficoMassivasTipos', [
     }
 ]);
 
+$obRouter->get('/ajax/massivas/graficoMassivasClientes', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoPizzaClientesPorRegional($request));
+    }
+]);
+
 $obRouter->get('/ajax/massivas/graifcoMassivasHistRegionais', [
     'middlewares' => [],
     function ($request) {
@@ -230,5 +237,13 @@ $obRouter->get('/ajax/massivas/graficoMassivasHistTipos', [
     'middlewares' => [],
     function ($request) {
         return new response(200, Graficos::getGraficoLinhaTipos($request));
+    }
+]);
+
+
+$obRouter->get('/ajax/massivas/graficoMassivasHistClientes', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getGraficoLinhaClientes($request));
     }
 ]);

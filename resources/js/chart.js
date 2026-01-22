@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoTecnicosPositividade", url: "/ajax/os/graficoTecnicosPositividade" },
     { id: "graficoTecnicosNegatividade", url: "/ajax/os/graficoTecnicosNegatividade" },
     { id: "graficoMassivasRegionais", url: "/ajax/massivas/graficoMassivasRegionais" },
-    { id: "graficoMassivasTipos", url: "/ajax/massivas/graficoMassivasTipos" }
+    { id: "graficoMassivasTipos", url: "/ajax/massivas/graficoMassivasTipos" },
+    { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" }
   ];
 
   var lineChartsConfig = [
@@ -22,7 +23,8 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoLinhaOs", url: "/ajax/os/graficoLinhaOs", yType: "logarithmic" },
     { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" },
     { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais", yType: "logarithmic" },
-    { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "logarithmic" }
+    { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "logarithmic" },
+    { id: "graficoMassivasHistClientes", url: "/ajax/massivas/graficoMassivasHistClientes", yType: "logarithmic" },
   ];
 
   var queryParams = {};
@@ -133,15 +135,18 @@ document.addEventListener("DOMContentLoaded", function () {
           },
           datalabels: {
             color: '#000',
-            font: { size: 15, weight: 'bold' },
-            formatter: function(value) {
+            font: { size: 14, weight: 'bold' },
+            formatter: function(value, context) {
+              var label = context.chart.data.labels[context.dataIndex];
               var percentage = ((value / total) * 100).toFixed(1);
-              return percentage + "%\n" + value;
+              return `${label}\n${percentage}%\n${value}`;
             },
             anchor: 'center',
             align: 'center',
-            textAlign: 'center'
+            textAlign: 'center',
+            clamp: true
           }
+
         }
       }
     });
@@ -170,6 +175,7 @@ var colors = {
   "Ruim": "#f5a6a6",
 
   "Total de Eventos": "#ffe066",
+  "Clientes Afetados": "#5a8fbf",
 
   "CDR": "#8ecae6",
   "VII": "#b388eb", 

@@ -35,6 +35,11 @@ class Massiva
     {
         return (new Database('massiva'))->select($where, $order, $limit, $fields, $group);
     }
+
+    public static function getMassivasByFilter($dataInicio, $dataFim)
+    {
+        return self::getMassivas('dataInicio BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"');
+    }
     public static function getMassivaById($id)
     {
         return self::getMassivas('id = "' . $id . '"')->fetchObject(self::class);

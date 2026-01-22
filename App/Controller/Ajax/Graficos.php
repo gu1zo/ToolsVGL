@@ -467,7 +467,11 @@ class Graficos
     }
     public static function getGraficoRegionais($request)
     {
-        $resultados = EntityMassivas::getMassivas();
+        $queryParams = $request->getQueryParams();
+        $dataInicio = $queryParams['dataInicio'] ?? null;
+        $dataFim = $queryParams['dataFim'] ?? null;
+
+        $resultados = EntityMassivas::getMassivasByFilter($dataInicio, $dataFim);
         $regionais = [];
 
         while ($row = $resultados->fetchObject()) {
@@ -493,7 +497,13 @@ class Graficos
 
     public static function getGraficosTipo($request)
     {
-        $resultados = EntityMassivas::getMassivas();
+        $queryParams = $request->getQueryParams();
+        $dataInicio = $queryParams['dataInicio'] ?? null;
+        $dataFim = $queryParams['dataFim'] ?? null;
+
+
+        $resultados = EntityMassivas::getMassivasByFilter($dataInicio, $dataFim);
+
         $tipos = [];
 
         while ($row = $resultados->fetchObject()) {
@@ -627,7 +637,80 @@ class Graficos
             'datasets' => $datasets
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
     }
+    public static function getGraficoLinhaClientes($request)
+    {
 
+        // Labels dos últimos 12 meses
+        $labels = [];
+        $current = new \DateTime('first day of this month');
+
+        for ($i = 11; $i >= 0; $i--) {
+            $month = (clone $current)->modify("-$i months");
+            $labels[] = $month->format('m/Y');
+        }
+
+        $resultados = EntityMassivas::getMassivas();
+
+        $clientesMensal = array_fill(0, 12, 0);
+
+        while ($row = $resultados->fetchObject()) {
+            if (empty($row->dataInicio) || empty($row->qtd)) {
+                continue;
+            }
+
+            $data = new \DateTime($row->dataInicio);
+            $mesAno = $data->format('m/Y');
+
+            $index = array_search($mesAno, $labels);
+            if ($index === false) {
+                continue;
+            }
+
+            $clientesMensal[$index] += (int) $row->qtd;
+        }
+
+        return json_encode([
+            'labels' => $labels,
+            'datasets' => [
+                [
+                    'label' => 'Clientes Afetados',
+                    'data' => $clientesMensal
+                ]
+            ]
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
+
+    public static function getGraficoPizzaClientesPorRegional($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $dataInicio = $queryParams['dataInicio'] ?? null;
+        $dataFim = $queryParams['dataFim'] ?? null;
+
+        $resultados = EntityMassivas::getMassivasByFilter($dataInicio, $dataFim);
+
+        $regionais = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $regional = $row->regional;
+            $qtd = (int) ($row->qtd ?? 0);
+
+            if (empty($regional) || $qtd <= 0) {
+                continue;
+            }
+
+            if (!isset($regionais[$regional])) {
+                $regionais[$regional] = 0;
+            }
+
+            $regionais[$regional] += $qtd;
+        }
+
+        return json_encode([
+            'labels' => array_keys($regionais),
+            'values' => array_values($regionais)
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
 
 
 

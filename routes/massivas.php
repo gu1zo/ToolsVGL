@@ -74,6 +74,16 @@ $obRouter->post('/massivas/delete', [
     }
 ]);
 
+$obRouter->get('/massivas/graficos/form', [
+    'middlewares' => [
+        'required-login',
+        'required-admin'
+    ],
+    function ($request) {
+        return new response(200, Massiva::getMassivasGraficosForm($request));
+    }
+]);
+
 $obRouter->get('/massivas/relatorios', [
     'middlewares' => [
         'required-login',

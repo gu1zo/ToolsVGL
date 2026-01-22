@@ -165,10 +165,10 @@ class Page
                             'item' => 'Atendimento',
                             'link' => URL . '/notas'
                         ]/*,
-             [
-                 'item' => 'Resolutividade',
-                 'link' => URL . '/notas-cordialidade'
-             ]*/
+          [
+              'item' => 'Resolutividade',
+              'link' => URL . '/notas-cordialidade'
+          ]*/
                     ]
                 ],
                 [
@@ -201,7 +201,7 @@ class Page
                         ],
                         [
                             'item' => 'Graficos',
-                            'link' => URL . '/massivas/graficos'
+                            'link' => URL . '/massivas/graficos/form'
                         ]
                     ]
                 ],

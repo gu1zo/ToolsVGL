@@ -45,6 +45,15 @@ class Massiva extends Page
         exit;
     }
 
+    public static function getMassivasGraficosForm($request)
+    {
+        $content = View::render('massivas/graficosForm', [
+            'status' => self::getStatus($request)
+        ]);
+        //Retorna a página
+        return parent::getPage('Massivas > ToolsVGL', $content);
+    }
+
     public static function getMassivas($request)
     {
         //Conteúdo da home
@@ -74,6 +83,7 @@ class Massiva extends Page
             $itens .= View::render('/massivas/item', [
                 'id' => $obMassivas->id,
                 'evento' => $obMassivas->evento,
+                'regional' => $obMassivas->regional,
                 'dataInicio' => $obMassivas->dataInicio,
                 'dataFim' => $dataFim
             ]);
@@ -199,6 +209,7 @@ class Massiva extends Page
         $id = isset($queryParams['id']) ? $queryParams['id'] : null;
         $itens = "";
         $regionais = [
+            'Todas',
             'CDR',
             'VII',
             'UVA',
