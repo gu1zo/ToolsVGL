@@ -264,11 +264,12 @@ class Massiva extends Page
                     'item' => $tipo,
                     'status' => 'selected'
                 ]);
+            } else {
+                $itens .= View::render('massivas/option', [
+                    'item' => $tipo,
+                    'status' => ''
+                ]);
             }
-            $itens .= View::render('massivas/option', [
-                'item' => $tipo,
-                'status' => ''
-            ]);
         }
 
         return $itens;
