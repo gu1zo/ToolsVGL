@@ -21,14 +21,17 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoAnoCordialidade", url: "/ajax/graficos/notasAnoCordialidade", yType: "logarithmic" },
     { id: "graficoLinhaOs", url: "/ajax/os/graficoLinhaOs", yType: "logarithmic" },
     { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" },
-    { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais", yType: "logarithmic" },
     { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "logarithmic" },
     { id: "graficoMassivasHistClientes", url: "/ajax/massivas/graficoMassivasHistClientes", yType: "logarithmic" },
   ];
 
   var barChartsConfig = [
-    { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" }
+    { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" },
   ];
+  var barTimeSeriesConfig = [
+    { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais" }
+  ];
+
 
 
   var queryParams = {};
@@ -356,6 +359,102 @@ barChartsConfig.forEach(function (config) {
     }
   });
 });
+barTimeSeriesConfig.forEach(function (config) {
+  $.ajax({
+    url: config.url,
+    method: 'GET',
+    dataType: 'json',
+    data: queryParams,
+    success: function (data) {
+      var canvas = document.getElementById(config.id);
+      if (canvas && data && data.labels && data.datasets) {
+        createBarTimeSeriesChart(config.id, data.labels, data.datasets);
+      } else {
+        console.error("Dados inválidos para " + config.id);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Erro ao buscar dados de " + config.url + ":", error);
+    }
+  });
+});
+function createBarTimeSeriesChart(canvasId, labels, datasets) {
+  var ctx = document.getElementById(canvasId).getContext('2d');
+  var isDarkMode = document.body.classList.contains('dark-mode');
+  var textColor = isDarkMode ? '#ddd' : '#333';
+  var gridColor = isDarkMode ? '#444' : '#ddd';
+
+  var colors = {
+    "CDR": "#8ecae6",
+    "VII": "#b388eb",
+    "UVA": "#6fb1a0",
+    "RSL": "#ffb703",
+    "IRI": "#a3c4bc",
+    "CNI": "#f4a6a6",
+    "ITH": "#cdb4db",
+    "CBS": "#90dbf4",
+    "CTA": "#ffd6a5",
+    "PYE": "#caffbf",
+    "JBA": "#ffadad",
+    "CCO": "#ff6392",
+    "MFA": "#fde68a"
+  };
+
+  var chartDatasets = datasets.map(function (ds) {
+    var color = colors[ds.label] || '#888';
+    return {
+      label: ds.label,
+      data: ds.data,
+      backgroundColor: color,
+      borderRadius: 6
+    };
+  });
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,      // meses
+      datasets: chartDatasets // regionais
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+            font: { size: 20, weight: 'bold' }
+          }
+        },
+        datalabels: {
+          color: textColor,
+          font: { size: 16, weight: 'bold' },
+          anchor: 'end',
+          align: 'top'
+        }
+      },
+      scales: {
+        x: {
+          stacked: false, // 👈 barras lado a lado por mês
+          ticks: {
+            color: textColor,
+            font: { size: 18, weight: 'bold' }
+          },
+          grid: { color: gridColor }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: textColor,
+            font: { size: 18, weight: 'bold' }
+          },
+          grid: { color: gridColor }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
 
 
 });
