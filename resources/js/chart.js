@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoNotasOs", url: "/ajax/os/graficoNotas" },
     { id: "graficoTecnicosPositividade", url: "/ajax/os/graficoTecnicosPositividade" },
     { id: "graficoTecnicosNegatividade", url: "/ajax/os/graficoTecnicosNegatividade" },
-    { id: "graficoMassivasRegionais", url: "/ajax/massivas/graficoMassivasRegionais" },
     { id: "graficoMassivasTipos", url: "/ajax/massivas/graficoMassivasTipos" },
   ];
 
@@ -28,6 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   var barChartsConfig = [
     { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" },
+    { id: "graficoMassivasRegionais", url: "/ajax/massivas/graficoMassivasRegionais" },
   ];
   
 
