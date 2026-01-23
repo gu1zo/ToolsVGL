@@ -40,6 +40,10 @@ class Massiva
     {
         return self::getMassivas('dataInicio BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"');
     }
+    public static function getMassivasByFilterTable($dataInicio, $dataFim, $regional)
+    {
+        return self::getMassivas('dataInicio BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND regional= "' . $regional . '"');
+    }
     public static function getMassivaById($id)
     {
         return self::getMassivas('id = "' . $id . '"')->fetchObject(self::class);

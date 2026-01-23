@@ -68,15 +68,17 @@ class Massiva extends Page
     private static function getMassivasItens($request)
     {
         $itens = '';
+        $queryParams = $request->getQueryParams();
 
-        //TOTAL DE REGISTROS
-        $quantidadetotal = EntityMassivas::getMassivas(null, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
-
-        if ($quantidadetotal <= 0) {
-            $itens = '';
+        if (isset($queryParams['dataInicio']) && isset($queryParams['dataFim']) && isset($queryParams['regional'])) {
+            $dataInicio = $queryParams['dataInicio'];
+            $dataFim = $queryParams['dataFim'];
+            $regional = $queryParams['regional'];
+            $results = EntityMassivas::getMassivasByFilterTable($dataInicio, $dataFim, $regional);
+        } else {
+            $results = EntityMassivas::getMassivas(null, 'id ASC');
         }
 
-        $results = EntityMassivas::getMassivas(null, 'id ASC');
 
         while ($obMassivas = $results->fetchObject(EntityMassivas::class)) {
             $dataFim = $obMassivas->dataFim == null ? '-' : $obMassivas->dataFim;

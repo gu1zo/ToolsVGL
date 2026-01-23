@@ -26,9 +26,22 @@ document.addEventListener("DOMContentLoaded", function () {
   ];
 
   var barChartsConfig = [
-    { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" },
-    { id: "graficoMassivasRegionais", url: "/ajax/massivas/graficoMassivasRegionais" },
+    {
+      id: "graficoMassivasClientes",
+      url: "/ajax/massivas/graficoMassivasClientes",
+      label: "Clientes Afetados"
+    },
+    {
+      id: "graficoMassivasRegionais",
+      url: "/ajax/massivas/graficoMassivasRegionais",
+      label: "Regional"
+    }
   ];
+var queryParams = {
+  dataInicio: $('#dataInicio').val(),
+  dataFim: $('#dataFim').val()
+};
+
   
 
 
@@ -278,7 +291,14 @@ var colors = {
     plugins: [ChartDataLabels] // garante que o plugin esteja ativo
   });
 }
-function createBarChart(canvasId, labels, values) {
+function createBarChart(
+  canvasId,
+  labels,
+  values,
+  label,
+  redirectBaseUrl = null,
+  extraParams = {}
+) {
   var ctx = document.getElementById(canvasId).getContext('2d');
   var isDarkMode = document.body.classList.contains('dark-mode');
   var textColor = isDarkMode ? '#ddd' : '#333';
@@ -289,7 +309,7 @@ function createBarChart(canvasId, labels, values) {
     data: {
       labels: labels,
       datasets: [{
-        label: 'Clientes Afetados',
+        label: label,
         data: values,
         backgroundColor: [
           '#8ecae6', '#b388eb', '#6fb1a0', '#ffb703',
@@ -302,12 +322,30 @@ function createBarChart(canvasId, labels, values) {
     },
     options: {
       responsive: true,
+
+      /** 👉 só ativa clique se tiver URL */
+      onClick: function (evt, elements) {
+        if (!redirectBaseUrl) return;
+        if (!elements.length) return;
+
+        const index = elements[0].index;
+        const regional = labels[index];
+
+        const params = new URLSearchParams({
+          ...extraParams,
+          regional: regional
+        });
+
+        window.location.href =
+          redirectBaseUrl + '?' + params.toString();
+      },
+
       plugins: {
         legend: {
           position: 'bottom',
           labels: {
             color: textColor,
-            font: { size: 20, weight: 'bold' },
+            font: { size: 20, weight: 'bold' }
           }
         },
         datalabels: {
@@ -339,6 +377,7 @@ function createBarChart(canvasId, labels, values) {
   });
 }
 
+
 barChartsConfig.forEach(function (config) {
   $.ajax({
     url: config.url,
@@ -347,17 +386,43 @@ barChartsConfig.forEach(function (config) {
     data: queryParams,
     success: function (data) {
       var canvas = document.getElementById(config.id);
-      if (canvas && data && data.labels && data.values) {
-        createBarChart(config.id, data.labels, data.values);
+
+      if (!canvas || !data || !data.labels || !data.values) {
+        console.error("Dados inválidos para", config.id);
+        return;
+      }
+
+      // Apenas o gráfico de regionais redireciona
+      if (config.id === 'graficoMassivasRegionais') {
+        canvas.style.cursor = 'pointer';
+
+        createBarChart(
+          config.id,
+          data.labels,
+          data.values,
+          config.label,
+          '/massivas',
+          {
+            dataInicio: queryParams.dataInicio,
+            dataFim: queryParams.dataFim
+          }
+        );
       } else {
-        console.error("Dados inválidos para o gráfico de barras " + config.id);
+        createBarChart(
+          config.id,
+          data.labels,
+          data.values,
+          config.label
+        );
       }
     },
     error: function (xhr, status, error) {
-      console.error("Erro ao obter dados de " + config.url + ":", error);
+      console.error("Erro ao obter dados de " + config.url, error);
     }
   });
 });
+
+
 
 
 
