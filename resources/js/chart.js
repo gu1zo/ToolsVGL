@@ -13,7 +13,6 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoTecnicosNegatividade", url: "/ajax/os/graficoTecnicosNegatividade" },
     { id: "graficoMassivasRegionais", url: "/ajax/massivas/graficoMassivasRegionais" },
     { id: "graficoMassivasTipos", url: "/ajax/massivas/graficoMassivasTipos" },
-    { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" }
   ];
 
   var lineChartsConfig = [
@@ -26,6 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "logarithmic" },
     { id: "graficoMassivasHistClientes", url: "/ajax/massivas/graficoMassivasHistClientes", yType: "logarithmic" },
   ];
+
+  var barChartsConfig = [
+    { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" }
+  ];
+
 
   var queryParams = {};
   var searchParams = new URLSearchParams(window.location.search);
@@ -273,5 +277,85 @@ var colors = {
     plugins: [ChartDataLabels] // garante que o plugin esteja ativo
   });
 }
+function createBarChart(canvasId, labels, values) {
+  var ctx = document.getElementById(canvasId).getContext('2d');
+  var isDarkMode = document.body.classList.contains('dark-mode');
+  var textColor = isDarkMode ? '#ddd' : '#333';
+  var gridColor = isDarkMode ? '#444' : '#ddd';
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Clientes Afetados',
+        data: values,
+        backgroundColor: [
+          '#8ecae6', '#b388eb', '#6fb1a0', '#ffb703',
+          '#a3c4bc', '#f4a6a6', '#cdb4db', '#90dbf4',
+          '#ffd6a5', '#caffbf', '#ffadad', '#ff6392',
+          '#fde68a'
+        ],
+        borderRadius: 8
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
+          labels: {
+            color: textColor,
+            font: { size: 20, weight: 'bold' }
+          }
+        },
+        datalabels: {
+          color: textColor,
+          font: { size: 18, weight: 'bold' },
+          anchor: 'end',
+          align: 'top'
+        }
+      },
+      scales: {
+        x: {
+          ticks: {
+            color: textColor,
+            font: { size: 18, weight: 'bold' }
+          },
+          grid: { color: gridColor }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: {
+            color: textColor,
+            font: { size: 18, weight: 'bold' }
+          },
+          grid: { color: gridColor }
+        }
+      }
+    },
+    plugins: [ChartDataLabels]
+  });
+}
+
+barChartsConfig.forEach(function (config) {
+  $.ajax({
+    url: config.url,
+    method: 'GET',
+    dataType: 'json',
+    data: queryParams,
+    success: function (data) {
+      var canvas = document.getElementById(config.id);
+      if (canvas && data && data.labels && data.values) {
+        createBarChart(config.id, data.labels, data.values);
+      } else {
+        console.error("Dados inválidos para o gráfico de barras " + config.id);
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Erro ao obter dados de " + config.url + ":", error);
+    }
+  });
+});
+
 
 });
