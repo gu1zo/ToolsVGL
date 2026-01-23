@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoAnoCordialidade", url: "/ajax/graficos/notasAnoCordialidade", yType: "logarithmic" },
     { id: "graficoLinhaOs", url: "/ajax/os/graficoLinhaOs", yType: "logarithmic" },
     { id: "graficoMediasAnoCordialidade", url: "/ajax/graficos/mediaNotasAnoCordialidade", yType: "linear" },
+    { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais", yType: "logarithmic" },
     { id: "graficoMassivasHistTipos", url: "/ajax/massivas/graficoMassivasHistTipos", yType: "logarithmic" },
     { id: "graficoMassivasHistClientes", url: "/ajax/massivas/graficoMassivasHistClientes", yType: "logarithmic" },
   ];
@@ -28,10 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
   var barChartsConfig = [
     { id: "graficoMassivasClientes", url: "/ajax/massivas/graficoMassivasClientes" },
   ];
-  var barTimeSeriesConfig = [
-  { id: "graifcoMassivasHistRegionais", url: "/ajax/massivas/graifcoMassivasHistRegionais" }
-];
-
+  
 
 
   var queryParams = {};
