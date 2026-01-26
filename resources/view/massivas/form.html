@@ -61,17 +61,20 @@
           <div class="row">
             <div class="col">
               <label for="regional" class="form-label">Regional:</label>
-              <select id="regional" class="form-select shadow" name="regional">
-                <option value="" selected disabled>
-                  Selecione uma Regional
-                </option>
+              <select
+                id="regional"
+                required
+                class="form-select shadow"
+                name="regional"
+              >
+                <option value="" selected>Selecione uma Regional</option>
                 {{regionais}}
               </select>
             </div>
             <div class="col">
               <label for="tipo" class="form-label">Tipo:</label>
-              <select id="tipo" class="form-select shadow" name="tipo">
-                <option value="" selected disabled>Selecione o Tipo</option>
+              <select id="tipo" required class="form-select shadow" name="tipo">
+                <option value="">Selecione o Tipo</option>
                 {{tipos}}
               </select>
             </div>

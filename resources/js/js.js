@@ -28,7 +28,7 @@ $(document).ready(function () {
       info: true,          // Exibe informações sobre os registros
       autoWidth: false,    
       responsive: true, 
-      order: [[2, 'desc']],
+      order: [[3, 'desc']],
       language: {
           url: "/resources/json/datatable-pt-br.json"  // Tradução para português
       },
