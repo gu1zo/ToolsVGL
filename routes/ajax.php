@@ -74,6 +74,25 @@ $obRouter->post('/ajax/fila/passar', [
         return new response(200, Ajax::passarVez($request));
     }
 ]);
+$obRouter->post('/ajax/fila/pausar', [
+    'middlewares' => [
+        'required-login'
+    ],
+    function ($request) {
+        return new response(200, Ajax::pausarFila($request));
+    }
+]);
+$obRouter->post('/ajax/fila/despausar', [
+    'middlewares' => [
+        'required-login'
+    ],
+    function ($request) {
+        return new response(200, Ajax::despausarFila($request));
+    }
+]);
+
+
+
 $obRouter->get('/ajax/graficos/notas', [
     'middlewares' => [],
     function ($request) {

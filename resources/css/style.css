@@ -197,7 +197,12 @@ footer {
 .default {
   background-color: #dbeaf5 !important;
 }
-
+.paused {
+  background-color: #ffc107 !important;
+}
+.online {
+  background-color: #28a745 !important;
+}
 /* Adiciona um limite máximo para evitar que a tabela fique muito larga */
 #fila td, #fila th {
   max-width: 200px;
@@ -276,6 +281,15 @@ footer {
 }
 .dark-mode .default {
   background-color: #004080 !important; /* Azul escuro no modo noturno */
+  color: #fff !important;
+}
+
+.dark-mode .paused {
+  background-color: #b8860b !important; /* Azul escuro no modo noturno */
+  color: #fff !important;
+}
+.dark-mode .online {
+  background-color: #1f8f4a !important; /* Azul escuro no modo noturno */
   color: #fff !important;
 }
 

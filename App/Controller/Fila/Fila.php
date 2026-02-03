@@ -44,11 +44,15 @@ class Fila extends Page
 
         while ($obFila = $results->fetchObject(EntityFila::class)) {
             $obUser = EntityUser::getUserById($obFila->id_usuario);
+            $motivo = $obFila->motivo == null ? '' : $obFila->motivo;
+            $data_pausa = $obFila->data_pausa == null ? '' : $obFila->data_pausa;
             $itens .= View::render('/fila/item', [
                 'id_usuario' => $obFila->id_usuario,
                 'usuario' => $obUser->nome,
                 'posicao' => $obFila->posicao,
-                'entrada' => $obFila->data_entrada
+                'entrada' => $obFila->data_entrada,
+                'motivo_pausa' => $motivo,
+                'hora_pausa' => $data_pausa
             ]);
         }
         return $itens;

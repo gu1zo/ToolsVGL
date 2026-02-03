@@ -162,6 +162,7 @@ $(document).ready(function () {
       $.get("/ajax/fila/usuario", function(response) {
           usuarioNaFila = response.naFila;
           usuarioPrimeiroFila = response.isFirst;
+          usuarioEmPausa = response.isPaused;
 
           atualizarBotoes();
       });
@@ -190,6 +191,8 @@ $(document).ready(function () {
           { data: 'id' },
           { data: 'usuario' },
           { data: 'posicao' },
+          { data: 'motivo_pausa' },
+          { data: 'hora_pausa' },
           { data: 'entrada' }
       ],
       columnDefs: [
@@ -197,13 +200,27 @@ $(document).ready(function () {
       ],
       createdRow: function (row, data) {
           $(row).find('td').addClass('text-center');
-          $(row).find('td').eq(0).html('');
-          $(row).find('td').eq(0).addClass('default');
-      }
+
+          const $primeiraColuna = $(row).find('td').eq(0);
+          $primeiraColuna.html('');
+
+          if (data.isPaused) {
+              $primeiraColuna
+                  .removeClass('online')
+                  .addClass('paused');
+          } else {
+              $primeiraColuna
+                  .removeClass('paused')
+                  .addClass('online');
+          }
+    }
+
   });
 
   function atualizarBotoes() {
       $("#entrarFila").toggleClass("d-none", usuarioNaFila);
+      $("#pausarFila").toggleClass("d-none", usuarioEmPausa || !usuarioNaFila);
+      $("#sairPausa").toggleClass("d-none", !usuarioEmPausa);
       $("#sairFila").toggleClass("d-none", !usuarioNaFila);
       $("#passarVez").toggleClass("d-none", !usuarioPrimeiroFila);
 
@@ -231,6 +248,27 @@ $(document).ready(function () {
           tabelaFila.ajax.reload();
       });
   });
+
+    $("#sairPausa").click(function() {
+      $.post("/ajax/fila/despausar", function() {
+          tabelaFila.ajax.reload();
+      });
+  });
+  $("#pausarSubmit").click(function () {
+    const motivo = $('select[name="motivo"]').val();
+
+    $.post("/ajax/fila/pausar", { motivo: motivo })
+        .done(function () {
+            tabelaFila.ajax.reload();
+
+            // fecha o modal (Bootstrap 5)
+            const modal = bootstrap.Modal.getInstance(
+                document.getElementById('pausa')
+            );
+            modal.hide();
+        });
+});
+
 
   setInterval(function() {
       verificarFila();

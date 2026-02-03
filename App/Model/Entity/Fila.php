@@ -11,6 +11,9 @@ class Fila
     public $posicao;
 
     public $data_entrada;
+    public $motivo;
+    public $data_pausa;
+    public $pausa;
 
     public static function getFila($where = null, $order = null, $limit = null, $fields = '*')
     {
@@ -23,6 +26,9 @@ class Fila
             'id_usuario' => $this->id_usuario,
             'posicao' => $this->posicao,
             'data_entrada' => $this->data_entrada,
+            'motivo' => null,
+            'data_pausa' => null,
+            'pausa' => 0
         ]);
 
         return true;
@@ -34,6 +40,9 @@ class Fila
             'id_usuario' => $this->id_usuario,
             'posicao' => $this->posicao,
             'data_entrada' => $this->data_entrada,
+            'motivo' => $this->motivo,
+            'data_pausa' => $this->data_pausa,
+            'pausa' => $this->pausa
         ]);
     }
 

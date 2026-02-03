@@ -1,1 +1,7 @@
-<div class="text-center text-muted">&copy 2025 - Desenvolvido por Vogel</div>
+<div class="text-center text-muted">
+  &copy; <span id="year"></span> - Desenvolvido por Vogel
+</div>
+
+<script>
+  document.getElementById("year").textContent = new Date().getFullYear();
+</script>

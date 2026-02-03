@@ -11,12 +11,14 @@
             <th scope="col">ID</th>
             <th scope="col" class="text-center">Usuário</th>
             <th scope="col" class="text-center">Posição</th>
+            <th scope="col" class="text-center">Motivo Pausa</th>
+            <th scope="col" class="text-center">Hora Pausa</th>
             <th scope="col" class="text-center">Entrada</th>
           </tr>
         </thead>
         <tfoot>
           <tr>
-            <td colspan="4" class="text-center">
+            <td colspan="6" class="text-center">
               <button
                 id="entrarFila"
                 class="btn btn-outline-primary shadow d-none"
@@ -30,6 +32,22 @@
                 <i class="bi bi-arrow-right"></i> Passar a vez
               </button>
               <button
+                id="pausarFila"
+                type="button"
+                class="btn btn-outline-info shadow d-none"
+                data-bs-toggle="modal"
+                data-bs-target="#pausa"
+              >
+                Pausar
+              </button>
+              <button
+                id="sairPausa"
+                type="button"
+                class="btn btn-outline-info shadow d-none"
+              >
+                Sair da Pausa
+              </button>
+              <button
                 id="sairFila"
                 class="btn btn-outline-danger shadow d-none"
               >
@@ -39,6 +57,44 @@
           </tr>
         </tfoot>
       </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="pausa"
+  tabindex="-1"
+  aria-labelledby="pausa"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="pausa">Pausa</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <select name="motivo" class="form-select">
+            <option value="Almoço">Almoço</option>
+            <option value="Café/Água">Café/Água</option>
+            <option value="Acesso Remoto">Acesso Remoto</option>
+            <option value="Banheiro">Banheiro</option>
+          </select>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="pausarSubmit" type="button" class="btn btn-primary">
+          Pausar
+        </button>
+      </div>
     </div>
   </div>
 </div>

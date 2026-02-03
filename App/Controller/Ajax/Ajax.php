@@ -107,11 +107,18 @@ class Ajax
 
         while ($obFila = $results->fetchObject(EntityFila::class)) {
             $obUser = EntityUser::getUserById($obFila->id_usuario);
+            $posicao = ($obFila->posicao == null) ? 'PAUSA' : $obFila->posicao;
+            $motivo = ($obFila->motivo == null) ? '-' : $obFila->motivo;
+            $hora_pausa = ($obFila->data_pausa == null) ? '-' : $obFila->data_pausa;
+            $pausa = ($obFila->pausa == 0) ? false : true;
             $fila[] = [
                 'id' => $obUser->id,
                 'usuario' => $obUser->nome,
-                'posicao' => $obFila->posicao,
+                'posicao' => $posicao,
                 'entrada' => $obFila->data_entrada,
+                'motivo_pausa' => $motivo,
+                'hora_pausa' => $hora_pausa,
+                'isPaused' => $pausa
             ];
         }
         return json_encode($fila, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -124,6 +131,7 @@ class Ajax
 
         $isFirst = false;
         $naFila = false;
+        $isPaused = false;
 
         $obFila = EntityFila::getFilaById($id_usuario);
         if ($obFila instanceof EntityFila) {
@@ -131,11 +139,15 @@ class Ajax
             if ($obFila->posicao == 1) {
                 $isFirst = true;
             }
+            if ($obFila->pausa == 1) {
+                $isPaused = true;
+            }
         }
 
         $response = [
             'naFila' => $naFila,
-            'isFirst' => $isFirst
+            'isFirst' => $isFirst,
+            'isPaused' => $isPaused
         ];
         header('Content-Type: application/json');
         echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
@@ -147,7 +159,7 @@ class Ajax
     {
         $id_usuario = Login::getId();
 
-        $results = EntityFila::getFila('id_usuario !="' . $id_usuario . '"');
+        $results = EntityFila::getFila('id_usuario !="' . $id_usuario . '" AND posicao IS NOT NULL');
         while ($obFila = $results->fetchObject(EntityFila::class)) {
             $obFila->posicao = $obFila->posicao + 1;
             $obFila->atualizar();
@@ -163,13 +175,60 @@ class Ajax
         return true;
     }
 
+    public static function pausarFila($request)
+    {
+        $postVars = $request->getPostVars();
+        $motivo = $postVars['motivo'];
+        $data = new DateTime('America/Sao_Paulo');
+
+        $id_usuario = Login::getId();
+
+        $obFila = EntityFila::getFilaById($id_usuario);
+
+        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '" AND posicao IS NOT NULL');
+
+        while ($row = $results->fetchObject(EntityFila::class)) {
+            $row->posicao = $row->posicao - 1;
+            $row->atualizar();
+        }
+
+        $obFila->motivo = $motivo;
+        $obFila->pausa = 1;
+        $obFila->posicao = null;
+        $obFila->data_pausa = $data->format('Y-m-d H:i:s');
+        $obFila->atualizar();
+
+        return true;
+    }
+
+    public static function despausarFila($request)
+    {
+        $id_usuario = Login::getId();
+
+        $results = EntityFila::getFila('id_usuario !="' . $id_usuario . '" AND posicao IS NOT NULL');
+        while ($obFila = $results->fetchObject(EntityFila::class)) {
+            $obFila->posicao = $obFila->posicao + 1;
+            $obFila->atualizar();
+        }
+        $data = new DateTime('America/Sao_Paulo');
+
+        $obFila = EntityFila::getFilaById($id_usuario);
+        $obFila->posicao = 1;
+        $obFila->motivo = null;
+        $obFila->pausa = 0;
+        $obFila->data_pausa = null;
+        $obFila->atualizar();
+        return true;
+    }
+
+
     public static function sairFila($request)
     {
         $id_usuario = Login::getId();
 
         $obFila = EntityFila::getFilaById($id_usuario);
 
-        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
+        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '" AND posicao IS NOT NULL');
 
         while ($row = $results->fetchObject(EntityFila::class)) {
             $row->posicao = $row->posicao - 1;
@@ -197,7 +256,7 @@ class Ajax
         $totalUsuarios = EntityFila::getTotalUsuarios(); // Presumindo que exista método que retorna total
 
         // Atualizar posições dos usuários atrás do atual
-        $results = EntityFila::getFila('posicao > "' . $posicaoAtual . '"');
+        $results = EntityFila::getFila('posicao > "' . $posicaoAtual . '" AND posicao IS NOT NULL');
 
         while ($row = $results->fetchObject(EntityFila::class)) {
             $row->posicao = $row->posicao - 1;
