@@ -58,7 +58,7 @@ class Fila
     }
     public static function getTotalUsuarios()
     {
-        $result = (new Database('fila'))->select(null, null, null, 'COUNT(*) as total')->fetch();
+        $result = (new Database('fila'))->select('posicao IS NOT NULL', null, null, 'COUNT(*) as total')->fetch();
         return (int) $result['total'];
     }
 
