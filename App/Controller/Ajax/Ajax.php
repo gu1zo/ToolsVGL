@@ -228,11 +228,13 @@ class Ajax
 
         $obFila = EntityFila::getFilaById($id_usuario);
 
-        $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '" AND posicao IS NOT NULL');
+        if ($obFila->posicao != null) {
+            $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '" AND posicao IS NOT NULL');
 
-        while ($row = $results->fetchObject(EntityFila::class)) {
-            $row->posicao = $row->posicao - 1;
-            $row->atualizar();
+            while ($row = $results->fetchObject(EntityFila::class)) {
+                $row->posicao = $row->posicao - 1;
+                $row->atualizar();
+            }
         }
 
         $obFila->excluir();
