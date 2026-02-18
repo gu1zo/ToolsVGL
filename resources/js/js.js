@@ -276,6 +276,44 @@ $(document).ready(function () {
   }, 500);
 
 });
+$(document).ready(function () {
+  const urlParams = Object.fromEntries(
+    new URLSearchParams(window.location.search)
+  );
+
+  $("#mediaNotas").DataTable({
+      searching: true,
+      paging: true,
+      pageLength: 10,
+      info: false,
+      order: [[2, 'dsc']],
+      autoWidth: false,
+      language: {
+          emptyTable: "Nenhum agendamento encontrado.",
+          url: "/resources/json/datatable-pt-br.json"
+      },
+      ajax: {
+          type: 'GET',
+          url: '/ajax/graficos/mediaAgentes',
+          data: urlParams, // ✅ agora envia corretamente
+          dataSrc: ''
+      },
+      columns: [
+          { data: 'id' },
+          { data: 'agente' },
+          { data: 'media_notas' },
+          { data: 'quantidade_avaliacoes' },
+      ],
+      columnDefs: [
+          { width: "8px", targets: 0 }
+      ],
+      createdRow: function (row, data) {
+          $(row).find('td').addClass('text-center');
+          $(row).find('td').eq(0).addClass('default');
+          $(row).find('td').eq(0).html('');
+      }
+  });
+});
 
 
 

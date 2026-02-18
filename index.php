@@ -19,6 +19,7 @@ include __DIR__ . '/routes/notas.php';
 include __DIR__ . '/routes/emails.php';
 include __DIR__ . '/routes/massivas.php';
 include __DIR__ . '/routes/ordem-servico.php';
+include __DIR__ . '/routes/ligacoes.php';
 
 
 //IMPRIME O RESPONSE DA PÁGINA

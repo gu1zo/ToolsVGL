@@ -240,6 +240,53 @@ class Graficos
 
         return json_encode($data, JSON_PRETTY_PRINT);
     }
+
+    public static function getMediaNotasPorAgente($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $dataInicio = $queryParams['data_inicial'] ?? null;
+        $dataFim = $queryParams['data_final'] ?? null;
+        $equipe = $queryParams['equipe'] ?? null;
+
+        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" 
+                AND "' . $dataFim . ' 23:59:59"';
+
+        $where = $periodo;
+
+        if ($equipe != 'todas') {
+            if ($equipe == 'ggnet' || $equipe == 'alt') {
+                $where .= ' AND canal = "' . $equipe . '"';
+            } else {
+                $where .= ' AND equipe = "' . $equipe . '"';
+            }
+        }
+
+        $fields = '
+        id,
+        agente,
+        COUNT(*) as quantidade_avaliacoes,
+        ROUND(AVG(nota),2) as media_notas
+    ';
+
+        $order = 'media_notas DESC';
+        $group = 'agente';
+
+        $resultados = EntityNotas::getNotas($where, $order, null, $fields, $group);
+
+        $dados = [];
+
+        while ($row = $resultados->fetchObject()) {
+            $dados[] = [
+                'id' => $row->id,
+                'agente' => $row->agente,
+                'quantidade_avaliacoes' => (int) $row->quantidade_avaliacoes,
+                'media_notas' => (float) $row->media_notas
+            ];
+        }
+
+        return json_encode($dados, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    }
+
     public static function getGraficoLinhaMediaNotas($request)
     {
         // Pega filtros opcionais (ex.: equipe)

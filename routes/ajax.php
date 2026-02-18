@@ -132,6 +132,14 @@ $obRouter->get('/ajax/graficos/mediaNotasAno', [
     }
 ]);
 
+$obRouter->get('/ajax/graficos/mediaAgentes', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Graficos::getMediaNotasPorAgente($request));
+    }
+]);
+
+
 
 
 

@@ -172,12 +172,13 @@ footer {
   color: inherit; /* Mantém a cor original */
 }
 
-#agendados, #table, #fila, #notas, #massivas, #ordens {
+#agendados, #table, #fila, #notas, #massivas, #ordens, #mediaNotas {
   table-layout: fixed;
   width: 100%;
 }
 
 #agendados th:nth-child(1), #agendados td:nth-child(1),
+#mediaNotas th:nth-child(1), #mediaNotas td:nth-child(1),
 #table th:nth-child(1), #table td:nth-child(1),
 #notas th:nth-child(1), #notas td:nth-child(1),
 #massivas th:nth-child(1), #massivas td:nth-child(1),
