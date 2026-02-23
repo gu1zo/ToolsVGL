@@ -190,7 +190,7 @@ $(document).ready(function () {
       columns: [
           { data: 'id' },
           { data: 'usuario' },
-          { data: 'posicao', type: 'num' },
+          { data: 'posicao' },
           { data: 'motivo_pausa' },
           { data: 'hora_pausa' },
           { data: 'entrada' }
