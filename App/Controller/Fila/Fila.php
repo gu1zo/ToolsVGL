@@ -84,13 +84,14 @@ class Fila extends Page
         $obFila = EntityFila::getFilaById($id_usuario);
         if ($obFila instanceof EntityFila) {
 
-            $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
+            if ($obFila != 0) {
+                $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
 
-            while ($row = $results->fetchObject(EntityFila::class)) {
-                $row->posicao = $row->posicao - 1;
-                $row->atualizar();
+                while ($row = $results->fetchObject(EntityFila::class)) {
+                    $row->posicao = $row->posicao - 1;
+                    $row->atualizar();
+                }
             }
-
             $obFila->excluir();
         }
         $request->getRouter()->redirect('/fila/gestao?status=deleted');

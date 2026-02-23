@@ -190,7 +190,19 @@ $(document).ready(function () {
       columns: [
           { data: 'id' },
           { data: 'usuario' },
-          { data: 'posicao' },
+          { 
+            data: 'posicao',
+            render: function(data, type, row) {
+
+                // Para ordenação → usa número real
+                if (type === 'sort' || type === 'type') {
+                    return data === null ? 9999 : parseInt(data);
+                }
+
+                // Para exibição
+                return data === null ? 'PAUSA' : data;
+            }
+          },
           { data: 'motivo_pausa' },
           { data: 'hora_pausa' },
           { data: 'entrada' }

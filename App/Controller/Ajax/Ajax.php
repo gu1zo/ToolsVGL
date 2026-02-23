@@ -107,7 +107,7 @@ class Ajax
 
         while ($obFila = $results->fetchObject(EntityFila::class)) {
             $obUser = EntityUser::getUserById($obFila->id_usuario);
-            $posicao = ($obFila->posicao == null) ? 'PAUSA' : $obFila->posicao;
+            $posicao = $obFila->posicao;
             $motivo = ($obFila->motivo == null) ? '-' : $obFila->motivo;
             $hora_pausa = ($obFila->data_pausa == null) ? '-' : $obFila->data_pausa;
             $pausa = ($obFila->pausa == 0) ? false : true;
