@@ -84,7 +84,7 @@ class Fila extends Page
         $obFila = EntityFila::getFilaById($id_usuario);
         if ($obFila instanceof EntityFila) {
 
-            if ($obFila != 0) {
+            if ($obFila->posicao != 0) {
                 $results = EntityFila::getFila('posicao > "' . $obFila->posicao . '"');
 
                 while ($row = $results->fetchObject(EntityFila::class)) {
