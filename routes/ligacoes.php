@@ -3,7 +3,7 @@
 use \App\http\Response;
 use \App\Controller\Ligacoes\Ligacoes;
 
-/*
+
 $obRouter->get('/ligacoes/dash', [
     'middlewares' => [
         'required-login',
@@ -12,4 +12,4 @@ $obRouter->get('/ligacoes/dash', [
     function ($request) {
         return new response(200, Ligacoes::render($request));
     }
-]);*/
+]);

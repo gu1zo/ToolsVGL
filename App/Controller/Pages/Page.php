@@ -145,6 +145,21 @@ class Page
             ],
             'GESTÃO' => [
                 [
+                    'name' => 'Dashboard Ligações',
+                    'icon' => 'bi bi-telephone',
+                    'link' => URL . '/ligacoes',
+                    'content' => [
+                        [
+                            'item' => 'CSA',
+                            'link' => URL . '/ligacoes/dash?queue=CSA'
+                        ],
+                        [
+                            'item' => 'SAC - Financeiro',
+                            'link' => URL . '/ligacoes/dash?queue=SAC'
+                        ]
+                    ]
+                ],
+                [
                     'name' => 'Ligações Perdidas',
                     'icon' => 'bi bi-clipboard-data-fill',
                     'link' => URL . '/perdidas',
@@ -165,10 +180,10 @@ class Page
                             'item' => 'Atendimento',
                             'link' => URL . '/notas'
                         ]/*,
-          [
-              'item' => 'Resolutividade',
-              'link' => URL . '/notas-cordialidade'
-          ]*/
+[
+ 'item' => 'Resolutividade',
+ 'link' => URL . '/notas-cordialidade'
+]*/
                     ]
                 ],
                 [

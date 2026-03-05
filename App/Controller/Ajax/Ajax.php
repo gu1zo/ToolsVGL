@@ -4,6 +4,7 @@ namespace App\Controller\Ajax;
 use App\Controller\Api\EvolutionAPI;
 use App\Controller\Agendados\Agendados;
 use App\Controller\Api\GoogleChatAPI;
+use \App\Model\Rest\APISippulse;
 use App\Controller\OrdensServico\OrdensServico;
 use \App\Model\Entity\Agendados as EntityAgendados;
 use \App\Model\Entity\Fila as EntityFila;
@@ -344,6 +345,50 @@ class Ajax
 
         $data = OrdensServico::getRoteador($pppoe);
         return $data;
+    }
+
+    public static function getDadosFila($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $queue = $queryParams['queue'];
+
+        switch ($queue) {
+            case 'CSA':
+                $fila = 55;
+                break;
+            case 'SAC':
+                $fila = 55;
+                break;
+            default:
+                return json_encode(['error' => 'Queue não informada']);
+        }
+
+        $dados = APISippulse::getDadosFila($queue);
+        $chamadasEntradas = $dados['statistics']['countReceivedCalls'];
+        $countDisponiveis = 0;
+        $countOnCall = 0;
+
+        $logados = $dados['statistics']['countConnected'];
+        foreach ($dados['extensionDetailMap']['GGNET_CSA'] as $k) {
+            if ($k['statusExtension'] == null) {
+                $countDisponiveis++;
+            } else if ($k['statusExtension'] == 'TALKING') {
+                $countOnCall++;
+            }
+
+
+        }
+        $json = [
+            "calls_waiting" => 0,
+            "agents_on_call" => $countOnCall,
+            "agents_available" => $countDisponiveis,
+            "agents_logged" => $logados,
+            "calls_offered" => $chamadasEntradas,
+            "calls_answered" => 115,
+            "calls_lost" => 0
+        ];
+
+        return json_encode($json, true, JSON_PRETTY_PRINT);
     }
 
 

@@ -8,6 +8,10 @@ class Ligacoes
 {
     public static function render($request)
     {
-        return View::render('ligacoes/dashboard');
+        $queryParams = $request->getQueryParams();
+        $queue = $queryParams['queue'];
+        return View::render('ligacoes/dashboard', [
+            'queue' => $queue
+        ]);
     }
 }

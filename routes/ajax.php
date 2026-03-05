@@ -274,3 +274,11 @@ $obRouter->get('/ajax/massivas/graficoMassivasHistClientes', [
         return new response(200, Graficos::getGraficoLinhaClientes($request));
     }
 ]);
+
+
+$obRouter->get('/ajax/ligacoes/dash', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getDadosFila($request));
+    }
+]);
