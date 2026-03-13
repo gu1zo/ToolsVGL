@@ -1,0 +1,79 @@
+.agent-table {
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 2px solid #dee2e6;
+}
+
+.agent-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.agent-table thead {
+    background: #e9ecef;
+}
+
+.agent-table th {
+    font-size: 22px;
+    padding: 18px;
+    text-align: left;
+    border-bottom: 3px solid #dee2e6;
+}
+
+.agent-table td {
+    font-size: 26px;
+    padding: 22px;
+    border-bottom: 2px solid #dee2e6;
+}
+
+.agent-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Linha com leve destaque ao passar */
+
+.agent-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+/* Status */
+
+.status-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-available {
+    background: #198754;
+}
+
+.status-call {
+    background: #ffc107;
+}
+
+.status-pause {
+    background: #dc3545;
+}
+
+/* Nome agente */
+
+.agent-name {
+    font-weight: 600;
+}
+
+/* Pausa */
+
+.pause-reason {
+    color: #495057;
+}
+
+/* Tempo */
+
+.status-time {
+    font-weight: bold;
+    font-size: 28px;
+}

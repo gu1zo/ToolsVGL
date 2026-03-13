@@ -226,7 +226,6 @@ class APISippulse
         $response = curl_exec($ch);
 
         if (curl_errno($ch)) {
-            echo 'Erro no cURL: ' . curl_error($ch);
             curl_close($ch);
             return null;
         }
@@ -246,10 +245,9 @@ class APISippulse
 
             $totalAgentes++;
 
-            if (
-                isset($agent['currentAgentStatus']) &&
-                $agent['currentAgentState'] === 'WAITING' && $agent['currentAgentStatus'] == 'AVAILABLE'
-            ) {
+            $parsed = self::parseAgentStatus($agent);
+
+            if ($parsed['status'] === 'available') {
                 $agentesDisponiveis++;
             }
         }
@@ -257,6 +255,106 @@ class APISippulse
         return [
             'total_agentes' => $totalAgentes,
             'agentes_disponiveis' => $agentesDisponiveis
+        ];
+    }
+
+    public static function getAgentes($queueId)
+    {
+        $instance = new self();
+        $token = self::getToken();
+
+        if (empty($token)) {
+            return null;
+        }
+
+        $domain = "unificado01.brasiltecpar.com.br";
+
+        $url = $instance->url . '/v2/dashboard/agent/analyticsDashboard'
+            . '?queueId=' . urlencode($queueId)
+            . '&domain=' . urlencode($domain);
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: {$token}",
+            "Accept: application/json"
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            curl_close($ch);
+            return null;
+        }
+
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (!$data) {
+            return null;
+        }
+
+        $agents = [];
+
+        foreach ($data as $agent) {
+
+            $parsed = self::parseAgentStatus($agent);
+
+            $seconds = $agent['secondsElapsedStatus'] ?? 0;
+
+            $agents[] = [
+                "name" => $agent['user']['firstName'] ?? 'Desconhecido',
+                "status" => $parsed['status'],
+                "pause" => $parsed['pause'],
+                "time" => gmdate("H:i:s", $seconds)
+            ];
+        }
+
+        usort($agents, function ($a, $b) {
+
+            $order = [
+                'available' => 1,
+                'call' => 2,
+                'pause' => 3
+            ];
+
+            return $order[$a['status']] <=> $order[$b['status']];
+        });
+
+        return $agents;
+    }
+
+    private static function parseAgentStatus($agent)
+    {
+        if (($agent['currentAgentStatus'] ?? null) === 'ON_BREAK') {
+            return [
+                'status' => 'pause',
+                'pause' => $agent['queueAgentBreakName'] ?? 'Pausa'
+            ];
+        }
+
+        if (($agent['currentAgentState'] ?? null) === 'IN_A_QUEUE_CALL') {
+            return [
+                'status' => 'call',
+                'pause' => null
+            ];
+        }
+
+        if (
+            ($agent['currentAgentStatus'] ?? null) === 'AVAILABLE' &&
+            ($agent['currentAgentState'] ?? null) === 'WAITING'
+        ) {
+            return [
+                'status' => 'available',
+                'pause' => null
+            ];
+        }
+
+        return [
+            'status' => 'pause',
+            'pause' => 'Indisponível'
         ];
     }
 }

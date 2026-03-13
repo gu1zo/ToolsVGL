@@ -383,5 +383,28 @@ class Ajax
         return json_encode($json, true, JSON_PRETTY_PRINT);
     }
 
+    public static function getDadosAgentesFila($request)
+    {
+        $queryParams = $request->getQueryParams();
+        $queue = $queryParams['queue'];
+
+        switch ($queue) {
+            case 'CSA':
+                $fila = 340;
+                break;
+            case 'SAC':
+                $fila = 347;
+                break;
+            case 'CSAN2':
+                $fila = 341;
+                break;
+            default:
+                return json_encode(['error' => 'Queue não informada']);
+        }
+
+        $json = APISippulse::getAgentes($fila);
+        return json_encode($json, true, JSON_PRETTY_PRINT);
+    }
+
 
 }

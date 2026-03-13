@@ -282,3 +282,10 @@ $obRouter->get('/ajax/ligacoes/dash', [
         return new response(200, Ajax::getDadosFila($request));
     }
 ]);
+
+$obRouter->get('/ajax/ligacoes/dash/agentes', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getDadosAgentesFila($request));
+    }
+]);

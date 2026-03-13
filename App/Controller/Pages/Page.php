@@ -154,6 +154,10 @@ class Page
                             'link' => URL . '/ligacoes/dash?queue=CSA'
                         ],
                         [
+                            'item' => 'CSA - Agentes',
+                            'link' => URL . '/ligacoes/dash/agentes?queue=CSA'
+                        ],
+                        [
                             'item' => 'CSA - N2',
                             'link' => URL . '/ligacoes/dash?queue=CSAN2'
                         ],

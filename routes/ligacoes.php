@@ -10,6 +10,16 @@ $obRouter->get('/ligacoes/dash', [
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Ligacoes::render($request));
+        return new response(200, Ligacoes::renderDashboardChamadas($request));
+    }
+]);
+
+$obRouter->get('/ligacoes/dash/agentes', [
+    'middlewares' => [
+        'required-login',
+        'required-admin-nota'
+    ],
+    function ($request) {
+        return new response(200, Ligacoes::renderDashboardAgentes($request));
     }
 ]);
