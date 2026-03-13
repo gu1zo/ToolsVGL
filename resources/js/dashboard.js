@@ -111,7 +111,7 @@ function updateLostCalls(value) {
   if (value > 0) {
     cardEl.style.backgroundColor = "#dc3545";
   } else {
-    cardEl.style.backgroundColor = "";
+    cardEl.style.backgroundColor = "#ffffff";
   }
 }
 function toggleScreenAlert(active) {
@@ -154,6 +154,7 @@ function fetchDashboardData() {
       }
       updateValue("callsOffered", data.calls_offered);
       updateValue("callsAnswered", data.calls_answered);
+      updateValue("callsLost", data.calls_lost);
       updateLostCalls(data.calls_lost);
     })
     .catch((error) => {
@@ -162,7 +163,7 @@ function fetchDashboardData() {
 }
 
 // 🚀 Atualiza a cada 1 segundo
-setInterval(fetchDashboardData, 1000);
+setInterval(fetchDashboardData, 1500);
 
 // Primeira execução imediata
 fetchDashboardData();

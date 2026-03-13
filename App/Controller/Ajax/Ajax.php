@@ -354,38 +354,27 @@ class Ajax
 
         switch ($queue) {
             case 'CSA':
-                $fila = 55;
+                $fila = 340;
                 break;
             case 'SAC':
-                $fila = 55;
+                $fila = 347;
                 break;
             default:
                 return json_encode(['error' => 'Queue não informada']);
         }
 
-        $dados = APISippulse::getDadosFila($queue);
-        $chamadasEntradas = $dados['statistics']['countReceivedCalls'];
-        $countDisponiveis = 0;
-        $countOnCall = 0;
+        $totalChamadas = APISippulse::getDadosTotalChamadas($fila);
+        $chamadas = APISippulse::getDadosChamadas($fila);
+        $agentes = APISippulse::getAgentesDisponiveis($fila);
 
-        $logados = $dados['statistics']['countConnected'];
-        foreach ($dados['extensionDetailMap']['GGNET_CSA'] as $k) {
-            if ($k['statusExtension'] == null) {
-                $countDisponiveis++;
-            } else if ($k['statusExtension'] == 'TALKING') {
-                $countOnCall++;
-            }
-
-
-        }
         $json = [
-            "calls_waiting" => 0,
-            "agents_on_call" => $countOnCall,
-            "agents_available" => $countDisponiveis,
-            "agents_logged" => $logados,
-            "calls_offered" => $chamadasEntradas,
-            "calls_answered" => 115,
-            "calls_lost" => 0
+            "calls_waiting" => $chamadas['waiting'],
+            "agents_on_call" => $chamadas['answered'],
+            "agents_available" => $agentes['agentes_disponiveis'],
+            "agents_logged" => $agentes['total_agentes'],
+            "calls_offered" => $totalChamadas['total_recebidas'],
+            "calls_answered" => $totalChamadas['total_atendidas'],
+            "calls_lost" => $totalChamadas['total_perdidas']
         ];
 
         return json_encode($json, true, JSON_PRETTY_PRINT);
