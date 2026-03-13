@@ -154,6 +154,10 @@ class Page
                             'link' => URL . '/ligacoes/dash?queue=CSA'
                         ],
                         [
+                            'item' => 'CSA - N2',
+                            'link' => URL . '/ligacoes/dash?queue=CSAN2'
+                        ],
+                        [
                             'item' => 'SAC - Financeiro',
                             'link' => URL . '/ligacoes/dash?queue=SAC'
                         ]
@@ -181,8 +185,8 @@ class Page
                             'link' => URL . '/notas'
                         ]/*,
 [
- 'item' => 'Resolutividade',
- 'link' => URL . '/notas-cordialidade'
+'item' => 'Resolutividade',
+'link' => URL . '/notas-cordialidade'
 ]*/
                     ]
                 ],

@@ -359,6 +359,9 @@ class Ajax
             case 'SAC':
                 $fila = 347;
                 break;
+            case 'CSAN2':
+                $fila = 341;
+                break;
             default:
                 return json_encode(['error' => 'Queue não informada']);
         }

@@ -57,6 +57,9 @@ class APISippulse
             case 347:
                 $queueName = 'FILA_SAC_FINANCEIRO_GGNET';
                 break;
+            case 341:
+                $queueName = 'FILA_CSA_N2_GGNET';
+                break;
         }
 
         $domain = "unificado01.brasiltecpar.com.br";
