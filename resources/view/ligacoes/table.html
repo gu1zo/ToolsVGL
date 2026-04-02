@@ -1,5 +1,5 @@
 <div class="container">
-  <div class="row row-cols-1 row-cols-md-5 g-4">
+  <div class="row row-cols-1 row-cols-md-6 g-4">
     <!-- Card Em Análise -->
     {{cards}}
   </div>
@@ -10,17 +10,16 @@
     <div class="card-body">
       {{status}}
       <form method="post" action="delete?{{URI}}" id="formNotas">
-        <table id="notas" class="table table-bordered text-center shadow">
+        <table id="ligacoes" class="table table-bordered text-center shadow">
           <thead>
             <tr>
               <th scope="col">#</th>
-              <th scope="col" class="text-center">Protocolo</th>
               <th scope="col" class="text-center">Data</th>
-              <th scope="col" class="text-center">Nota</th>
-              <th scope="col" class="text-center">Equipe</th>
-              <th scope="col" class="text-center">Mensagem</th>
+              <th scope="col" class="text-center">Tempo de Espera</th>
+              <th scope="col" class="text-center">Tempo do Atendimento</th>
               <th scope="col" class="text-center">Agente</th>
-              <th scope="col" class="text-center">Ações</th>
+              <th scope="col" class="text-center">Status</th>
+              <th scope="col" class="text-center">Número</th>
             </tr>
           </thead>
           <tbody>
@@ -45,8 +44,7 @@
           >
             Gráficos
           </a>
-          -->
-        </div>
+        --></div>
       </form>
     </div>
   </div>

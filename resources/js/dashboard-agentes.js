@@ -57,3 +57,10 @@ function fetchAgents() {
 }
 
 fetchAgents();
+
+setTimeout(
+  () => {
+    location.reload();
+  },
+  6 * 60 * 60 * 1000,
+);

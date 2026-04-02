@@ -164,6 +164,10 @@ class Page
                         [
                             'item' => 'SAC - Financeiro',
                             'link' => URL . '/ligacoes/dash?queue=SAC'
+                        ],
+                        [
+                            'item' => 'Estatisticas',
+                            'link' => URL . '/ligacoes'
                         ]
                     ]
                 ],

@@ -134,8 +134,6 @@ function fetchDashboardData() {
   })
     .then((response) => response.json())
     .then((data) => {
-      // 🔵 CHAMADAS EM ESPERA
-      // 🔴 Chamadas em espera (normal)
       updateCircle("callsWaiting", data.calls_waiting, data.agents_logged);
 
       updateCircle("agentsOnCall", data.agents_on_call, data.agents_logged);
@@ -162,8 +160,13 @@ function fetchDashboardData() {
     });
 }
 
-// 🚀 Atualiza a cada 1 segundo
 setInterval(fetchDashboardData, 1500);
 
-// Primeira execução imediata
+setTimeout(
+  () => {
+    location.reload();
+  },
+  30 * 60 * 1000,
+);
+
 fetchDashboardData();

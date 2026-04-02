@@ -357,4 +357,47 @@ class APISippulse
             'pause' => 'Indisponível'
         ];
     }
+
+    public static function getChamadas($date, $page, $size, $queue)
+    {
+        $instance = new self();
+        $token = self::getToken();
+
+        if (empty($token)) {
+            return null;
+        }
+
+        $domain = "unificado01.brasiltecpar.com.br";
+        $startDate = $date . ' 00:00:00';
+        $endDate = $date . ' 23:59:59';
+        $url = $instance->url . '/v2/reports/queueCdrs'
+            . '?domain=' . urlencode($domain)
+            . '&direction=inbound'
+            . '&startDate=' . urlencode($startDate)
+            . '&endDate=' . urlencode($endDate)
+            . '&page=' . $page
+            . '&size=' . $size
+            . '&queueName=' . $queue;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: {$token}",
+            "Accept: application/json"
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            curl_close($ch);
+            return null;
+        }
+
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        return $data;
+    }
 }
