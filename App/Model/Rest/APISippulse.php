@@ -60,6 +60,11 @@ class APISippulse
             case 341:
                 $queueName = 'FILA_CSA_N2_GGNET';
                 break;
+            case 404:
+                $queueName = 'FILA_OPERACIONAL_EVO';
+                break;
+            case 405:
+                $queueName = 'FILA_SAC_FINANCEIRO_EVO';
         }
 
         $domain = "unificado01.brasiltecpar.com.br";
@@ -399,5 +404,60 @@ class APISippulse
         $data = json_decode($response, true);
 
         return $data;
+    }
+
+    public static function getNota($date, $page, $size, $ivrId, $numero, $uuid)
+    {
+        $instance = new self();
+        $token = self::getToken();
+
+        if (empty($token) || empty($ivrId) || empty($numero) || empty($uuid)) {
+            return null;
+        }
+
+        $domain = "unificado01.brasiltecpar.com.br";
+        $startDate = $date . ' 00:00:00';
+        $endDate = $date . ' 23:59:59';
+
+        $url = $instance->url . '/v2/ivrLog/findByFilters'
+            . '?domain=' . urlencode($domain)
+            . '&startDate=' . urlencode($startDate)
+            . '&endDate=' . urlencode($endDate)
+            . '&page=' . $page
+            . '&size=' . $size
+            . '&ivrId=' . $ivrId
+            . '&caller=' . $numero;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Authorization: {$token}",
+            "Accept: application/json"
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            curl_close($ch);
+            return null;
+        }
+
+        curl_close($ch);
+
+        $data = json_decode($response, true);
+
+        if (!isset($data['content']) || !is_array($data['content'])) {
+            return null;
+        }
+
+        // 🔎 Procura pelo UUID correto
+        foreach ($data['content'] as $item) {
+            if (isset($item['uuid']) && $item['uuid'] === $uuid) {
+                return $item['digit'] ?? null;
+            }
+        }
+
+        return null;
     }
 }

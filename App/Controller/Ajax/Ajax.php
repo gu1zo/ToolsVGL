@@ -362,6 +362,12 @@ class Ajax
             case 'CSAN2':
                 $fila = 341;
                 break;
+            case 'EVO':
+                $fila = 404;
+                break;
+            case 'SACEVO':
+                $fila = 405;
+                break;
             default:
                 return json_encode(['error' => 'Queue não informada']);
         }
@@ -397,6 +403,12 @@ class Ajax
                 break;
             case 'CSAN2':
                 $fila = 341;
+                break;
+            case 'EVO':
+                $fila = 404;
+                break;
+            case 'SACEVO':
+                $fila = 405;
                 break;
             default:
                 return json_encode(['error' => 'Queue não informada']);

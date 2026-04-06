@@ -15,6 +15,7 @@ class Ligacoes
     public $fila;
     public $numero;
     public $uuid;
+    public $nota;
 
     public static function getLigacoes($where = null, $order = null, $limit = null, $fields = '*', $group = null)
     {
@@ -32,7 +33,8 @@ class Ligacoes
             'status' => $this->status,
             'fila' => $this->fila,
             'numero' => $this->numero,
-            'uuid' => $this->uuid
+            'uuid' => $this->uuid,
+            'nota' => $this->nota
         ]);
 
         return true;
@@ -48,7 +50,8 @@ class Ligacoes
             'status' => $this->status,
             'fila' => $this->fila,
             'numero' => $this->numero,
-            'uuid' => $this->uuid
+            'uuid' => $this->uuid,
+            'nota' => $this->nota
         ]);
     }
     public function excluir()

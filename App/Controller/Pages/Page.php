@@ -162,8 +162,16 @@ class Page
                             'link' => URL . '/ligacoes/dash?queue=CSAN2'
                         ],
                         [
+                            'item' => 'CSA - EVO',
+                            'link' => URL . '/ligacoes/dash?queue=EVO'
+                        ],
+                        [
                             'item' => 'SAC - Financeiro',
                             'link' => URL . '/ligacoes/dash?queue=SAC'
+                        ],
+                        [
+                            'item' => 'SAC - Financeiro - EVO',
+                            'link' => URL . '/ligacoes/dash?queue=SACEVO'
                         ],
                         [
                             'item' => 'Estatisticas',
