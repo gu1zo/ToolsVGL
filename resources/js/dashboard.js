@@ -1,5 +1,4 @@
 // altere para sua rota real
-
 function updateValue(elementId, newValue) {
   const el = document.getElementById(elementId);
 
@@ -114,6 +113,7 @@ function updateLostCalls(value) {
     cardEl.style.backgroundColor = "#ffffff";
   }
 }
+
 function toggleScreenAlert(active) {
   const overlay = document.getElementById("alertOverlay");
 
@@ -124,9 +124,22 @@ function toggleScreenAlert(active) {
   }
 }
 
+function updateRamalAlert(ramais, active) {
+  const el = document.getElementById("ramalAlert");
+
+  if (active && ramais && ramais.length > 0) {
+    el.innerHTML = ramais
+      .map((r) => `<div class="ramal-item">${r}</div>`)
+      .join("");
+
+    el.classList.add("active");
+  } else {
+    el.classList.remove("active");
+    el.innerHTML = "";
+  }
+}
 function fetchDashboardData() {
-  // 🔹 Enviando fila via query string
-  fetch(`${API_URL}?queue=${encodeURIComponent(queue)}`, {
+  return fetch(`${API_URL}?queue=${encodeURIComponent(queue)}`, {
     method: "GET",
     headers: {
       Accept: "application/json",
@@ -134,39 +147,57 @@ function fetchDashboardData() {
   })
     .then((response) => response.json())
     .then((data) => {
+      // 🔵 Atualizações normais
       updateCircle("callsWaiting", data.calls_waiting, data.agents_logged);
-
       updateCircle("agentsOnCall", data.agents_on_call, data.agents_logged);
-
       updateCircle(
         "agentsAvailable",
         data.agents_available,
         data.agents_logged,
         true,
       );
-      // 🚨 ALERTA TELA VERMELHA SE 0 DISPONÍVEIS
-      if (data.agents_available === 0 && data.agents_logged > 0) {
-        toggleScreenAlert(true);
-      } else {
-        toggleScreenAlert(false);
-      }
+
       updateValue("callsOffered", data.calls_offered);
       updateValue("callsAnswered", data.calls_answered);
       updateValue("callsLost", data.calls_lost);
       updateLostCalls(data.calls_lost);
+
+      const currentCalls = data.calls_waiting;
+      const ramais = data.ramais;
+
+      if (currentCalls > 0) {
+        toggleScreenAlert(true);
+        updateRamalAlert(ramais, true);
+
+        if (currentCalls > lastCallsWaiting) {
+          alertSound.currentTime = 0;
+          alertSound.play().catch((e) => console.error(e));
+        }
+
+        alertActive = true;
+      } else {
+        toggleScreenAlert(false);
+        updateRamalAlert(null, false); // 👈 AQUI
+        alertActive = false;
+      }
+
+      lastCallsWaiting = currentCalls;
     })
     .catch((error) => {
       console.error("Erro ao buscar dados:", error);
     });
 }
 
-setInterval(fetchDashboardData, 1500);
+function fetchDashboardLoop() {
+  Promise.resolve()
+    .then(() => fetchDashboardData())
+    .catch((err) => {
+      console.error("Erro no loop:", err);
+    })
+    .finally(() => {
+      setTimeout(fetchDashboardLoop, 1500);
+    });
+}
 
-setTimeout(
-  () => {
-    location.reload();
-  },
-  30 * 60 * 1000,
-);
-
-fetchDashboardData();
+// 👇 chama só isso
+fetchDashboardLoop();

@@ -289,7 +289,7 @@ $(document).ready(function () {
     paging: true,
     pageLength: 10,
     info: false,
-    order: [[2, "dsc"]],
+    order: [[7, "desc"]],
     autoWidth: false,
     language: {
       emptyTable: "Nenhum agendamento encontrado.",
@@ -297,15 +297,70 @@ $(document).ready(function () {
     },
     ajax: {
       type: "GET",
-      url: "/ajax/graficos/mediaAgentes",
-      data: urlParams, // ✅ agora envia corretamente
+      url: "/ajax/graficos/mediaAgentesUra",
+      data: urlParams,
       dataSrc: "",
     },
     columns: [
       { data: "id" },
       { data: "agente" },
-      { data: "media_notas" },
       { data: "quantidade_avaliacoes" },
+      { data: "media_notas" },
+      { data: "promotores" },
+      { data: "neutros" },
+      { data: "detratores" },
+      {
+        data: "csat",
+        render: function (data, type) {
+          if (type === "display") {
+            return parseFloat(data).toFixed(2) + "%";
+          }
+          return data; // mantém número pra ordenação
+        },
+      },
+    ],
+    columnDefs: [{ width: "8px", targets: 0 }],
+    createdRow: function (row, data) {
+      $(row).find("td").addClass("text-center");
+      $(row).find("td").eq(0).addClass("default");
+      $(row).find("td").eq(0).html("");
+    },
+  });
+
+  $("#mediaNotasUra").DataTable({
+    searching: true,
+    paging: true,
+    pageLength: 10,
+    info: false,
+    order: [[7, "desc"]],
+    autoWidth: false,
+    language: {
+      emptyTable: "Nenhum agendamento encontrado.",
+      url: "/resources/json/datatable-pt-br.json",
+    },
+    ajax: {
+      type: "GET",
+      url: "/ajax/graficos/mediaAgentesUra",
+      data: urlParams,
+      dataSrc: "",
+    },
+    columns: [
+      { data: "id" },
+      { data: "agente" },
+      { data: "quantidade_avaliacoes" },
+      { data: "media_notas" },
+      { data: "promotores" },
+      { data: "neutros" },
+      { data: "detratores" },
+      {
+        data: "csat",
+        render: function (data, type) {
+          if (type === "display") {
+            return parseFloat(data).toFixed(2) + "%";
+          }
+          return data; // mantém número pra ordenação
+        },
+      },
     ],
     columnDefs: [{ width: "8px", targets: 0 }],
     createdRow: function (row, data) {

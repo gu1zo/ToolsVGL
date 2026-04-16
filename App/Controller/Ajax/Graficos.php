@@ -249,7 +249,7 @@ class Graficos
         $equipe = $queryParams['equipe'] ?? null;
 
         $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" 
-                AND "' . $dataFim . ' 23:59:59"';
+            AND "' . $dataFim . ' 23:59:59"';
 
         $where = $periodo;
 
@@ -265,10 +265,18 @@ class Graficos
         id,
         agente,
         COUNT(*) as quantidade_avaliacoes,
-        ROUND(AVG(nota),2) as media_notas
+        ROUND(AVG(nota),2) as media_notas,
+
+        SUM(CASE WHEN nota >= 4 THEN 1 ELSE 0 END) as promotores,
+        SUM(CASE WHEN nota = 3 THEN 1 ELSE 0 END) as neutros,
+        SUM(CASE WHEN nota <= 2 THEN 1 ELSE 0 END) as detratores,
+
+        ROUND(
+            (SUM(CASE WHEN nota >= 4 THEN 1 ELSE 0 END) / COUNT(*)) * 100,
+        2) as csat
     ';
 
-        $order = 'media_notas DESC';
+        $order = 'csat DESC';
         $group = 'agente';
 
         $resultados = EntityNotas::getNotas($where, $order, null, $fields, $group);
@@ -280,7 +288,13 @@ class Graficos
                 'id' => $row->id,
                 'agente' => $row->agente,
                 'quantidade_avaliacoes' => (int) $row->quantidade_avaliacoes,
-                'media_notas' => (float) $row->media_notas
+                'media_notas' => (float) $row->media_notas,
+
+                'promotores' => (int) $row->promotores,
+                'neutros' => (int) $row->neutros,
+                'detratores' => (int) $row->detratores,
+
+                'csat' => (float) $row->csat
             ];
         }
 

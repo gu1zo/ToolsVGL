@@ -376,14 +376,16 @@ class Ajax
         $chamadas = APISippulse::getDadosChamadas($fila);
         $agentes = APISippulse::getAgentesDisponiveis($fila);
 
+
         $json = [
-            "calls_waiting" => $chamadas['waiting'],
-            "agents_on_call" => $chamadas['answered'],
-            "agents_available" => $agentes['agentes_disponiveis'],
-            "agents_logged" => $agentes['total_agentes'],
-            "calls_offered" => $totalChamadas['total_recebidas'],
-            "calls_answered" => $totalChamadas['total_atendidas'],
-            "calls_lost" => $totalChamadas['total_perdidas']
+            "calls_waiting" => $chamadas['waiting'] ?? 0,
+            "agents_on_call" => $chamadas['answered'] ?? 0,
+            "agents_available" => $agentes['agentes_disponiveis'] ?? 0,
+            "agents_logged" => $agentes['total_agentes'] ?? 0,
+            "calls_offered" => $totalChamadas['total_recebidas'] ?? 0,
+            "calls_answered" => $totalChamadas['total_atendidas'] ?? 0,
+            "calls_lost" => $totalChamadas['total_perdidas'] ?? 0,
+            "ramais" => $chamadas['ramais'] ?? []
         ];
 
         return json_encode($json, true, JSON_PRETTY_PRINT);

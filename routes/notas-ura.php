@@ -1,74 +1,74 @@
 <?php
 
 use \App\http\Response;
-use \App\Controller\Notas\Notas;
+use \App\Controller\Notas\NotasUra;
 use \App\Controller\Relatorios\Relatorio;
 
-$obRouter->get('/notas', [
+$obRouter->get('/notas-ura', [
     'middlewares' => [
         'required-login'
     ],
     function ($request) {
-        return new response(200, Notas::getNotas($request));
+        return new response(200, NotasUra::getNotas($request));
     }
 ]);
 
-$obRouter->get('/notas/table', [
+$obRouter->get('/notas-ura/table', [
     'middlewares' => [
         'required-login',
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Notas::getNotasTable($request));
+        return new response(200, NotasUra::getNotasTable($request));
     }
 ]);
 
-$obRouter->get('/notas/delete', [
+$obRouter->get('/notas-ura/delete', [
     'middlewares' => [
         'required-login',
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Notas::getDeleteNota($request));
+        return new response(200, NotasUra::getDeleteNota($request));
     }
 ]);
 
-$obRouter->post('/notas/delete', [
+$obRouter->post('/notas-ura/delete', [
     'middlewares' => [
         'required-login',
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Notas::setDeleteNotasByGroup($request));
+        return new response(200, NotasUra::setDeleteNotasByGroup($request));
     }
 ]);
 
-$obRouter->get('/notas/relatorios', [
+$obRouter->get('/notas-ura/relatorios', [
     'middlewares' => [
         'required-login',
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Relatorio::getNotasCSV($request));
+        return new response(200, Relatorio::getNotasUraCSV($request));
     }
 ]);
 
-$obRouter->get('/notas/media/relatorios', [
+$obRouter->get('/notas-ura/media/relatorios', [
     'middlewares' => [
         'required-login',
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Relatorio::getMediaNotasPorAgenteCSV($request));
+        return new response(200, Relatorio::getMediaNotasPorAgenteUraCSV($request));
     }
 ]);
 
-$obRouter->get('/notas/graficos', [
+$obRouter->get('/notas-ura/graficos', [
     'middlewares' => [
         'required-login',
         'required-admin-nota'
     ],
     function ($request) {
-        return new response(200, Relatorio::getGraficos($request));
+        return new response(200, Relatorio::getGraficosUra($request));
     }
 ]);

@@ -3,7 +3,7 @@
 use \App\http\Response;
 use \App\Controller\Ajax\Ajax;
 use \App\Controller\Ajax\Graficos;
-use \App\Controller\Ajax\GraficosResolutividade;
+use \App\Controller\Ajax\GraficosUra;
 
 $obRouter->get('/ajax/agendados', [
     'middlewares' => [
@@ -144,44 +144,54 @@ $obRouter->get('/ajax/graficos/mediaAgentes', [
 
 
 
-$obRouter->get('/ajax/graficos/notasCordialidade', [
+$obRouter->get('/ajax/graficos/notasUra', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosResolutividade::getGraficoNotas($request));
+        return new response(200, GraficosUra::getGraficoNotas($request));
     }
 ]);
-$obRouter->get('/ajax/graficos/csatCordialidade', [
+$obRouter->get('/ajax/graficos/csatUra', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosResolutividade::getGraficoResolutividade($request));
+        return new response(200, GraficosUra::getGraficoCSAT($request));
     }
 ]);
-$obRouter->get('/ajax/graficos/agentesPositivoCordialidade', [
+$obRouter->get('/ajax/graficos/agentesPositivoUra', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosResolutividade::getGraficoResolutividadePorAgente($request));
+        return new response(200, GraficosUra::getGraficoElogiosPorAgente($request));
     }
 ]);
-$obRouter->get('/ajax/graficos/agentesNegativoCordialidade', [
+$obRouter->get('/ajax/graficos/agentesNegativoUra', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosResolutividade::getGraficoNResolutividadePorAgente($request));
-    }
-]);
-
-$obRouter->get('/ajax/graficos/notasAnoCordialidade', [
-    'middlewares' => [],
-    function ($request) {
-        return new response(200, GraficosResolutividade::getGraficoLinhaResolutividadeIndividual($request));
+        return new response(200, GraficosUra::getGraficoCriticasPorAgente($request));
     }
 ]);
 
-$obRouter->get('/ajax/graficos/mediaNotasAnoCordialidade', [
+$obRouter->get('/ajax/graficos/mediaAgentesUra', [
     'middlewares' => [],
     function ($request) {
-        return new response(200, GraficosResolutividade::getGraficoLinhaResolutividade($request));
+        return new response(200, GraficosUra::getMediaNotasPorAgente($request));
     }
 ]);
+$obRouter->get('/ajax/graficos/notasAnoUra', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, GraficosUra::getGraficoLinhaNotas($request));
+    }
+]);
+$obRouter->get('/ajax/graficos/mediaNotasAnoUra', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, GraficosUra::getGraficoLinhaMediaNotas($request));
+    }
+]);
+
+
+
+
+
 
 $obRouter->get('/ajax/tecnicos', [
     'middlewares' => [],

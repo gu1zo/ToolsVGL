@@ -152,6 +152,7 @@ class APISippulse
         $total = 0;
         $answered = 0;
         $waiting = 0;
+        $ramais = [];
 
         do {
 
@@ -194,6 +195,12 @@ class APISippulse
 
                 if ($item['state'] === 'Waiting') {
                     $waiting++;
+                    $partes = explode('@', $item['servingAgent']);
+                    $ramalExtraido = $partes[0] ?? null;
+
+                    if ($ramalExtraido) {
+                        $ramais[] = $ramalExtraido;
+                    }
                 }
             }
 
@@ -204,7 +211,8 @@ class APISippulse
         return [
             'total' => $total,
             'answered' => $answered,
-            'waiting' => $waiting
+            'waiting' => $waiting,
+            'ramais' => $ramais
         ];
     }
     public static function getAgentesDisponiveis($queueId)

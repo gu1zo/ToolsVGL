@@ -103,3 +103,47 @@ h6 {
 .overlay-active {
     animation: overlayPulse 1s infinite;
 }
+
+#ramalAlert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+    /* 🔥 empilha */
+    align-items: center;
+    /* centraliza horizontal */
+    justify-content: center;
+    /* centraliza vertical */
+
+    gap: 10px;
+    /* espaço entre ramais */
+
+    z-index: 10000;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.ramal-item {
+    font-size: 8vw;
+    /* menor que antes pra caber vários */
+    font-weight: bold;
+    color: #fff;
+
+    text-shadow:
+        -4px -4px 0 #000,
+        4px -4px 0 #000,
+        -4px 4px 0 #000,
+        4px 4px 0 #000,
+        0px 0px 15px rgba(0, 0, 0, 0.9);
+}
+
+/* 🔴 USA A MESMA ANIMAÇÃO DO OVERLAY */
+#ramalAlert.active {
+    animation: overlayPulse 1s infinite;
+    opacity: 1;
+}

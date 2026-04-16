@@ -65,6 +65,11 @@ class Ligacoes
         return self::getLigacoes('uuid ="' . $uuid . '"')->fetchObject(self::class);
     }
 
+    public static function getLigacoesById($id)
+    {
+        return self::getLigacoes('id ="' . $id . '"')->fetchObject(self::class);
+    }
+
     public static function getLigacoesByFilter($dataInicio, $dataFim, $fila)
     {
         $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"';
@@ -73,6 +78,47 @@ class Ligacoes
             return self::getLigacoes($periodo, null, null, '*');
         }
         return self::getLigacoes($periodo . ' AND fila = "' . $fila . '"', null, null, '*');
+    }
+
+    public static function getNotasByFilter($dataInicio, $dataFim, $fila)
+    {
+        $where = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59" AND nota is not null';
+        if ($fila == 'todas') {
+            return self::getLigacoes($where, null, null, 'nota, fila, responsavel, data, numero');
+        }
+
+        return self::getLigacoes($where . ' AND fila = "' . $fila . '"', null, null, 'nota, fila, responsavel, data, numero');
+    }
+
+    public static function getNotasByAgente($agente, $dataInicio, $dataFim, $equipe)
+    {
+        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"';
+
+        if ($equipe == 'todas') {
+            return self::getLigacoes($periodo . ' AND responsavel="' . $agente . '"');
+        }
+
+        return self::getLigacoes($periodo . ' AND fila = "' . $equipe . '" AND responsavel="' . $agente . '"');
+    }
+
+    public static function getAgentesByFilter($dataInicio, $dataFim, $equipe)
+    {
+        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" AND "' . $dataFim . ' 23:59:59"';
+
+        if ($equipe == 'todas') {
+            return self::getLigacoes($periodo, null, null, '*', 'responsavel');
+        }
+
+        return self::getLigacoes($periodo . ' AND fila = "' . $equipe . '"', null, null, '*', 'responsavel');
+    }
+
+    public static function getNotasByEquipe($equipe)
+    {
+        if ($equipe == 'todas') {
+            return self::getLigacoes();
+        }
+
+        return self::getLigacoes('fila = "' . $equipe . '"');
     }
 
     public static function getFilas()

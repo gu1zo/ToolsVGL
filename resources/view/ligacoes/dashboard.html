@@ -16,10 +16,16 @@
       const queue = "{{queue}}";
 
       const API_URL = "{{URL}}/ajax/ligacoes/dash";
+      let alertActive = false;
+      const alertSound = new Audio("{{URL}}/resources/sounds/alarm.mp3");
+      alertSound.preload = "auto";
+      alertSound.load();
     </script>
   </head>
   <body>
     <div id="alertOverlay" class="alert-overlay"></div>
+    <div id="ramalAlert" class="ramal-alert"></div>
+
     <div class="container-fluid dashboard">
       <div class="row g-4 h-100">
         <!-- LINHA SUPERIOR -->

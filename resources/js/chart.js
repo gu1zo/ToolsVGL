@@ -4,15 +4,16 @@ document.addEventListener("DOMContentLoaded", function () {
     { id: "graficoCSAT", url: "/ajax/graficos/csat" },
     { id: "graficoAgentesPositivo", url: "/ajax/graficos/agentesPositivo" },
     { id: "graficoAgentesNegativo", url: "/ajax/graficos/agentesNegativo" },
-    { id: "graficoNotasCordialidade", url: "/ajax/graficos/notasCordialidade" },
-    { id: "graficoCSATCordialidade", url: "/ajax/graficos/csatCordialidade" },
+
+    { id: "graficoNotasUra", url: "/ajax/graficos/notasUra" },
+    { id: "graficoCSATUra", url: "/ajax/graficos/csatUra" },
     {
-      id: "graficoAgentesPositivoCordialidade",
-      url: "/ajax/graficos/agentesPositivoCordialidade",
+      id: "graficoAgentesPositivoUra",
+      url: "/ajax/graficos/agentesPositivoUra",
     },
     {
-      id: "graficoAgentesNegativoCordialidade",
-      url: "/ajax/graficos/agentesNegativoCordialidade",
+      id: "graficoAgentesNegativoUra",
+      url: "/ajax/graficos/agentesNegativoUra",
     },
     { id: "graficoNotasOs", url: "/ajax/os/graficoNotas" },
     {
@@ -34,8 +35,8 @@ document.addEventListener("DOMContentLoaded", function () {
       yType: "linear",
     },
     {
-      id: "graficoAnoCordialidade",
-      url: "/ajax/graficos/notasAnoCordialidade",
+      id: "graficoAnoUra",
+      url: "/ajax/graficos/notasAnoUra",
       yType: "logarithmic",
     },
     {
@@ -44,8 +45,8 @@ document.addEventListener("DOMContentLoaded", function () {
       yType: "logarithmic",
     },
     {
-      id: "graficoMediasAnoCordialidade",
-      url: "/ajax/graficos/mediaNotasAnoCordialidade",
+      id: "graficoMediasAnoUra",
+      url: "/ajax/graficos/mediaNotasAnoUra",
       yType: "linear",
     },
     {
@@ -110,8 +111,8 @@ document.addEventListener("DOMContentLoaded", function () {
           var colors;
           if (config.id === "graficoNotas") {
             colors = ["#f5a6a6", "#f7b267", "#b0c4de", "#a6f5b5", "#76c7a6"];
-          } else if (config.id === "graficoNotasCordialidade") {
-            colors = ["#76c7a6", "#f5a6a6"];
+          } else if (config.id === "graficoNotasUra") {
+            colors = ["#f5a6a6", "#f7b267", "#b0c4de", "#a6f5b5", "#76c7a6"];
           } else if (
             config.id === "graficoCSAT" ||
             config.id === "graficoNotasOs"
@@ -206,9 +207,8 @@ document.addEventListener("DOMContentLoaded", function () {
             color: "#000",
             font: { size: 14, weight: "bold" },
             formatter: function (value, context) {
-              var label = context.chart.data.labels[context.dataIndex];
               var percentage = ((value / total) * 100).toFixed(1);
-              return `${label}\n${percentage}%\n${value}`;
+              return `${percentage}%\n${value}`;
             },
             anchor: "center",
             align: "center",
@@ -309,10 +309,10 @@ document.addEventListener("DOMContentLoaded", function () {
             align: "top",
             anchor: "end",
             formatter: function (value, context) {
-              // Apenas para o graficoMediasAnoCordialidade
-              if (context.chart.canvas.id === "graficoMediasAnoCordialidade") {
+              // Apenas para o graficoMediasAnoUra
+              if (context.chart.canvas.id === "graficoMediasAnoUra") {
                 var percentual = value; // valor já é média em %
-                return `${percentual}%`;
+                return `${percentual}`;
               }
               return value;
             },

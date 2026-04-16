@@ -199,6 +199,10 @@ class Page
                         [
                             'item' => 'Atendimento',
                             'link' => URL . '/notas'
+                        ],
+                        [
+                            'item' => 'URA',
+                            'link' => URL . '/notas-ura'
                         ]/*,
 [
 'item' => 'Resolutividade',
