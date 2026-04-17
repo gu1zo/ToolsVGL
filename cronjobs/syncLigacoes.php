@@ -29,69 +29,46 @@ $filas = [
 $inicio = new DateTime('2026-04-01', new DateTimeZone('America/Sao_Paulo'));
 $fim = new DateTime('2026-04-17', new DateTimeZone('America/Sao_Paulo'));
 
-for ($dataConsulta = clone $inicio; $dataConsulta <= $fim; $dataConsulta->modify('+1 day')) {
-
-    foreach ($filas as $item) {
-        $queue = $item['fila'];
-        $ivrId = $item['ivrId'];
-        $page = 0;
-        $size = 100;
-        $totalPages = 1;
-
-        do {
-            $response = APISippulse::getChamadas($dataConsulta->format('Y-m-d'), $page, $size, $queue);
-            $content = $response['content'] ?? [];
-
-            foreach ($content as $ligacao) {
-                $status = $ligacao['status'] ?? null;
-
-                if ($status != 'answered' && $status != 'abandoned')
-                    continue;
-
-                $obLigacoes = EntityLigacoes::getLigacoesByUuid($ligacao['uuid']);
-
-                if (!$obLigacoes instanceof EntityLigacoes) {
-                    $nota = null;
-
-                    if ($ivrId !== null) {
-                        $nota = APISippulse::getNota(
-                            $dataConsulta->format('Y-m-d'),
-                            0,
-                            20,
-                            $ivrId,
-                            $ligacao['callerId'],
-                            $ligacao['uuid']
-                        );
-
-                        if ($nota == 't' || $nota < 1 || $nota > 5) {
-                            $nota = null;
-                        }
+foreach ($filas as $item) {
+    $queue = $item['fila'];
+    $ivrId = $item['ivrId'];
+    $dataConsulta = new DateTime('yesterday', new DateTimeZone('America/Sao_Paulo'));
+    $page = 0;
+    $size = 100;
+    $totalPages = 1;
+    do {
+        $response = APISippulse::getChamadas($dataConsulta->format('Y-m-d'), $page, $size, $queue);
+        $content = $response['content'] ?? [];
+        foreach ($content as $ligacao) {
+            $status = $ligacao['status'] ?? null;
+            if ($status != 'answered' && $status != 'abandoned')
+                continue;
+            $obLigacoes = EntityLigacoes::getLigacoesByUuid($ligacao['uuid']);
+            if (!$obLigacoes instanceof EntityLigacoes) {
+                $nota = null;
+                if ($ivrId !== null) {
+                    $nota = APISippulse::getNota($dataConsulta->format('Y-m-d'), 0, 20, $ivrId, $ligacao['callerId'], $ligacao['uuid']);
+                    if ($nota == 't') {
+                        $nota = null;
                     }
-
-                    $obLigacoes = new EntityLigacoes();
-                    $obLigacoes->data = $ligacao['startStamp'] ?? null;
-                    $obLigacoes->tempo_fila = $ligacao['waitingDuration'] ?? 0;
-
-                    $tempoAtendimento = $ligacao['queueCallDuration'] ?? $ligacao['duration'] ?? '00:00:00';
-                    $obLigacoes->tempo_atendimento = timeToSeconds($tempoAtendimento);
-
-                    $obLigacoes->responsavel = $ligacao['userName'] ?? null;
-                    $obLigacoes->status = $status;
-
-                    $obLigacoes->fila = $queue;
-                    $obLigacoes->numero = $ligacao['callerId'] ?? null;
-                    $obLigacoes->uuid = $ligacao['uuid'];
-                    $obLigacoes->nota = $nota;
-
-                    $obLigacoes->cadastrar();
                 }
+                $obLigacoes = new EntityLigacoes();
+                $obLigacoes->data = $ligacao['startStamp'] ?? null;
+                $obLigacoes->tempo_fila = $ligacao['waitingDuration'] ?? 0;
+                $tempoAtendimento = $ligacao['queueCallDuration'] ?? $ligacao['duration'] ?? '00:00:00';
+                $obLigacoes->tempo_atendimento = timeToSeconds($tempoAtendimento);
+                $obLigacoes->responsavel = $ligacao['userName'] ?? null;
+                $obLigacoes->status = $status;
+                $obLigacoes->fila = $queue;
+                $obLigacoes->numero = $ligacao['callerId'] ?? null;
+                $obLigacoes->uuid = $ligacao['uuid'];
+                $obLigacoes->nota = $nota;
+                $obLigacoes->cadastrar();
             }
-
-            $totalPages = $response['totalPages'] ?? 1;
-            $page++;
-
-        } while ($page < $totalPages);
-    }
+        }
+        $totalPages = $response['totalPages'] ?? 1;
+        $page++;
+    } while ($page < $totalPages);
 }
 $dataAtual = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
 echo "Ligações de: " . $dataConsulta->format('d/m/Y') . " sincronizadas - " . $dataAtual->format('d/m/Y H:i') . "\n";
