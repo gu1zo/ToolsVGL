@@ -347,48 +347,88 @@ class Ajax
         return $data;
     }
 
+
     public static function getDadosFila($request)
     {
         $queryParams = $request->getQueryParams();
         $queue = $queryParams['queue'];
 
-        switch ($queue) {
-            case 'CSA':
-                $fila = 340;
-                break;
-            case 'SAC':
-                $fila = 347;
-                break;
-            case 'CSAN2':
-                $fila = 341;
-                break;
-            case 'EVO':
-                $fila = 404;
-                break;
-            case 'SACEVO':
-                $fila = 405;
-                break;
-            default:
-                return json_encode(['error' => 'Queue não informada']);
-        }
-
-        $totalChamadas = APISippulse::getDadosTotalChamadas($fila);
-        $chamadas = APISippulse::getDadosChamadas($fila);
-        $agentes = APISippulse::getAgentesDisponiveis($fila);
-
-
-        $json = [
-            "calls_waiting" => $chamadas['waiting'] ?? 0,
-            "agents_on_call" => $chamadas['answered'] ?? 0,
-            "agents_available" => $agentes['agentes_disponiveis'] ?? 0,
-            "agents_logged" => $agentes['total_agentes'] ?? 0,
-            "calls_offered" => $totalChamadas['total_recebidas'] ?? 0,
-            "calls_answered" => $totalChamadas['total_atendidas'] ?? 0,
-            "calls_lost" => $totalChamadas['total_perdidas'] ?? 0,
-            "ramais" => $chamadas['ramais'] ?? []
+        $map = [
+            'CSA' => [340],
+            'SAC' => [347],
+            'CSAN2' => [341],
+            'EVO' => [404],
+            'SACEVO' => [405],
+            'NOC' => [342, 343, 344, 380]
         ];
 
-        return json_encode($json, true, JSON_PRETTY_PRINT);
+        if (!isset($map[$queue])) {
+            return json_encode(['error' => 'Queue não informada']);
+        }
+
+        $filas = $map[$queue];
+
+        // =============================
+        // 🔥 PARALELO (tempo real)
+        // =============================
+        $dadosParalelo = APISippulse::getDadosFilasParalelo($filas);
+
+        $chamadas = $dadosParalelo['chamadas'] ?? [
+            'waiting' => 0,
+            'answered' => 0,
+            'ramais' => []
+        ];
+
+        $agentes = $dadosParalelo['agentes'] ?? [
+            'total_agentes' => 0,
+            'agentes_disponiveis' => 0
+        ];
+
+        // =============================
+        // 🔥 CACHE DOS TOTAIS (pesado)
+        // =============================
+        $cacheKey = "totalChamadas_" . $queue;
+
+        if (function_exists('apcu_exists') && apcu_exists($cacheKey)) {
+            $totalChamadas = apcu_fetch($cacheKey);
+        } else {
+
+            $totalChamadas = [
+                'total_recebidas' => 0,
+                'total_atendidas' => 0,
+                'total_perdidas' => 0
+            ];
+
+            foreach ($filas as $fila) {
+                $dados = APISippulse::getDadosTotalChamadas($fila);
+
+                if ($dados) {
+                    $totalChamadas['total_recebidas'] += $dados['total_recebidas'] ?? 0;
+                    $totalChamadas['total_atendidas'] += $dados['total_atendidas'] ?? 0;
+                    $totalChamadas['total_perdidas'] += $dados['total_perdidas'] ?? 0;
+                }
+            }
+
+            if (function_exists('apcu_store')) {
+                apcu_store($cacheKey, $totalChamadas, 30); // 30s cache
+            }
+        }
+
+        // =============================
+        // RESPOSTA FINAL
+        // =============================
+        $json = [
+            "calls_waiting" => $chamadas['waiting'],
+            "agents_on_call" => $chamadas['answered'],
+            "agents_available" => $agentes['agentes_disponiveis'],
+            "agents_logged" => $agentes['total_agentes'],
+            "calls_offered" => $totalChamadas['total_recebidas'],
+            "calls_answered" => $totalChamadas['total_atendidas'],
+            "calls_lost" => $totalChamadas['total_perdidas'],
+            "ramais" => array_values(array_unique($chamadas['ramais']))
+        ];
+
+        return json_encode($json);
     }
 
     public static function getDadosAgentesFila($request)

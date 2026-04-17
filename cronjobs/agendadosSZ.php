@@ -29,4 +29,4 @@ $number = getenv('EVO_API_NUMBER_DIGITAL');
 if (!empty($mensagem) && GoogleChatAPI::sendMessage(trim($mensagem), $number)) {
     $data = new DateTime('now', new DateTimeZone('America/Sao_Paulo'));
     echo "Mensagem enviada - " . $data->format('d/m/Y H:i') . "\n";
-}
+}                                                               

@@ -121,7 +121,6 @@ class Page
                             'link' => URL . '/agendados?tipo=digital'
                         ]
                     ]
-
                 ],
                 [
                     'name' => 'Nova Ligação Perdida',
@@ -141,49 +140,23 @@ class Page
                     'link' => URL . '/apps',
                     'content' => []
                 ],
-
             ],
+
             'GESTÃO' => [
                 [
-                    'name' => 'Dashboard Ligações',
+                    'name' => 'Ligações',
                     'icon' => 'bi bi-telephone',
                     'link' => URL . '/ligacoes',
                     'content' => [
                         [
-                            'item' => 'CSA',
-                            'link' => URL . '/ligacoes/dash?queue=CSA'
-                        ],
-                        [
-                            'item' => 'CSA - Agentes',
-                            'link' => URL . '/ligacoes/dash/agentes?queue=CSA'
-                        ],
-                        [
-                            'item' => 'CSA - N2',
-                            'link' => URL . '/ligacoes/dash?queue=CSAN2'
-                        ],
-                        [
-                            'item' => 'CSA - EVO',
-                            'link' => URL . '/ligacoes/dash?queue=EVO'
-                        ],
-                        [
-                            'item' => 'SAC - Financeiro',
-                            'link' => URL . '/ligacoes/dash?queue=SAC'
-                        ],
-                        [
-                            'item' => 'SAC - Financeiro - EVO',
-                            'link' => URL . '/ligacoes/dash?queue=SACEVO'
-                        ],
-                        [
                             'item' => 'Estatisticas',
                             'link' => URL . '/ligacoes'
+                        ],
+                        [
+                            'item' => 'Ligações Perdidas',
+                            'link' => URL . '/perdidas'
                         ]
                     ]
-                ],
-                [
-                    'name' => 'Ligações Perdidas',
-                    'icon' => 'bi bi-clipboard-data-fill',
-                    'link' => URL . '/perdidas',
-                    'content' => []
                 ],
                 [
                     'name' => 'Fila Gestão',
@@ -203,11 +176,7 @@ class Page
                         [
                             'item' => 'URA',
                             'link' => URL . '/notas-ura'
-                        ]/*,
-[
-'item' => 'Resolutividade',
-'link' => URL . '/notas-cordialidade'
-]*/
+                        ]
                     ]
                 ],
                 [
@@ -245,6 +214,59 @@ class Page
                     ]
                 ],
             ],
+
+            'DASHBOARD LIGAÇÕES' => [
+                [
+                    'name' => 'CSA',
+                    'icon' => 'bi bi-telephone',
+                    'link' => URL . '/ligacoes',
+                    'content' => [
+                        [
+                            'item' => 'CSA',
+                            'link' => URL . '/ligacoes/dash?queue=CSA'
+                        ],
+                        [
+                            'item' => 'CSA - Agentes',
+                            'link' => URL . '/ligacoes/dash/agentes?queue=CSA'
+                        ],
+                        [
+                            'item' => 'CSA - N2',
+                            'link' => URL . '/ligacoes/dash?queue=CSAN2'
+                        ],
+                        [
+                            'item' => 'CSA - EVO',
+                            'link' => URL . '/ligacoes/dash?queue=EVO'
+                        ]
+                    ]
+                ],
+                [
+                    'name' => 'SAC - Financeiro',
+                    'icon' => 'bi bi-telephone',
+                    'link' => URL . '/ligacoes',
+                    'content' => [
+                        [
+                            'item' => 'SAC - Financeiro',
+                            'link' => URL . '/ligacoes/dash?queue=SAC'
+                        ],
+                        [
+                            'item' => 'SAC - Financeiro - EVO',
+                            'link' => URL . '/ligacoes/dash?queue=SACEVO'
+                        ]
+                    ]
+                ],
+                [
+                    'name' => 'NOC',
+                    'icon' => 'bi bi-telephone',
+                    'link' => URL . '/ligacoes',
+                    'content' => [
+                        [
+                            'item' => 'NOC',
+                            'link' => URL . '/ligacoes/dash?queue=NOC'
+                        ]
+                    ]
+                ]
+            ],
+
             'ORDENS DE SERVIÇO' => [
                 [
                     'name' => 'Ordens Serviço',
@@ -262,6 +284,7 @@ class Page
                     ]
                 ],
             ],
+
             'USUÁRIOS' => [
                 [
                     'name' => 'Listar Usuários',

@@ -6,6 +6,8 @@ class APISippulse
     private $url;
     private $user;
     private $pass;
+    private static $tokenCache = null;
+    private static $tokenTime = 0;
 
     public function __construct()
     {
@@ -16,30 +18,39 @@ class APISippulse
 
     public static function getToken()
     {
+        // 🔥 cache por 60s
+        if (self::$tokenCache && (time() - self::$tokenTime) < 60) {
+            return self::$tokenCache;
+        }
+
         $instance = new self();
         $url = $instance->url . '/login';
+
         $data = [
             "user" => $instance->user,
             "password" => $instance->pass
         ];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Content-Type: application/json"]);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($ch);
+        curl_setopt_array($ch, [
+            CURLOPT_URL => $url,
+            CURLOPT_POST => true,
+            CURLOPT_HTTPHEADER => ["Content-Type: application/json"],
+            CURLOPT_POSTFIELDS => json_encode($data),
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
+        ]);
 
-        if (curl_errno($ch)) {
-            echo 'Erro no cURL: ' . curl_error($ch);
-        } else {
-            $responseData = json_decode($response, true);
-            $token = $responseData['token'] ?? '';
-        }
-        return $token;
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        $responseData = json_decode($response, true);
+
+        self::$tokenCache = $responseData['token'] ?? null;
+        self::$tokenTime = time();
+
+        return self::$tokenCache;
     }
 
 
@@ -67,8 +78,20 @@ class APISippulse
                 break;
             case 405:
                 $queueName = 'FILA_SAC_FINANCEIRO_EVO';
+                break;
+            case 342:
+                $queueName = 'FILA_NOC_CDR_ALT';
+                break;
+            case 343:
+                $queueName = 'FILA_NOC_MADRU_ALT';
+                break;
+            case 344:
+                $queueName = 'FILA_NOC_SUPERVISAO_ALT';
+                break;
+            case 380:
+                $queueName = 'FILA_NOC_COMERCIAL_ALT';
+                break;
         }
-
         $domain = "unificado01.brasiltecpar.com.br";
         date_default_timezone_set('America/Sao_Paulo');
         $startDate = date('Y-m-d') . ' 00:00:00';
@@ -98,7 +121,7 @@ class APISippulse
                 "Authorization: {$token}",
                 "Accept: application/json"
             ]);
-
+            echo $url . "<br>";
             $response = curl_exec($ch);
 
             if (curl_errno($ch)) {
@@ -113,7 +136,6 @@ class APISippulse
             if (!isset($data['content'])) {
                 break;
             }
-
             // atualiza total de páginas
             $totalPages = $data['totalPages'];
 
@@ -469,5 +491,132 @@ class APISippulse
         }
 
         return null;
+    }
+
+    public static function getDadosFilasParalelo($filas)
+    {
+        $instance = new self();
+        $token = self::getToken();
+
+        if (empty($token)) {
+            return null;
+        }
+
+        $domain = "unificado01.brasiltecpar.com.br";
+
+        $multi = curl_multi_init();
+        $handles = [];
+
+        foreach ($filas as $fila) {
+
+            // =============================
+            // chamadas
+            // =============================
+            $urlChamadas = $instance->url . "/v2/memberfreeswitch/params?domain={$domain}&queueId={$fila}&page=0&size=100";
+
+            $chChamadas = curl_init();
+            curl_setopt_array($chChamadas, [
+                CURLOPT_URL => $urlChamadas,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: {$token}",
+                    "Accept: application/json"
+                ]
+            ]);
+
+            curl_multi_add_handle($multi, $chChamadas);
+
+            // =============================
+            // agentes
+            // =============================
+            $urlAgentes = $instance->url . "/v2/dashboard/agent/analyticsDashboard?queueId={$fila}&domain={$domain}";
+
+            $chAgentes = curl_init();
+            curl_setopt_array($chAgentes, [
+                CURLOPT_URL => $urlAgentes,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_HTTPHEADER => [
+                    "Authorization: {$token}",
+                    "Accept: application/json"
+                ]
+            ]);
+
+            curl_multi_add_handle($multi, $chAgentes);
+
+            $handles[] = [
+                'chamadas' => $chChamadas,
+                'agentes' => $chAgentes
+            ];
+        }
+
+        // 🚀 executa paralelo
+        do {
+            curl_multi_exec($multi, $running);
+        } while ($running);
+
+        $chamadas = [
+            'waiting' => 0,
+            'answered' => 0,
+            'ramais' => []
+        ];
+
+        $agentes = [
+            'total_agentes' => 0,
+            'agentes_disponiveis' => 0
+        ];
+
+        foreach ($handles as $h) {
+
+            // chamadas
+            $respChamadas = curl_multi_getcontent($h['chamadas']);
+            $dataChamadas = json_decode($respChamadas, true);
+
+            if (isset($dataChamadas['content'])) {
+                foreach ($dataChamadas['content'] as $item) {
+
+                    if ($item['state'] === 'Answered') {
+                        $chamadas['answered']++;
+                    }
+
+                    if ($item['state'] === 'Waiting') {
+                        $chamadas['waiting']++;
+
+                        $partes = explode('@', $item['servingAgent']);
+                        $ramal = $partes[0] ?? null;
+
+                        if ($ramal) {
+                            $chamadas['ramais'][] = $ramal;
+                        }
+                    }
+                }
+            }
+
+            // agentes
+            $respAgentes = curl_multi_getcontent($h['agentes']);
+            $dataAgentes = json_decode($respAgentes, true);
+
+            if ($dataAgentes) {
+                foreach ($dataAgentes as $agent) {
+
+                    $agentes['total_agentes']++;
+
+                    $parsed = self::parseAgentStatus($agent);
+
+                    if ($parsed['status'] === 'available') {
+                        $agentes['agentes_disponiveis']++;
+                    }
+                }
+            }
+
+            curl_multi_remove_handle($multi, $h['chamadas']);
+            curl_multi_remove_handle($multi, $h['agentes']);
+        }
+
+        curl_multi_close($multi);
+
+        return [
+            'chamadas' => $chamadas,
+            'agentes' => $agentes
+        ];
     }
 }
