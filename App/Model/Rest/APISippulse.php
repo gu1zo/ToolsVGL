@@ -121,7 +121,6 @@ class APISippulse
                 "Authorization: {$token}",
                 "Accept: application/json"
             ]);
-            echo $url . "<br>";
             $response = curl_exec($ch);
 
             if (curl_errno($ch)) {
