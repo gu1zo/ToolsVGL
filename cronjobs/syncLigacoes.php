@@ -50,7 +50,7 @@ foreach ($filas as $item) {
                 $nota = null;
                 if ($ivrId !== null) {
                     $nota = APISippulse::getNota($dataConsulta->format('Y-m-d'), 0, 20, $ivrId, $ligacao['callerId'], $ligacao['uuid']);
-                    if ($nota == 't') {
+                    if ($nota == 't' || $nota < 1 || $nota > 5) {
                         $nota = null;
                     }
                 }
