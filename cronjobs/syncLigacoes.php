@@ -20,7 +20,7 @@ $filas = [
     ["fila" => "FILA_CSA_N2_ALT", "ivrId" => 20],
     ["fila" => "FILA_SAC_FINANCEIRO_GGNET", "ivrId" => 24],
     ["fila" => "FILA_SAC_FINANCEIRO_ALT", "ivrId" => 21],
-    ["fila" => "FILA_OPERACIONAL_EVO", "ivrId" => null],
+    ["fila" => "FILA_CSA_EVO", "ivrId" => null],
     ["fila" => "FILA_SAC_FINANCEIRO_EVO", "ivrId" => null],
     ["fila" => "FILA_NOC_CDR_ALT", "ivrId" => null],
     ["fila" => "FILA_NOC_COMERCIAL_ALT", "ivrId" => null],

@@ -74,7 +74,7 @@ class APISippulse
                 $queueName = 'FILA_CSA_N2_GGNET';
                 break;
             case 404:
-                $queueName = 'FILA_OPERACIONAL_EVO';
+                $queueName = 'FILA_CSA_EVO';
                 break;
             case 405:
                 $queueName = 'FILA_SAC_FINANCEIRO_EVO';
