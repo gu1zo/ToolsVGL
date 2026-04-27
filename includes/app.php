@@ -4,6 +4,7 @@ require __DIR__ . '/../vendor/autoload.php';
 use \App\Utils\View;
 use \WilliamCosta\DotEnv\Environment;
 use \WilliamCosta\DatabaseManager\Database;
+use \WilliamCosta\DatabaseManager\DatabaseSIP;
 use \App\http\Middleware\Queue as MiddlewareQueue;
 
 
@@ -16,6 +17,15 @@ Database::config(
     getenv('DB_PASS'),
     getenv('DB_PORT'),
 );
+
+DatabaseSip::config(
+    getenv('DB_HOST2'),
+    getenv('DB_NAME2'),
+    getenv('DB_USER2'),
+    getenv('DB_PASS2'),
+    getenv('DB_PORT2'),
+);
+
 
 
 define('URL', getenv('URL'));

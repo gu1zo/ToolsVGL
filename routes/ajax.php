@@ -299,3 +299,23 @@ $obRouter->get('/ajax/ligacoes/dash/agentes', [
         return new response(200, Ajax::getDadosAgentesFila($request));
     }
 ]);
+
+$obRouter->get('/ajax/ligacoes/filas', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getFilas($request));
+    }
+]);
+$obRouter->get('/ajax/ligacoes/table', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getLigacoesAjax($request));
+    }
+]);
+
+$obRouter->get('/ajax/ligacoes/notas/table', [
+    'middlewares' => [],
+    function ($request) {
+        return new response(200, Ajax::getNotasAjax($request));
+    }
+]);

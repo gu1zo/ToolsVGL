@@ -31,26 +31,12 @@ class Ligacoes extends Page
     public static function getLigacoes($request)
     {
         $content = View::render('/ligacoes/form', [
-            'filas' => self::getFilas(),
+            'filas' => '',//self::getFilas(),
             'status' => self::getStatus($request)
         ]);
 
         return parent::getPage('Estatisticas Ligação > ToolsVGL', $content);
     }
-
-    private static function getFilas()
-    {
-        $results = EntityLigacoes::getFilas();
-        $itens = '';
-
-        while ($obLigacoes = $results->fetchObject(EntityLigacoes::class)) {
-            $itens .= View::render('/ligacoes/option', [
-                'fila' => $obLigacoes->fila
-            ]);
-        }
-        return $itens;
-    }
-
     public static function getLigacoesTable($request)
     {
         $queryParams = $request->getQueryParams();
@@ -68,62 +54,34 @@ class Ligacoes extends Page
     private static function getCards($request)
     {
         $queryParams = $request->getQueryParams();
+
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
-        $fila = $queryParams['filaLigacoes'];
+        $filas = $queryParams['filaLigacoes'];
+
         $uri = $_SERVER['REQUEST_URI'];
 
-        $resultados = EntityLigacoes::getLigacoesByFilter($dataInicio, $dataFim, $fila);
+        $resumo = EntityLigacoes::getResumoByFilter($dataInicio, $dataFim, $filas);
 
-        // Totais
-        $total = 0;
-        $atendidas = 0;
-        $perdidas = 0;
-
-        // Somatórios
-        $totalTempoFila = 0;
-        $totalTempoAtendimento = 0;
-
-        // Meta
-        $dentroMeta = 0;
-
-        while ($ligacao = $resultados->fetchObject(EntityLigacoes::class)) {
-
-            $tempoFila = (int) $ligacao->tempo_fila;
-            $tempoAtendimento = (int) $ligacao->tempo_atendimento;
-            $status = $ligacao->status;
-
-            $total++;
-            $totalTempoFila += $tempoFila;
-
-            // Dentro da meta (<= 45s)
-            if ($tempoFila <= 45) {
-                $dentroMeta++;
-            }
-
-            // Ajusta aqui conforme teu status real
-            if ($status === 'answered') {
-                $atendidas++;
-                $totalTempoAtendimento += $tempoAtendimento;
-            } else {
-                $perdidas++;
-            }
-        }
+        $total = (int) $resumo->total;
 
         if ($total <= 0) {
             $request->getRouter()->redirect('/ligacoes?status=nenhuma');
             exit;
         }
 
+        $atendidas = (int) $resumo->atendidas;
+        $perdidas = (int) $resumo->perdidas;
+        $totalTempoFila = (int) $resumo->totalTempoFila;
+        $totalTempoAtendimento = (int) $resumo->totalTempoAtendimento;
+        $dentroMeta = (int) $resumo->dentroMeta;
+
         // Cálculos
         $tme = $total > 0 ? $totalTempoFila / $total : 0;
         $tma = $atendidas > 0 ? $totalTempoAtendimento / $atendidas : 0;
         $percentMeta = ($dentroMeta / $total) * 100;
 
-        // Formata segundos → HH:MM:SS
-        $formatTime = function ($seconds) {
-            return gmdate("H:i:s", (int) $seconds);
-        };
+        $formatTime = fn($seconds) => gmdate("H:i:s", (int) $seconds);
 
         $cards = [
             [
@@ -187,14 +145,6 @@ class Ligacoes extends Page
 
     public static function getTableItens($request)
     {
-        $queryParams = $request->getQueryParams();
-        $dataInicio = $queryParams['data_inicial'];
-        $dataFim = $queryParams['data_final'];
-        $fila = $queryParams['filaLigacoes'];
-        $resultados = EntityLigacoes::getLigacoesByFilter($dataInicio, $dataFim, $fila);
-        $uri = str_replace("/table", "/delete", $_SERVER['REQUEST_URI']);
-
-        // Função para formatar tempo
         $formatTime = function ($seconds) {
             $seconds = (int) $seconds;
 
@@ -204,26 +154,34 @@ class Ligacoes extends Page
 
             return gmdate("i:s", $seconds); // padrão mm:ss
         };
-
         $itens = '';
+        $queryParams = $request->getQueryParams();
+        $dataInicio = $queryParams['data_inicial'];
+        $dataFim = $queryParams['data_final'];
+        $filas = $queryParams['filaLigacoes'];
+        $uri = str_replace("/table", "/delete", $_SERVER['REQUEST_URI']);
+        /*
+        foreach ($filas as $fila) {
+            $resultados = EntityLigacoes::getLigacoesByFilter($dataInicio, $dataFim, $fila);
 
-        while ($obLigacoes = $resultados->fetchObject(EntityLigacoes::class)) {
+            while ($obLigacoes = $resultados->fetchObject(EntityLigacoes::class)) {
 
-            $data = (new DateTime($obLigacoes->data))->format('d/m/Y H:i');
+                $data = (new DateTime($obLigacoes->data))->format('d/m/Y H:i');
 
-            $status = ($obLigacoes->status == 'answered') ? 'Atendida' : 'Perdida';
+                $status = ($obLigacoes->status == 'answered') ? 'Atendida' : 'Perdida';
 
-            $itens .= View::render('/ligacoes/item', [
-                'id' => $obLigacoes->id,
-                'data' => $data,
-                'tempo_fila' => $formatTime($obLigacoes->tempo_fila),
-                'tempo_atendimento' => $formatTime($obLigacoes->tempo_atendimento),
-                'agente' => $obLigacoes->responsavel,
-                'status' => $status,
-                'numero' => $obLigacoes->numero,
-                'URI' => $uri
-            ]);
-        }
+                $itens .= View::render('/ligacoes/item', [
+                    'id' => $obLigacoes->id,
+                    'data' => $data,
+                    'tempo_fila' => $formatTime($obLigacoes->tempo_fila),
+                    'tempo_atendimento' => $formatTime($obLigacoes->tempo_atendimento),
+                    'agente' => $obLigacoes->responsavel,
+                    'status' => $status,
+                    'numero' => $obLigacoes->numero,
+                    'URI' => $uri
+                ]);
+            }
+        }*/
 
         return $itens;
     }

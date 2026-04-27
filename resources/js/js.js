@@ -436,12 +436,40 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
-  $(".filaLigacoes").select2({
-    placeholder: "Selecione a fila",
-    multiple: false,
-    closeOnSelect: true,
+  // Inicialização do Select2 com AJAX
+  $("#filaLigacoes").select2({
+    ajax: {
+      url: "/ajax/ligacoes/filas",
+      dataType: "json",
+      delay: 250,
+      data: function (params) {
+        return {
+          search: params.term,
+          page: params.page || 1,
+        };
+      },
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+
+        // Ordenar os resultados em ordem alfabética
+        if (data && data.results) {
+          data.results.sort(function (a, b) {
+            return a.text.localeCompare(b.text);
+          });
+        }
+
+        return {
+          results: data.results,
+          pagination: {
+            more: data.pagination && data.pagination.more,
+          },
+        };
+      },
+    },
+    placeholder: "Selecione as Filas",
+    multiple: true,
+    closeOnSelect: false,
     theme: "bootstrap-5",
-    search: true,
   });
   $(".filaLigacoes")
     .next(".select2-container")
@@ -510,6 +538,171 @@ $(document).ready(function () {
 });
 
 $(document).ready(function () {
+  var selecoes = new Set();
+
+  var tabela = $("#notasUra").DataTable({
+    processing: true,
+    serverSide: true, // importante se seu backend já pagina
+    ajax: {
+      url: "/ajax/ligacoes/notas/table",
+      type: "GET",
+      data: function (d) {
+        // pega da URL atual
+        const params = new URLSearchParams(window.location.search);
+
+        d.data_inicial = params.get("data_inicial");
+        d.data_final = params.get("data_final");
+
+        // pode vir como ?filas[]=1&filas[]=2 OU filas=1
+        d.filaLigacoes = params.getAll("filaLigacoes[]");
+
+        // fallback igual ao outro
+        if (d.filaLigacoes.length === 0) {
+          const filaUnica = params.get("filaLigacoes");
+          if (filaUnica) {
+            d.filaLigacoes = [filaUnica];
+          }
+        }
+      },
+    },
+
+    paging: true,
+    searching: true,
+    ordering: true,
+    info: true,
+    autoWidth: false,
+    responsive: true,
+
+    language: {
+      url: "/resources/json/datatable-pt-br.json",
+    },
+
+    columns: [
+      { data: "id" },
+      { data: "numero" },
+      { data: "data" },
+      { data: "nota" },
+      { data: "fila" },
+      { data: "agente" },
+      {
+        data: "id",
+        orderable: false,
+        searchable: false,
+        render: function (data, type, row) {
+          return `
+            <input type="checkbox" name="notas[]" value="${data}" ${
+              selecoes.has(String(data)) ? "checked" : ""
+            }>
+          `;
+        },
+      },
+    ],
+
+    columnDefs: [
+      { width: "8px", targets: 0 }, // Ajusta a largura da primeira coluna
+    ],
+    createdRow: function (row, data, dataIndex) {
+      $(row).find("td").eq(0).addClass("default"); // Adiciona a classe à primeira coluna (status)
+    },
+  });
+
+  // manter seleção ao redesenhar tabela
+  tabela.on("draw.dt", function () {
+    $("#notasUra tbody input[type='checkbox']").each(function () {
+      var id = $(this).val();
+      $(this).prop("checked", selecoes.has(id));
+    });
+  });
+
+  // checkbox individual
+  $("#notasUra tbody").on(
+    "change",
+    'input[type="checkbox"][name="notas[]"]',
+    function () {
+      var id = $(this).val();
+
+      if ($(this).is(":checked")) {
+        selecoes.add(id);
+      } else {
+        selecoes.delete(id);
+      }
+    },
+  );
+
+  // check all (página atual)
+  $("#checkAll").on("change", function () {
+    var checked = $(this).is(":checked");
+
+    $("#notasUra tbody input[type='checkbox']").each(function () {
+      var id = $(this).val();
+
+      $(this).prop("checked", checked);
+
+      if (checked) {
+        selecoes.add(id);
+      } else {
+        selecoes.delete(id);
+      }
+    });
+  });
+
+  // submit
+  $("#formNotas").on("submit", function () {
+    $("#inputsHidden").empty();
+
+    selecoes.forEach(function (id) {
+      $("#inputsHidden").append(
+        `<input type="hidden" name="notas[]" value="${id}">`,
+      );
+    });
+  });
+});
+
+$(document).ready(function () {
+  var tabela = $("#ligacoes").DataTable({
+    processing: true,
+    serverSide: true,
+    ajax: {
+      url: "/ajax/ligacoes/table",
+      type: "GET",
+      data: function (d) {
+        const params = new URLSearchParams(window.location.search);
+
+        d.data_inicial = params.get("data_inicial");
+        d.data_final = params.get("data_final");
+
+        // múltiplos valores (filaLigacoes[])
+        d.filaLigacoes = params.getAll("filaLigacoes[]");
+      },
+    },
+    paging: true,
+    searching: true,
+    ordering: true,
+    info: true,
+    autoWidth: false,
+    responsive: true,
+    language: {
+      url: "/resources/json/datatable-pt-br.json",
+    },
+    columns: [
+      { data: "id" },
+      { data: "data" },
+      { data: "fila" },
+      { data: "tempo_espera" },
+      { data: "tempo_atendimento" },
+      { data: "agente" },
+      { data: "status" },
+      { data: "numero" },
+    ],
+    columnDefs: [
+      { width: "8px", targets: 0 }, // Ajusta a largura da primeira coluna
+    ],
+    createdRow: function (row, data, dataIndex) {
+      $(row).find("td").eq(0).addClass("default"); // Adiciona a classe à primeira coluna (status)
+    },
+  });
+});
+$(document).ready(function () {
   // Inicialização do Select2 com AJAX
   $("#tecnicos").select2({
     ajax: {
@@ -550,6 +743,7 @@ $(document).ready(function () {
     .find(".select2-selection")
     .addClass("shadow");
 });
+/*
 $(document).ready(function () {
   var selecoes = new Set();
 
@@ -571,3 +765,4 @@ $(document).ready(function () {
     },
   });
 });
+*/

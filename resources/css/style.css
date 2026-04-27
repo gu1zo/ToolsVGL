@@ -179,7 +179,7 @@ footer {
   /* Mantém a cor original */
 }
 
-#agendados, #table, #fila, #notas, #massivas, #ordens, #mediaNotas, #mediaNotasUra, #ligacoes {
+#agendados, #table, #fila, #notas, #notasUra, #massivas, #ordens, #mediaNotas, #mediaNotasUra, #ligacoes {
   table-layout: fixed;
   width: 100%;
 }
@@ -189,6 +189,7 @@ footer {
 #mediaNotasUra th:nth-child(1), #mediaNotasUra td:nth-child(1),
 #table th:nth-child(1), #table td:nth-child(1),
 #notas th:nth-child(1), #notas td:nth-child(1),
+#notasUra th:nth-child(1), #notasUra td:nth-child(1),
 #massivas th:nth-child(1), #massivas td:nth-child(1),
 #fila th:nth-child(1), #fila td:nth-child(1),
 #ligacoes th:nth-child(1), #ligacoes td:nth-child(1),

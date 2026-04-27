@@ -10,7 +10,7 @@
     <div class="card-body">
       {{status}}
       <form method="post" action="delete?{{URI}}" id="formNotas">
-        <table id="notas" class="table table-bordered text-center shadow">
+        <table id="notasUra" class="table table-bordered text-center shadow">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -19,7 +19,9 @@
               <th scope="col" class="text-center">Nota</th>
               <th scope="col" class="text-center">Equipe</th>
               <th scope="col" class="text-center">Agente</th>
-              <th scope="col" class="text-center">Ações</th>
+              <th scope="col" class="text-center">
+                <input type="checkbox" id="checkAll" />
+              </th>
             </tr>
           </thead>
           <tbody>

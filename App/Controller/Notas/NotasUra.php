@@ -27,7 +27,7 @@ class NotasUra extends Page
         $content = View::render('/notas/notas-ura/table', [
             'cards' => self::getCards($request),
             'status' => self::getStatus($request),
-            'itens' => self::getTableItens($request),
+            'itens' => ''/*self::getTableItens($request)*/ ,
             'URI' => $uri
         ]);
 
@@ -88,75 +88,58 @@ class NotasUra extends Page
     private static function getCards($request)
     {
         $queryParams = $request->getQueryParams();
+
         $dataInicio = $queryParams['data_inicial'];
         $dataFim = $queryParams['data_final'];
-        $equipe = $queryParams['equipe'];
-        $uri = $_SERVER['REQUEST_URI'];
+        $filas = $queryParams['filaLigacoes'] ?? [];
 
-        $resultados = EntityLigacoes::getNotasByFilter($dataInicio, $dataFim, $equipe);
-        $detratores = 0;
-        $promotores = 0;
-        $neutros = 0;
-        $total = 0;
-        $totalNotas = 0;
-
-        while ($obNotas = $resultados->fetchObject(EntityLigacoes::class)) {
-            $nota = $obNotas->nota;
-            if ($nota <= 2) {
-                $detratores++;
-            } else if ($nota == 3) {
-                $neutros++;
-            } else if ($nota > 3) {
-                $promotores++;
-            }
-            $totalNotas += $nota;
-            $total++;
+        if (!is_array($filas)) {
+            $filas = [$filas];
         }
 
-        if ($total <= 0) {
+        $dados = EntityLigacoes::getCardsData($dataInicio, $dataFim, $filas);
+
+        if ($dados->total <= 0) {
             $request->getRouter()->redirect('/notas-ura?status=nenhuma');
             exit;
         }
 
-        $content = '';
+        $total = $dados->total;
+
         $status = [
             [
                 'name' => 'Satisfatórios',
                 'color' => 'green',
-                'total' => $promotores,
-                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=promotores'
+                'total' => $dados->promotores,
+                'porcentagem' => number_format(($dados->promotores / $total) * 100, 2) . "%"
             ],
             [
                 'name' => 'Neutros',
                 'color' => 'lightblue',
-                'total' => $neutros,
-                'porcentagem' => number_format(($neutros / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=neutros'
+                'total' => $dados->neutros,
+                'porcentagem' => number_format(($dados->neutros / $total) * 100, 2) . "%"
             ],
             [
                 'name' => 'Insatisfatórios',
                 'color' => 'red',
-                'total' => $detratores,
-                'porcentagem' => number_format(($detratores / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=detratores'
+                'total' => $dados->detratores,
+                'porcentagem' => number_format(($dados->detratores / $total) * 100, 2) . "%"
             ],
             [
                 'name' => 'Nota Média',
                 'color' => 'darkblue',
                 'total' => '',
-                'porcentagem' => number_format(($totalNotas / $total), 2),
-                'link' => $uri . '&tipo=todos'
+                'porcentagem' => number_format($dados->media, 2)
             ],
             [
                 'name' => 'CSAT',
                 'color' => 'green',
                 'total' => '',
-                'porcentagem' => number_format(($promotores / $total) * 100, 2) . "%",
-                'link' => $uri . '&tipo=todos'
+                'porcentagem' => number_format(($dados->promotores / $total) * 100, 2) . "%"
             ],
         ];
 
+        $content = '';
 
         foreach ($status as $card) {
             $content .= View::render('/notas/notas-ura/card', [
@@ -164,7 +147,7 @@ class NotasUra extends Page
                 'color' => $card['color'],
                 'total' => $card['total'],
                 'porcentagem' => $card['porcentagem'],
-                'link' => $card['link']
+                'link' => '#'
             ]);
         }
 

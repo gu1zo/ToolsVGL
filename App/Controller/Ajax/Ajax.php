@@ -10,6 +10,8 @@ use \App\Model\Entity\Agendados as EntityAgendados;
 use \App\Model\Entity\Fila as EntityFila;
 use \App\Model\Entity\User as EntityUser;
 use \App\Model\Entity\Tecnicos as EntityTecnicos;
+use \App\Model\Entity\Ligacoes as EntityLigacoes;
+use \App\Model\Entity\Queues as EntityQueues;
 use \App\Session\Login\Login;
 use WilliamCosta\DatabaseManager\Pagination;
 use DateTime;
@@ -458,6 +460,66 @@ class Ajax
 
         $json = APISippulse::getAgentes($fila);
         return json_encode($json, true, JSON_PRETTY_PRINT);
+    }
+
+    public static function getFilas($request)
+    {
+        $results = [];
+
+        $queryParams = $request->getQueryParams();
+
+        $paginaAtual = $queryParams['page'] ?? 1;
+        $search = $queryParams['search'] ?? '';
+        $where = null;
+        if (!empty($search)) {
+            $where = 'nome LIKE "%' . addslashes($search) . '%"';
+        }
+        $quantidadetotal = EntityQueues::getQueues($where, null, null, 'COUNT(*) as qtd')->fetchObject()->qtd;
+
+        $obPagination = new Pagination($quantidadetotal, $paginaAtual, 15);
+
+        $res = EntityQueues::getQueues($where, 'nome ASC', $obPagination->getLimit());
+
+        while ($obQueues = $res->fetchObject(EntityQueues::class)) {
+            $results[] = [
+                'id' => $obQueues->id,
+                'text' => $obQueues->nome
+            ];
+        }
+
+        $hasMore = $paginaAtual * 15 < $quantidadetotal;
+        $response = [
+            'results' => $results,
+            'pagination' => [
+                'more' => $hasMore
+            ]
+        ];
+
+
+        // Retornar JSON
+        return json_encode($response);
+    }
+
+    public static function getNotasAjax($request)
+    {
+        $params = $request->getQueryParams();
+
+        $response = EntityLigacoes::getNotasDataTable($params);
+
+        header('Content-Type: application/json');
+        echo json_encode($response);
+        exit;
+    }
+
+    public static function getLigacoesAjax($request)
+    {
+        $params = $request->getQueryParams();
+
+        $response = EntityLigacoes::getLigacoesDataTable($params);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($response, JSON_UNESCAPED_UNICODE);
+        exit;
     }
 
 

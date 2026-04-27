@@ -89,95 +89,126 @@ class Relatorio extends Page
     public static function getNotasUraCSV($request)
     {
         date_default_timezone_set('America/Sao_Paulo');
+
         $queryParams = $request->getQueryParams();
-        $dataInicio = $queryParams['data_inicial'];
-        $dataFim = $queryParams['data_final'];
-        $equipe = $queryParams['equipe'];
+
+        $dataInicio = $queryParams['data_inicial'] ?? date('Y-m-d');
+        $dataFim = $queryParams['data_final'] ?? date('Y-m-d');
+
+        // ✅ PADRÃO IGUAL AO DATATABLE
+        $filas = $queryParams['filaLigacoes'] ?? [];
+
+        if (!is_array($filas)) {
+            $filas = [$filas];
+        }
+
+        // 🔒 sanitiza
+        $ids = array_filter(
+            array_map('intval', $filas),
+            fn($v) => $v > 0
+        );
+
         $tipo = $queryParams['tipo'] ?? 'todos';
 
-        $resultados = EntityLigacoes::getNotasByFilter($dataInicio, $dataFim, $equipe);
+        // ✅ usa o mesmo padrão de filtro
+        $resultados = EntityLigacoes::getNotasByFilter($dataInicio, $dataFim, $ids);
+
         $data = [
-            ['numero', 'data', 'nota', 'equipe', 'agente', 'canal']
+            ['numero', 'data', 'nota', 'fila', 'agente']
         ];
 
         while ($obNotas = $resultados->fetchObject(EntityLigacoes::class)) {
+
             $seguir = false;
 
             switch ($tipo) {
                 case 'promotores':
-                    if ($obNotas->nota >= 4) {
-                        $seguir = true;
-                    }
+                    $seguir = $obNotas->nota >= 4;
                     break;
+
                 case 'neutros':
-                    if ($obNotas->nota == 3) {
-                        $seguir = true;
-                    }
+                    $seguir = $obNotas->nota == 3;
                     break;
+
                 case 'detratores':
-                    if ($obNotas->nota < 3) {
-                        $seguir = true;
-                    }
+                    $seguir = $obNotas->nota < 3;
                     break;
+
                 default:
                     $seguir = true;
             }
+
             if ($seguir) {
                 $data[] = [
                     $obNotas->numero,
-                    $obNotas->data,
+                    (new \DateTime($obNotas->data))->format('d/m/Y H:i'),
                     $obNotas->nota,
                     $obNotas->fila,
-                    $obNotas->responsavel
+                    $obNotas->responsavel,
                 ];
             }
         }
 
-        // Nome do arquivo CSV
+        // 📄 nome do arquivo
+        $filename = "Relatorio_Notas_" . date('d-m-Y_H-i') . ".csv";
 
-        $filename = "Relatório Notas " . date('d-m-Y') . ".csv";
-
-        // Definir cabeçalhos para download
-        // Cabeçalhos
+        // 📦 headers
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="' . $filename . '"');
 
-        // Abrir saída
         $output = fopen('php://output', 'w');
 
-        // BOM para UTF-8
+        // BOM UTF-8 (excel-friendly)
         fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-        // Escrever dados com conversão explícita para UTF-8
         foreach ($data as $row) {
-            $utf8Row = array_map(fn($val) => mb_convert_encoding($val, 'UTF-8', 'auto'), $row);
+            $utf8Row = array_map(
+                fn($val) => mb_convert_encoding((string) $val, 'UTF-8', 'auto'),
+                $row
+            );
+
             fputcsv($output, $utf8Row, ';');
         }
 
         fclose($output);
         exit;
-
     }
     public static function getMediaNotasPorAgenteUraCSV($request)
     {
         $queryParams = $request->getQueryParams();
-        $dataInicio = $queryParams['data_inicial'] ?? null;
-        $dataFim = $queryParams['data_final'] ?? null;
-        $equipe = $queryParams['equipe'] ?? null;
 
-        $periodo = 'data BETWEEN "' . $dataInicio . ' 00:00:00" 
-        AND "' . $dataFim . ' 23:59:59" AND nota is not null AND responsavel is not null';
+        $dataInicio = $queryParams['data_inicial'] ?? date('Y-m-d');
+        $dataFim = $queryParams['data_final'] ?? date('Y-m-d');
 
-        $where = $periodo;
+        // ✅ PADRÃO IGUAL AO RESTO DO SISTEMA
+        $filas = $queryParams['filaLigacoes'] ?? [];
 
-        if ($equipe != 'todas') {
-            if ($equipe == 'ggnet' || $equipe == 'alt') {
-                $where .= ' AND canal = "' . $equipe . '"';
-            } else {
-                $where .= ' AND equipe = "' . $equipe . '"';
-            }
+        if (!is_array($filas)) {
+            $filas = [$filas];
         }
 
+        // 🔒 sanitiza
+        $ids = array_filter(
+            array_map('intval', $filas),
+            fn($v) => $v > 0
+        );
+
+        // 📅 WHERE BASE
+        $where = 'data BETWEEN "' . $dataInicio . ' 00:00:00"
+        AND "' . $dataFim . ' 23:59:59"
+        AND nota IS NOT NULL
+        AND responsavel IS NOT NULL
+        AND id_queue > 0';
+
+        // 🎯 filtro por filas (igual DataTable)
+        if (!empty($ids)) {
+            $where .= ' AND id_queue IN (' . implode(',', $ids) . ')';
+        } else {
+            // 🔥 evita retornar tudo sem filtro
+            $where .= ' AND 1=0';
+        }
+
+        // 📊 agregações
         $fields = '
         responsavel,
         COUNT(*) as quantidade_avaliacoes,
@@ -190,18 +221,27 @@ class Relatorio extends Page
         2) as csat
     ';
 
-        $order = 'csat DESC';
-        $group = 'responsavel';
+        $resultados = EntityLigacoes::getLigacoes(
+            $where,
+            'csat DESC',
+            null,
+            $fields,
+            'responsavel'
+        );
 
-        $resultados = EntityLigacoes::getLigacoes($where, $order, null, $fields, $group);
+        // 📄 nome do arquivo
+        $filename = 'relatorio_notas_por_agente_' . date('d-m-Y_H-i') . '.csv';
 
-        // 🔽 Cabeçalhos para download
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename=relatorio_notas_por_agente.csv');
+        // 📦 headers
+        header('Content-Type: text/csv; charset=UTF-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
 
         $output = fopen('php://output', 'w');
 
-        // 🔽 Cabeçalho do CSV
+        // BOM UTF-8 (Excel)
+        fprintf($output, chr(0xEF) . chr(0xBB) . chr(0xBF));
+
+        // 🧾 cabeçalho
         fputcsv($output, [
             'Agente',
             'Qtd Avaliações',
@@ -210,7 +250,7 @@ class Relatorio extends Page
             'Neutros',
             'Detratores',
             'CSAT (%)'
-        ], ';'); // separador ; (padrão Excel BR)
+        ], ';');
 
         while ($row = $resultados->fetchObject()) {
             fputcsv($output, [
