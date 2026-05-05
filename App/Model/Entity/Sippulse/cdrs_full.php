@@ -71,7 +71,7 @@ class cdrs_full
         $dataFim = $dataFim . ' 23:59:59';
 
         $where = 'cdr.start_stamp BETWEEN "' . $dataInicio . '" AND "' . $dataFim . '" 
-              AND cdr.queue_name = "' . $fila . '"';
+          AND cdr.queue_name = "' . $fila . '"';
 
         $fields = '
         cdr.id,
@@ -84,13 +84,17 @@ class cdrs_full
         cdr.queue_name,
         cdr.queue_id,
         cdr.caller_id,
-        ivr.digit AS digit
+        COALESCE(ivr_uuid.digit, ivr_transfer.digit) AS digit
     ';
 
         $join = '
-        LEFT JOIN ivr_log ivr 
-        ON ivr.uuid = cdr.transfer_dst_uuid_out 
-        AND ivr.id_ivr = 15
+        LEFT JOIN ivr_log ivr_uuid
+            ON ivr_uuid.uuid = cdr.uuid
+            AND ivr_uuid.id_ivr = 15
+
+        LEFT JOIN ivr_log ivr_transfer
+            ON ivr_transfer.uuid = cdr.transfer_dst_uuid_out
+            AND ivr_transfer.id_ivr = 15
     ';
 
         return (new DatabaseSIP('cdrs_full cdr'))
