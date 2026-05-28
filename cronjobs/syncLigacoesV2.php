@@ -22,8 +22,8 @@ function timeToSeconds($time)
 }
 
 // Define período fixo
-$dataInicio = new DateTime('2026-04-27', new DateTimeZone('America/Sao_Paulo'));
-$dataFim = new DateTime('2026-04-30', new DateTimeZone('America/Sao_Paulo'));
+$dataInicio = new DateTime('2026-05-1', new DateTimeZone('America/Sao_Paulo'));
+$dataFim = new DateTime('2026-05-24', new DateTimeZone('America/Sao_Paulo'));
 
 $results = EntityQueues::getQueues();
 
@@ -61,6 +61,9 @@ while ($fila = $results->fetchObject(EntityQueues::class)) {
         $nota = null;
         if ($row->digit >= 1 && $row->digit <= 5) {
             $nota = $row->digit;
+        }
+        if ($row->queue_status != 'answered' && $row->queue_status != 'abandonned') {
+            continue;
         }
 
         $obLigacoes->data = $row->start_stamp ?? null;

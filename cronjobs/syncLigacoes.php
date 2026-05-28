@@ -23,16 +23,16 @@ function timeToSeconds($time)
 $filas = [
     ["fila" => "FILA_CSA_GGNET", "ivrId" => 15],
     ["fila" => "FILA_CSA_N2_GGNET", "ivrId" => 15],
-    ["fila" => "FILA_CSA_N2_ALT", "ivrId" => 20],
-    ["fila" => "FILA_SAC_FINANCEIRO_GGNET", "ivrId" => 24],
-    ["fila" => "FILA_SAC_FINANCEIRO_ALT", "ivrId" => 21],
+    ["fila" => "FILA_CSA_N2_ALT", "ivrId" => 15],
+    ["fila" => "FILA_SAC_FINANCEIRO_GGNET", "ivrId" => 15],
+    ["fila" => "FILA_SAC_FINANCEIRO_ALT", "ivrId" => 15],
     ["fila" => "FILA_CSA_EVO", "ivrId" => null],
     ["fila" => "FILA_SAC_FINANCEIRO_EVO", "ivrId" => null],
 ];
 
 // intervalo de datas
-$inicio = new DateTime('2026-04-01', new DateTimeZone('America/Sao_Paulo'));
-$fim = new DateTime('2026-04-03', new DateTimeZone('America/Sao_Paulo'));
+$inicio = new DateTime('2026-05-01', new DateTimeZone('America/Sao_Paulo'));
+$fim = new DateTime('2026-05-24', new DateTimeZone('America/Sao_Paulo'));
 
 // inclui o último dia
 $fim->modify('+1 day');
