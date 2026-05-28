@@ -171,11 +171,7 @@ class Relatorio extends Page
         $where = $periodo;
 
         if ($equipe != 'todas') {
-            if ($equipe == 'ggnet' || $equipe == 'alt') {
-                $where .= ' AND canal = "' . $equipe . '"';
-            } else {
-                $where .= ' AND equipe = "' . $equipe . '"';
-            }
+            $where .= ' AND fila = "' . $equipe . '"';
         }
 
         $fields = '
