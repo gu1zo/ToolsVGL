@@ -297,7 +297,7 @@ $(document).ready(function () {
     },
     ajax: {
       type: "GET",
-      url: "/ajax/graficos/mediaAgentesUra",
+      url: "/ajax/graficos/mediaAgentes",
       data: urlParams,
       dataSrc: "",
     },
