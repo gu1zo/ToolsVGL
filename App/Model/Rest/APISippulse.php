@@ -121,6 +121,9 @@ class APISippulse
                 "Authorization: {$token}",
                 "Accept: application/json"
             ]);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
             $response = curl_exec($ch);
 
             if (curl_errno($ch)) {
@@ -190,6 +193,8 @@ class APISippulse
                 "Authorization: {$token}",
                 "Accept: application/json"
             ]);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
             $response = curl_exec($ch);
 
@@ -258,6 +263,8 @@ class APISippulse
             "Authorization: {$token}",
             "Accept: application/json"
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         $response = curl_exec($ch);
 
@@ -316,6 +323,8 @@ class APISippulse
             "Authorization: {$token}",
             "Accept: application/json"
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         $response = curl_exec($ch);
 
@@ -422,6 +431,8 @@ class APISippulse
             "Authorization: {$token}",
             "Accept: application/json"
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         $response = curl_exec($ch);
 
@@ -466,6 +477,8 @@ class APISippulse
             "Authorization: {$token}",
             "Accept: application/json"
         ]);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 
         $response = curl_exec($ch);
 
@@ -520,8 +533,11 @@ class APISippulse
                 CURLOPT_HTTPHEADER => [
                     "Authorization: {$token}",
                     "Accept: application/json"
-                ]
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false
             ]);
+
 
             curl_multi_add_handle($multi, $chChamadas);
 
@@ -537,7 +553,9 @@ class APISippulse
                 CURLOPT_HTTPHEADER => [
                     "Authorization: {$token}",
                     "Accept: application/json"
-                ]
+                ],
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_SSL_VERIFYHOST => false
             ]);
 
             curl_multi_add_handle($multi, $chAgentes);
